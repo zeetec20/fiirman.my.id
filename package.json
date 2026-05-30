@@ -17,8 +17,9 @@
     "deploy": "bun run build && wrangler deploy",
     "sync:medium": "bun run scripts/sync-medium.ts",
     "sync:content": "bun run scripts/build-content.ts",
+    "optimize:images": "bun run scripts/optimize-images.ts",
     "predev": "bun run sync:content",
-    "prebuild": "bun run sync:content"
+    "prebuild": "bun run sync:content && bun run optimize:images"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.26.0",
@@ -78,6 +79,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "fast-xml-parser": "^4.5.1",
     "jsdom": "^28.1.0",
+    "sharp": "^0.34.5",
     "turndown": "^7.2.0",
     "turndown-plugin-gfm": "^1.0.2",
     "typescript": "^6.0.2",

@@ -19,3 +19,16 @@ export function getArticleBySlug(slug: string): Article | undefined {
 export function getArticleSlugs(): string[] {
 	return ALL_ARTICLES.map((a) => a.slug);
 }
+
+const PLACEHOLDER_THUMBNAIL = "/images/placeholder/sunflower.webp";
+
+/**
+ * Resolve a stored thumbnail path to the optimized WebP sibling that
+ * `scripts/optimize-images.ts` generates at build time. Empty input
+ * returns the placeholder. WebP is universal in 2026 — no `<picture>`
+ * fallback needed. Originals stay on disk if a render ever needs them.
+ */
+export function thumbnailUrl(src: string | null | undefined): string {
+	if (!src) return PLACEHOLDER_THUMBNAIL;
+	return src.replace(/\.(jpe?g|png)$/i, ".webp");
+}

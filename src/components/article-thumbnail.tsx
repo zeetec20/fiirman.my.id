@@ -1,8 +1,7 @@
 import { GlyphBookClosed, GlyphBookOpen } from "./glyphs";
+import { thumbnailUrl } from "../lib/articles";
 import { hashSeed, pickSubset } from "../lib/random";
 import { AspectRatio } from "./ui/aspect-ratio";
-
-const PLACEHOLDER = "/images/placeholder/sunflower.jpg";
 
 const DUST_POOL = 5;
 const SCRATCH_POOL = 5;
@@ -37,6 +36,7 @@ export function ArticleThumbnail({
 	interactive = false,
 	seed,
 	aspect = "natural",
+	priority = false,
 }: {
 	src?: string | null;
 	alt: string;
@@ -51,9 +51,17 @@ export function ArticleThumbnail({
 	 * as a tidy print sheet — no stretching, longer edges get cropped.
 	 */
 	aspect?: "natural" | "feature";
+	/**
+	 * Pass `priority` on the **above-fold LCP image** (typically the
+	 * featured hero on the home page or the article detail header).
+	 * Enables `loading="eager"` + `fetchpriority="high"` so the browser
+	 * pulls the image in the first request wave instead of deferring.
+	 */
+	priority?: boolean;
 }) {
-	const resolved = src && src.length > 0 ? src : PLACEHOLDER;
-	const isPlaceholder = resolved === PLACEHOLDER;
+	const resolved = thumbnailUrl(src);
+	const isPlaceholder =
+		!src || src.length === 0 || resolved === thumbnailUrl(null);
 	const showCaption = caption !== undefined || isPlaceholder;
 
 	const seedHash = hashSeed(seed ?? alt ?? resolved);
@@ -80,7 +88,8 @@ export function ArticleThumbnail({
 				<img
 					src={resolved}
 					alt={alt}
-					loading="lazy"
+					loading={priority ? "eager" : "lazy"}
+					fetchPriority={priority ? "high" : undefined}
 					decoding="async"
 					width={isFeature ? 720 : 1080}
 					height={isFeature ? 480 : 720}

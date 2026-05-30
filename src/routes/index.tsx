@@ -11,12 +11,26 @@ import { RubricLink } from "../components/rubric-link";
 import { RuleHair } from "../components/rules";
 import { randomQuote } from "../data/quotes";
 import type { Article } from "../lib/article-schema";
-import { getAllArticles } from "../lib/articles";
+import { getAllArticles, thumbnailUrl } from "../lib/articles";
 import { getAnalytics } from "../lib/track-analytic";
 
 export const Route = createFileRoute("/")({
 	component: Home,
 	loader: () => ({ articles: getAllArticles(), quote: randomQuote() }),
+	head: ({ loaderData }) => {
+		const featured = loaderData?.articles[0];
+		if (!featured?.thumbnail) return {};
+		return {
+			links: [
+				{
+					rel: "preload",
+					as: "image",
+					href: thumbnailUrl(featured.thumbnail),
+					fetchpriority: "high",
+				},
+			],
+		};
+	},
 });
 
 function todayKey(): string {
@@ -128,6 +142,7 @@ function Home() {
 						<ArticleThumbnail
 							src={featured.thumbnail}
 							alt={featured.title}
+							priority
 						/>
 					</div>
 					{featuredTag ? <Kicker>{featuredTag}</Kicker> : null}
