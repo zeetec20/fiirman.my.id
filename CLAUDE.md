@@ -61,7 +61,7 @@ bun run sync:medium    # pull latest Medium posts via RSS
 3. **Cloudflare Workers API** → verify via `context7` or `wrangler` docs. Workers runtime ≠ Node.
 4. **Never invent** a route name, hook name, or export. Verify it exists in current docs.
 5. **Design tokens** → reference `design.md`. If a token is missing, add it to `design.md` first, then use it.
-6. **Imagery** → run `scripts/fetch-unsplash.ts` (build-time only, reads `UNSPLASH_ACCESS_KEY` from shell). Downloads land in `/public/images/<slug>/` with a sibling `credit.json` (`{source, id, photographer, url}`). Never embed a remote URL in source. If an article has no thumbnail (or the referenced file is missing on disk), the renderer falls back to `/public/images/placeholder/sunflower.jpg` — do not invent paths.
+6. **Imagery** → place per-article thumbnails manually under `/public/images/<slug>/` (filename referenced from the article frontmatter). Never embed a remote URL in source. If an article has no thumbnail (or the referenced file is missing on disk), the renderer falls back to `/public/images/placeholder/sunflower.jpg` — do not invent paths.
 
 ---
 

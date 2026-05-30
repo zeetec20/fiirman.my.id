@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hallmark · component: favicon · genre: editorial · theme: design.md (locked)
+  Manuscript-illuminated initial "F" of Firman Lestari — rubric on parchment,
+  hairline frame, single fleuron pip ornament. Auto light/dark via internal
+  prefers-color-scheme media query. OKLCH values frozen from src/styles.css
+  @theme tokens.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 100 100"
+  role="img"
+  aria-labelledby="favicon-title"
+>
+  <title id="favicon-title">Firman Lestari</title>
+
+  <style>
+    :root {
+      --paper: oklch(94% 0.025 80);
+      --ink: oklch(20% 0.015 50);
+      --rubric: oklch(38% 0.15 25);
+    }
+    .paper { fill: oklch(94% 0.025 80); }
+    .ink { fill: oklch(20% 0.015 50); }
+    .rubric-fill { fill: oklch(38% 0.15 25); }
+    .rubric-stroke { stroke: oklch(38% 0.15 25); }
+    .ink-stroke { stroke: oklch(20% 0.015 50); }
+
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: oklch(18% 0.015 60); }
+      .ink { fill: oklch(88% 0.020 75); }
+      .rubric-fill { fill: oklch(62% 0.18 25); }
+      .rubric-stroke { stroke: oklch(62% 0.18 25); }
+      .ink-stroke { stroke: oklch(88% 0.020 75); }
+    }
+  </style>
+
+  <!-- Parchment ground -->
+  <rect class="paper" x="0" y="0" width="100" height="100" />
+
+  <!-- Hairline frame, double-rule: outer + inner thin -->
+  <rect
+    class="ink-stroke"
+    x="6" y="6" width="88" height="88"
+    fill="none"
+    stroke-width="2"
+  />
+  <rect
+    class="ink-stroke"
+    x="11" y="11" width="78" height="78"
+    fill="none"
+    stroke-width="0.8"
+    opacity="0.6"
+  />
+
+  <!-- Manuscript "F" — drawn as paths so it reads at 16px.
+       Stem 14 wide, top arm 44 wide × 12 tall, middle arm 30 wide × 9 tall.
+       Triangular serifs at stem feet + arm ends. -->
+  <g class="rubric-fill">
+    <!-- Vertical stem -->
+    <rect x="30" y="22" width="14" height="56" />
+
+    <!-- Top arm -->
+    <rect x="30" y="22" width="44" height="12" />
+
+    <!-- Middle crossbar -->
+    <rect x="30" y="46" width="28" height="9" />
+
+    <!-- Top-left serif foot -->
+    <polygon points="26,22 30,22 30,28 26,30" />
+    <!-- Top-right serif of top arm -->
+    <polygon points="74,22 78,22 78,30 74,28" />
+    <!-- Bottom-right serif of top arm -->
+    <polygon points="74,34 78,32 78,38 74,36" />
+    <!-- Right serif of middle crossbar -->
+    <polygon points="58,46 60,48 58,55 56,53" />
+    <!-- Bottom-left serif of stem -->
+    <polygon points="26,76 30,74 30,78 26,80" />
+    <!-- Bottom-right serif of stem -->
+    <polygon points="44,74 48,76 48,80 44,78" />
+  </g>
+
+  <!-- Fleuron pip — single rubric dot top-right of crossbar, manuscript flourish -->
+  <circle class="rubric-fill" cx="66" cy="50" r="2.2" />
+
+  <!-- Subtle ink underline beneath the F — folio dignifier -->
+  <line
+    class="ink-stroke"
+    x1="24" y1="84" x2="76" y2="84"
+    stroke-width="0.8"
+    opacity="0.5"
+  />
+</svg>

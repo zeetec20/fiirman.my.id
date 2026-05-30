@@ -18,8 +18,7 @@
     "sync:medium": "bun run scripts/sync-medium.ts",
     "sync:content": "bun run scripts/build-content.ts",
     "predev": "bun run sync:content",
-    "prebuild": "bun run sync:content",
-    "fetch:unsplash": "bun run scripts/fetch-unsplash.ts"
+    "prebuild": "bun run sync:content"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.26.0",
@@ -30,6 +29,7 @@
     "@fontsource/unifrakturcook": "^5.2.5",
     "@hookform/resolvers": "^3.10.0",
     "@shikijs/rehype": "^1.29.2",
+    "@supabase/supabase-js": "^2.106.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",

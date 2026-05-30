@@ -78,9 +78,13 @@ export function ThemeToggle() {
 					size="icon"
 					onClick={cycle}
 					aria-label={TITLE[mode]}
-					className="theme-toggle size-9"
+					className="theme-toggle size-9 [&>span]:flex [&>span]:items-center [&>span]:justify-center"
 				>
-					<span aria-hidden="true" suppressHydrationWarning>
+					<span
+						aria-hidden="true"
+						suppressHydrationWarning
+						className="size-full"
+					>
 						{mounted ? <ModeIcon mode={mode} /> : <ModeIcon mode="auto" />}
 					</span>
 				</Button>

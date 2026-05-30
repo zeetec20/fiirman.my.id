@@ -7,14 +7,10 @@ import { z } from "zod";
  *
  * Never read process.env / import.meta.env outside this module.
  */
-const schema = z.object({
-  UNSPLASH_ACCESS_KEY: z.string().min(1).optional(),
-});
+const schema = z.object({});
 
 const source = typeof process !== "undefined" ? process.env : {};
 
-export const env = schema.parse({
-  UNSPLASH_ACCESS_KEY: source.UNSPLASH_ACCESS_KEY,
-});
+export const env = schema.parse(source);
 
 export type Env = z.infer<typeof schema>;

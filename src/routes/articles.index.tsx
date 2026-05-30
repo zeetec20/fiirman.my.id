@@ -34,8 +34,10 @@ function ArchiveIndex() {
 			{years.map((year) => (
 				<div key={year} className="mb-12">
 					<div className="text-center mb-6">
-						<RuleDouble className="mb-3" />
-						<span className="small-caps text-sm text-fg-muted">{year}</span>
+						<RuleDouble className="mb-4" />
+						<h2 className="font-serif-display italic text-2xl text-rubric leading-none">
+							{year}
+						</h2>
 					</div>
 					<div className="grid gap-y-10 md:grid-cols-2 xl:grid-cols-3 md:gap-x-8 md:divide-x md:divide-rule">
 						{(byYear.get(year) ?? []).map((article) => (

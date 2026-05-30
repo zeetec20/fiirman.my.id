@@ -221,33 +221,20 @@ Newspaper-broadsheet treatment, never modern marketing photography.
 - Border: `rule-hair`. No radius. No shadow.
 - Color photos forbidden in chrome and articles by default. Exception: article frontmatter `imageStyle: color` opts the article into a color treatment.
 
-**Source — direct Unsplash API via `scripts/fetch-unsplash.ts`:**
+**Source — manual asset placement:**
 
-Build-time helper. No MCP. Reads `UNSPLASH_ACCESS_KEY` from shell env.
+Per-article thumbnails are placed by hand under `/public/images/<slug>/`. The filename is referenced from the article's frontmatter `thumbnail` field. No API, no fetch script — drop the image in the folder and rebuild.
 
-```bash
-export UNSPLASH_ACCESS_KEY=...   # from https://unsplash.com/developers (demo: 50 req/hr)
-bun run scripts/fetch-unsplash.ts "old typewriter" my-article-slug
-```
-
-Script behavior:
-1. `GET https://api.unsplash.com/search/photos?query=<q>&per_page=10&orientation=landscape` with `Authorization: Client-ID $UNSPLASH_ACCESS_KEY`, `Accept-Version: v1`.
-2. Print top 10 results (id, photographer, description, url). Prompt for index 0–9.
-3. Download chosen photo's `urls.regular` (~1080w) → `/public/images/<slug>/cover.jpg`.
-4. Write `/public/images/<slug>/credit.json` (`{source: "unsplash", id, photographer, url}`).
-5. Warn if width > 1600px or file > 250KB. (Compression deferred — v1 just warns.)
-6. Exit 1 with the exact `export UNSPLASH_ACCESS_KEY=…` reminder if env missing.
-
-Render attribution in caption: small caps `text-xs text-fg-muted` → `PHOTO · NAME / UNSPLASH`.
+Render attribution (when applicable) in caption: small caps `text-xs text-fg-muted` → `PHOTO · <SOURCE>`.
 
 **Placeholder fallback:**
 
 If `frontmatter.thumbnail` is empty OR the referenced file does not exist on disk at build time, the loader rewrites the path to `/images/placeholder/sunflower.jpg`. Caption renders as `PHOTO · PLACEHOLDER`. The placeholder file ships at `/public/images/placeholder/sunflower.jpg` with a `credit.json` marking it `source: user-provided`. Never invent paths; never embed remote URLs as a substitute.
 
 **Rules:**
-- **No runtime fetches.** Site never calls Unsplash in a Worker handler. Build-time only.
-- **No remote URLs in source.** `<img src="https://images.unsplash.com/…">` is forbidden — always local `/images/<slug>/…`.
-- **No invented paths.** If an image is not yet downloaded, the loader uses the sunflower placeholder, not a guessed filename.
+- **No runtime fetches.** Site never fetches imagery in a Worker handler.
+- **No remote URLs in source.** `<img src="https://…">` from any third-party host is forbidden — always local `/images/<slug>/…`.
+- **No invented paths.** If an image is not yet placed, the loader uses the sunflower placeholder, not a guessed filename.
 - **Format:** prefer JPG (smaller for photos). Build pipeline converts to WebP (separate plan).
 - **Sizing:** ≤ 1600px wide, ≤ 250KB per image. Reject larger or compress first.
 
@@ -307,7 +294,7 @@ Cells: 11×11 with 3px gap, hairline stroke at `--color-rule`. Month and weekday
 6. **No inline `style={{}}`** — exception: `transform` and/or `opacity` for animations only.
 7. **No sans-serif font.** Ever. Only the five families above.
 8. **No emoji icons in UI chrome.** Decorative ornaments `❦ ⁂` only as `rule-ornament` in long-form prose.
-9. **No remote image URLs** in JSX (`https://images.unsplash.com/…`, etc.). Local `/images/<slug>/…` only. *(Single carve-out in rule 13.)*
+9. **No remote image URLs** in JSX. Local `/images/<slug>/…` only. *(Single carve-out in rule 13.)*
 10. **No background images, textures, orbits, stars, or full-bleed decoration outside `<BackgroundDecoration>`.** No body `background-image`, `background: url(...)`, or full-bleed decoration in feature code. The six atmosphere layers — paper grain, starry night, age stains, candle glow, heliocentric orbits, embers — are owned exclusively by `<BackgroundDecoration>`. Per-article imagery flows through `<ArticleThumbnail>`; everything else lives in the central background component.
 11. **Thumbnail aging layers are rendered only by `<ArticleThumbnail>`.** Feature code never declares scratch overlays, dust blobs, `box-shadow: inset` vignettes, or seeded turbulence filters on images elsewhere.
 12. **`<ArticleProgress>` and `<BackToTop>` are article-detail-only chrome.** Neither component is mounted globally; they live inside `src/routes/articles.$slug.tsx` only.

@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { ArticleBody } from "../components/article-body";
 import { ArticleThumbnail } from "../components/article-thumbnail";
 import { Byline } from "../components/byline";
@@ -11,6 +12,7 @@ import { Comments } from "../components/comments";
 import { Button } from "../components/ui/button";
 import { getArticleBySlug } from "../lib/articles";
 import { estimateReadingMinutes } from "../lib/reading";
+import { trackAnalytic } from "../lib/track-analytic";
 
 export const Route = createFileRoute("/articles/$slug")({
 	component: ArticlePage,
@@ -32,6 +34,10 @@ export const Route = createFileRoute("/articles/$slug")({
 function ArticlePage() {
 	const { article, minutes } = Route.useLoaderData();
 	const tagLine = article.tag.join(" · ").toUpperCase();
+
+	useEffect(() => {
+		trackAnalytic(window.location.pathname);
+	}, [article.slug]);
 
 	return (
 		<article className="py-8">
