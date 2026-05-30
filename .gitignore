@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+
+# OS / system
+.DS_Store
+Thumbs.db
+
+# Build output
+dist
+dist-ssr
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+*.tsbuildinfo
+
+# Env / local
+*.local
+.env
+.env.*
+!.env.example
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Nix / direnv
+.direnv/
+result
+result-*
+
+# Logs / coverage
+*.log
+npm-debug.log*
+yarn-debug.log*
+bun-debug.log*
+coverage/
+.nyc_output/
+
+# Test / preview artifacts
+playwright-report/
+test-results/
+
+# Tooling state
+__unconfig*
+todos.json
+.turbo/
+.cache/
+
+# Build-time content snapshots (regenerated via `bun run sync:content`).
+src/data/*.generated.json

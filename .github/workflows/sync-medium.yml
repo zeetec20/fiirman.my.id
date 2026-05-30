@@ -1,0 +1,36 @@
+name: sync-medium
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - name: Sync Medium articles
+        run: bun run sync:medium
+
+      - name: Commit any new posts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content/medium public/article
+          if git diff --cached --quiet; then
+            echo "No new posts."
+            exit 0
+          fi
+          git commit -m "chore(content): sync Medium"
+          git push

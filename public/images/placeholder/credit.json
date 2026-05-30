@@ -1,0 +1,5 @@
+{
+  "source": "user-provided",
+  "filename": "sunflower.jpg",
+  "note": "Default thumbnail rendered when an article has no per-article image, or the referenced thumbnail file is missing on disk. Not Unsplash-sourced."
+}
