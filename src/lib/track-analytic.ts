@@ -7,7 +7,7 @@ import { getSupabase } from "./supabase";
  * Browser-only. No-op on the server or when Supabase env is unconfigured.
  */
 export async function trackAnalytic(path: string): Promise<void> {
-	const supabase = getSupabase();
+	const supabase = await getSupabase();
 	if (!supabase) return;
 	try {
 		await supabase.rpc("track_analytic", { p_path: path });
@@ -30,7 +30,7 @@ export async function getAnalytics(
 ): Promise<Map<string, number>> {
 	const empty = new Map<string, number>();
 	if (paths.length === 0) return empty;
-	const supabase = getSupabase();
+	const supabase = await getSupabase();
 	if (!supabase) return empty;
 	try {
 		const { data, error } = await supabase.rpc("get_analytics", { paths });

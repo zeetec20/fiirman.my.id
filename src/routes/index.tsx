@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ArticleCard } from "../components/article-card";
 import { ArticleThumbnail } from "../components/article-thumbnail";
@@ -9,13 +9,14 @@ import { Fleuron } from "../components/fleuron";
 import { Kicker } from "../components/kicker";
 import { RubricLink } from "../components/rubric-link";
 import { RuleHair } from "../components/rules";
+import { randomQuote } from "../data/quotes";
 import type { Article } from "../lib/article-schema";
 import { getAllArticles } from "../lib/articles";
 import { getAnalytics } from "../lib/track-analytic";
 
 export const Route = createFileRoute("/")({
 	component: Home,
-	loader: () => ({ articles: getAllArticles() }),
+	loader: () => ({ articles: getAllArticles(), quote: randomQuote() }),
 });
 
 function todayKey(): string {
@@ -27,7 +28,7 @@ function todayKey(): string {
 }
 
 function Home() {
-	const { articles } = Route.useLoaderData();
+	const { articles, quote } = Route.useLoaderData();
 	const today = todayKey();
 	const [featured, ...rest] = articles;
 
@@ -37,6 +38,7 @@ function Home() {
 	const [popular, setPopular] = useState<Article[]>(() =>
 		articles.slice(0, Math.min(5, articles.length)),
 	);
+	const [popularLoading, setPopularLoading] = useState(true);
 
 	const allPaths = useMemo(
 		() => articles.map((a) => `/articles/${a.slug}`),
@@ -45,22 +47,36 @@ function Home() {
 
 	useEffect(() => {
 		let cancelled = false;
-		(async () => {
+		const run = async () => {
 			const counts = await getAnalytics(allPaths);
-			if (cancelled || counts.size === 0) return;
-			const ranked = [...articles].sort((a, b) => {
-				const ac = counts.get(`/articles/${a.slug}`) ?? 0;
-				const bc = counts.get(`/articles/${b.slug}`) ?? 0;
-				if (bc !== ac) return bc - ac;
-				/* tie-break: preserve newest-first via existing array order */
-				return articles.indexOf(a) - articles.indexOf(b);
-			});
-			/* Always fill 5 slots — articles with counter=0 fall to the bottom
-			   of the sorted list but still surface as "popular" placeholders. */
-			setPopular(ranked.slice(0, Math.min(5, ranked.length)));
-		})();
+			if (cancelled) return;
+			if (counts.size > 0) {
+				const ranked = [...articles].sort((a, b) => {
+					const ac = counts.get(`/articles/${a.slug}`) ?? 0;
+					const bc = counts.get(`/articles/${b.slug}`) ?? 0;
+					if (bc !== ac) return bc - ac;
+					/* tie-break: preserve newest-first via existing array order */
+					return articles.indexOf(a) - articles.indexOf(b);
+				});
+				/* Always fill 5 slots — articles with counter=0 fall to the bottom
+				   of the sorted list but still surface as "popular" placeholders. */
+				setPopular(ranked.slice(0, Math.min(5, ranked.length)));
+			}
+			setPopularLoading(false);
+		};
+		/* Defer to browser idle so the Supabase chunk download + RPC fetch
+		   don't compete with hydration on slow connections. */
+		const hasIdle =
+			typeof window !== "undefined" &&
+			typeof (window as Window & { requestIdleCallback?: unknown })
+				.requestIdleCallback === "function";
+		const idleId = hasIdle
+			? window.requestIdleCallback(() => run(), { timeout: 2000 })
+			: window.setTimeout(run, 200);
 		return () => {
 			cancelled = true;
+			if (hasIdle) window.cancelIdleCallback(idleId as number);
+			else window.clearTimeout(idleId as number);
 		};
 	}, [articles, allPaths]);
 
@@ -95,12 +111,11 @@ function Home() {
 				<RuleHair className="max-w-prose mx-auto" />
 				<blockquote className="max-w-prose mx-auto px-6 py-6 text-center">
 					<p className="font-serif-display italic text-xl sm:text-2xl leading-snug text-fg">
-						“We can only see a short distance ahead, but we can see plenty
-						there that needs to be done.”
+						&ldquo;{quote.text}&rdquo;
 					</p>
 					<cite className="small-caps text-xs text-fg-muted not-italic block mt-3 tracking-wider">
-						Alan M. Turing &middot; Computing Machinery and Intelligence
-						&middot; MCML
+						{quote.author}
+						{quote.source ? <> &middot; {quote.source}</> : null}
 					</cite>
 				</blockquote>
 				<RuleHair className="max-w-prose mx-auto" />
@@ -116,13 +131,15 @@ function Home() {
 						/>
 					</div>
 					{featuredTag ? <Kicker>{featuredTag}</Kicker> : null}
-					<h2 className="font-serif-display leading-[1.05] mt-3 text-3xl md:text-4xl lg:text-5xl">
+					<h2 className="group/card font-serif-display leading-[1.05] mt-3 text-3xl md:text-4xl lg:text-5xl">
 						<RubricLink
 							to="/articles/$slug"
 							params={{ slug: featured.slug }}
 							className="text-fg border-none hover:text-rubric"
 						>
-							{featured.title}
+							<span className="ink-stroke ink-stroke-ink">
+								{featured.title}
+							</span>
 						</RubricLink>
 					</h2>
 					<div className="has-drop-cap mt-5">
@@ -145,7 +162,7 @@ function Home() {
 				</div>
 
 				{/* Popular Articles — right rail (Supabase-ranked, falls back to newest) */}
-				{popular.length > 0 ? (
+				{popular.length > 0 || popularLoading ? (
 					<aside className="md:col-span-4">
 						<div className="mb-2 text-rubric flex justify-center">
 							<Fleuron variant="flourish" />
@@ -153,14 +170,38 @@ function Home() {
 						<div className="small-caps text-xs text-fg-muted tracking-[0.2em] mb-4 text-center">
 							Popular Articles
 						</div>
+						{popularLoading ? (
+							<ul
+								className="flex flex-col"
+								aria-label="Loading popular articles"
+								aria-busy="true"
+							>
+								{Array.from({ length: 5 }).map((_, i) => (
+									<li
+										key={`skeleton-${i}`}
+										className={`popular-skeleton-item ${
+											i === 0 ? "pb-4" : "py-4 border-t border-rule"
+										}`}
+									>
+										<div className="flex items-center gap-2 mb-2">
+											<span className="shimmer-bar block h-3 w-8" />
+											<span className="shimmer-bar block h-3 w-24" />
+										</div>
+										<span className="shimmer-bar block h-5 w-full mb-1.5" />
+										<span className="shimmer-bar block h-5 w-3/4 mb-2" />
+										<span className="shimmer-bar block h-3 w-32" />
+									</li>
+								))}
+							</ul>
+						) : (
 						<ul className="flex flex-col">
 							{popular.map((a, i) => (
 								<li
 									key={a.slug}
 									className={
 										i === 0
-											? "pb-4"
-											: "py-4 border-t border-rule"
+											? "group/card pb-4"
+											: "group/card py-4 border-t border-rule"
 									}
 								>
 									<div className="flex items-baseline gap-2 small-caps text-xs text-fg-muted tracking-wider mb-1">
@@ -177,9 +218,11 @@ function Home() {
 										<RubricLink
 											to="/articles/$slug"
 											params={{ slug: a.slug }}
-											className="text-fg border-none hover:text-rubric"
+											className="border-none"
 										>
-											{a.title}
+											<span className="ink-stroke ink-stroke-ink">
+												{a.title}
+											</span>
 										</RubricLink>
 									</h3>
 									<div className="mt-1">
@@ -191,6 +234,7 @@ function Home() {
 								</li>
 							))}
 						</ul>
+						)}
 					</aside>
 				) : null}
 			</section>
@@ -255,30 +299,33 @@ function Home() {
 								{others.map((a, i) => (
 									<li
 										key={a.slug}
-										className={
-											i === 0 && others.length === 2
-												? "py-4 md:border-r md:border-rule md:pr-10"
-												: "py-4"
-										}
+										className="group/card rule-draw py-4"
 									>
-										<Kicker>
-											{a.tag.slice(0, 2).join(" · ").toUpperCase() ||
-												"ESSAY"}
-										</Kicker>
-										<h3 className="font-serif-display text-2xl leading-tight mt-1">
-											<RubricLink
+										<div className="flex items-baseline gap-2 small-caps text-xs text-fg-muted tracking-wider mb-1">
+											<span
+												aria-label={`Item ${i + 1}`}
+												className="font-serif-display not-italic text-rubric text-sm tracking-normal"
+											>
+												·{toRoman(i + 1)}·
+											</span>
+											<span aria-hidden="true">·</span>
+											<Dateline date={a.createdAt} />
+										</div>
+										<h3 className="font-serif-display text-lg leading-snug">
+											<Link
 												to="/articles/$slug"
 												params={{ slug: a.slug }}
-												className="text-fg border-none hover:text-rubric"
+												className="text-fg no-underline outline-none focus-visible:text-rubric"
 											>
 												{a.title}
-											</RubricLink>
+											</Link>
 										</h3>
-										<Byline
-											className="mt-2"
-											writer={a.writer}
-											date={a.createdAt}
-										/>
+										<div className="mt-1">
+											<Kicker className="transition-colors duration-300 ease-out group-hover/card:text-rubric">
+												{a.tag.slice(0, 2).join(" · ").toUpperCase() ||
+													"ESSAY"}
+											</Kicker>
+										</div>
 									</li>
 								))}
 							</ul>

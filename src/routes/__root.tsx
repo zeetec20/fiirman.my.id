@@ -3,8 +3,7 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
+import { Suspense, lazy } from 'react'
 import { BackgroundDecoration } from '../components/background-decoration'
 import { Masthead } from '../components/masthead'
 import { Dateline, toRoman } from '../components/dateline'
@@ -16,11 +15,45 @@ import { ThemeToggle } from '../components/theme-toggle'
 import { Toaster } from '../components/ui/sonner'
 import { TooltipProvider } from '../components/ui/tooltip'
 
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+
+/**
+ * Dev-only devtools mount. `import.meta.env.DEV` is a Vite compile-time
+ * constant — in production it's literal `false`, so this ternary collapses
+ * to `null` and Rollup tree-shakes the entire dynamic-import chain. The
+ * @tanstack/react-devtools + router-devtools + query-devtools chunks are
+ * not emitted in the production bundle.
+ */
+const DevtoolsMount = import.meta.env.DEV
+  ? lazy(async () => {
+      const [
+        { TanStackDevtools },
+        { TanStackRouterDevtoolsPanel },
+        qdModule,
+      ] = await Promise.all([
+        import('@tanstack/react-devtools'),
+        import('@tanstack/react-router-devtools'),
+        import('../integrations/tanstack-query/devtools'),
+      ])
+      const TanStackQueryDevtools = qdModule.default
+      return {
+        default: () => (
+          <TanStackDevtools
+            config={{ position: 'bottom-right' }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+              TanStackQueryDevtools,
+            ]}
+          />
+        ),
+      }
+    })
+  : null
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -199,16 +232,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
         <Toaster position="bottom-right" />
 
-        <TanStackDevtools
-          config={{ position: 'bottom-right' }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
+        {DevtoolsMount ? (
+          <Suspense fallback={null}>
+            <DevtoolsMount />
+          </Suspense>
+        ) : null}
         <Scripts />
       </body>
     </html>

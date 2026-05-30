@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Browser-only Supabase client for client-side RPC calls (e.g. analytics).
@@ -11,11 +11,15 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * Returns `null` if either env is missing or if called on the server.
  * Consumers MUST null-check before calling — analytics must never break the
  * page if the env isn't configured (preview deploys, local without `.env`).
+ *
+ * **Code-split**: `@supabase/supabase-js` is loaded via dynamic import only
+ * when this function is first invoked at runtime, so the ~35-40KB library
+ * doesn't ship in the initial page bundle.
  */
 
 let cached: SupabaseClient | null | undefined;
 
-export function getSupabase(): SupabaseClient | null {
+export async function getSupabase(): Promise<SupabaseClient | null> {
 	if (cached !== undefined) return cached;
 
 	if (typeof window === "undefined") {
@@ -31,6 +35,7 @@ export function getSupabase(): SupabaseClient | null {
 		return null;
 	}
 
+	const { createClient } = await import("@supabase/supabase-js");
 	cached = createClient(url, anonKey, {
 		auth: { persistSession: false, autoRefreshToken: false },
 	});

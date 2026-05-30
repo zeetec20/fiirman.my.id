@@ -36,7 +36,18 @@ function ArticlePage() {
 	const tagLine = article.tag.join(" · ").toUpperCase();
 
 	useEffect(() => {
-		trackAnalytic(window.location.pathname);
+		/* Defer to idle — analytics is fire-and-forget, never block hydration. */
+		const path = window.location.pathname;
+		const hasIdle =
+			typeof (window as Window & { requestIdleCallback?: unknown })
+				.requestIdleCallback === "function";
+		const id = hasIdle
+			? window.requestIdleCallback(() => trackAnalytic(path), { timeout: 2000 })
+			: window.setTimeout(() => trackAnalytic(path), 200);
+		return () => {
+			if (hasIdle) window.cancelIdleCallback(id as number);
+			else window.clearTimeout(id as number);
+		};
 	}, [article.slug]);
 
 	return (

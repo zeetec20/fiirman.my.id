@@ -81,6 +81,9 @@ export function ArticleThumbnail({
 					src={resolved}
 					alt={alt}
 					loading="lazy"
+					decoding="async"
+					width={isFeature ? 720 : 1080}
+					height={isFeature ? 480 : 720}
 					className={`thumbnail-engraved transition-transform duration-300 ease-out ${imgFitClass} ${imgHoverClasses}`}
 				/>
 

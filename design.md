@@ -320,8 +320,6 @@ Generic UI primitives come from shadcn/ui via the MCP server and are stored in `
 | `Sonner` (`Toaster`) | mounted once in `__root.tsx`, voice keyed to parchment via `[data-sonner-toast*]` overrides in `styles.css` |
 | `Tooltip`, `TooltipProvider` | wraps `__root.tsx`; consumed by `<ThemeToggle>`, `<BackToTop>`, `<SocialLinks>` |
 | `Card`, `CardContent` | Spotify embed on `about.tsx`. Border-radius flattened via `rounded-sm` override; ring removed via `ring-0`. |
-| `Separator` | reserved — `RuleHair`/`RuleDouble` remain bespoke because they carry ornaments |
-| `Skeleton` | reserved — `<GithubActivity>` skeleton is SVG `<rect>`-based so the `<div>`-based primitive doesn't fit; `.gh-cell-skeleton` CSS stays |
 | `AspectRatio` | `<ArticleThumbnail>` `aspect="feature"` mode |
 
 **Rules:**

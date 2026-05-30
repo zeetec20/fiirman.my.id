@@ -269,8 +269,10 @@
 
 /* --- Classical hover: ink-stroke underline draws in from left -------------
    Apply to a span/link inside a `.group/card`. On group hover/focus,
-   a 1px rubric line slides in beneath. Pure transform — respects
-   prefers-reduced-motion. */
+   a 1px line slides in beneath. Default colour is rubric; add
+   `.ink-stroke-ink` to draw the underline in fg ink instead (useful for
+   rubric-coloured headlines where rubric-on-rubric would be invisible).
+   Pure transform — respects prefers-reduced-motion. */
 @utility ink-stroke {
   position: relative;
 }
@@ -281,11 +283,14 @@
   right: 0;
   bottom: -3px;
   height: 1px;
-  background: var(--color-rubric);
+  background: var(--ink-stroke-color, var(--color-rubric));
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 320ms ease-out;
   pointer-events: none;
+}
+.ink-stroke-ink {
+  --ink-stroke-color: var(--color-fg);
 }
 .group\/card:hover .ink-stroke::after,
 .group\/card:focus-within .ink-stroke::after,
@@ -295,6 +300,35 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .ink-stroke::after { transition: none; }
+}
+
+/* --- Classical hover: bottom rule shifts color, not width ----------------
+   Apply to a list item inside a `.group/card`. A 1px hairline sits along
+   the item's bottom edge at all times. On group hover/focus, the line's
+   color shifts from rule (muted ink) to rubric. Width never changes —
+   only the chromatic state. */
+@utility rule-draw {
+  position: relative;
+}
+.rule-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-rule);
+  transition: background-color 320ms var(--ease-paper);
+  pointer-events: none;
+}
+.group\/card:hover .rule-draw::after,
+.group\/card:focus-within .rule-draw::after,
+.rule-draw:hover::after,
+.rule-draw:focus-visible::after {
+  background: var(--color-rubric);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rule-draw::after { transition: none; }
 }
 
 @utility thumbnail-engraved {
@@ -1038,6 +1072,20 @@
   .orbit-planet-4 { display: none; }
 }
 
+/* -------- Mobile motion budget --------
+   Atmosphere animations are decorative. On small viewports they cost
+   battery and CPU more than they earn presence. Pause the heaviest
+   continuous repaints below 768px. Stars + planet motion stay (they're
+   the visible centerpiece); shimmer/candle/embers/sun-pulse stand down. */
+
+@media (max-width: 768px) {
+  .bg-candle-glow { animation: none; }
+  .ember { animation: none; opacity: 0; }
+  .portrait-shimmer::before { animation: none; opacity: 0; }
+  .orbit-sun-pulse,
+  .orbit-sun-group { animation: none; }
+}
+
 /* -------- Portrait frame — gold-leaf shimmer overlay --------
    Diagonal sheen sweeps across the portrait on a 7s loop. Pure
    transform — no layout shift. Suppressed under reduced-motion. */
@@ -1250,6 +1298,24 @@
 .gh-shimmer .gh-cell-skeleton:nth-child(7n + 5) { animation-delay: 0.32s; }
 .gh-shimmer .gh-cell-skeleton:nth-child(7n + 6) { animation-delay: 0.40s; }
 .gh-shimmer .gh-cell-skeleton:nth-child(7n)     { animation-delay: 0.48s; }
+
+/* -------- Popular rail loading shimmer --------
+   Aged-paper bars pulsing with the same gh-shimmer-sweep keyframe.
+   Used by the Popular Articles rail on `index.tsx` while the Supabase
+   `get_analytics` request is in flight. Bars sized via Tailwind width
+   utilities at the call site; this utility owns the colour + animation. */
+@utility shimmer-bar {
+  background: var(--color-bg-aged);
+  animation: gh-shimmer-sweep 1.4s ease-in-out infinite;
+}
+.popular-skeleton-item:nth-child(1) .shimmer-bar { animation-delay: 0s; }
+.popular-skeleton-item:nth-child(2) .shimmer-bar { animation-delay: 0.12s; }
+.popular-skeleton-item:nth-child(3) .shimmer-bar { animation-delay: 0.24s; }
+.popular-skeleton-item:nth-child(4) .shimmer-bar { animation-delay: 0.36s; }
+.popular-skeleton-item:nth-child(5) .shimmer-bar { animation-delay: 0.48s; }
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-bar { animation: none; opacity: 0.55; }
+}
 
 .gh-shimmer-text {
   animation: gh-shimmer-text 1.4s ease-in-out infinite;
