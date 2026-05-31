@@ -1,21 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-/**
- * giscus comment widget — loads a single iframe pointed at GitHub
- * Discussions. Only mounted on `source: "github"` articles. Reacts to
- * the site theme toggle by re-sending an `setConfig` message to giscus.
- *
- * Update REPO / REPO_ID / CATEGORY / CATEGORY_ID after enabling
- * Discussions on the target repo and copying the IDs from
- * https://giscus.app.
- */
+const REPO = "zeetec20/fiirman.my.id";
+const REPO_ID = "R_kgDOSoMitg";
+const CATEGORY = "General";
+const CATEGORY_ID = "DIC_kwDOSoMits4C-NcL";
 
-const REPO = "zeetec20/firmanlestari";
-const REPO_ID = "REPLACE_WITH_REPO_ID";
-const CATEGORY = "Announcements";
-const CATEGORY_ID = "REPLACE_WITH_CATEGORY_ID";
+type GiscusTheme = "light" | "dark";
 
-function resolveTheme(): "light" | "dark" {
+function resolveTheme(): GiscusTheme {
 	if (typeof document === "undefined") return "light";
 	const attr = document.documentElement.getAttribute("data-theme");
 	if (attr === "dark") return "dark";
@@ -29,9 +21,9 @@ function clearChildren(node: HTMLElement) {
 	while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-export function Comments({ term }: { term: string }) {
+export function Comments() {
 	const ref = useRef<HTMLDivElement | null>(null);
-	const [theme, setTheme] = useState<"light" | "dark">("light");
+	const [theme, setTheme] = useState<GiscusTheme>("light");
 
 	useEffect(() => {
 		setTheme(resolveTheme());
@@ -61,8 +53,7 @@ export function Comments({ term }: { term: string }) {
 		script.setAttribute("data-repo-id", REPO_ID);
 		script.setAttribute("data-category", CATEGORY);
 		script.setAttribute("data-category-id", CATEGORY_ID);
-		script.setAttribute("data-mapping", "specific");
-		script.setAttribute("data-term", term);
+		script.setAttribute("data-mapping", "pathname");
 		script.setAttribute("data-strict", "0");
 		script.setAttribute("data-reactions-enabled", "1");
 		script.setAttribute("data-emit-metadata", "0");
@@ -71,7 +62,10 @@ export function Comments({ term }: { term: string }) {
 		script.setAttribute("data-lang", "en");
 		script.setAttribute("data-loading", "lazy");
 		host.appendChild(script);
-	}, [term]);
+		/* theme intentionally omitted from deps — script is mounted once;
+		   theme changes flow through the postMessage effect below. */
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		const iframe = document.querySelector<HTMLIFrameElement>(

@@ -84,7 +84,7 @@ function ArticlePage() {
 						<h2 className="small-caps text-sm text-fg-muted mb-6">
 							Reader Comments
 						</h2>
-						<Comments term={article.slug} />
+						<Comments />
 					</>
 				) : (
 					<>
