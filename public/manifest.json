@@ -1,11 +1,15 @@
 {
   "short_name": "Firman Lestari",
   "name": "Firman Lestari — Folios & Marginalia",
+  "description": "Curious person who became a software engineer, with interests far beyond tech and always exploring nerdy ideas and random deep dives.",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "favicon.svg",
       "type": "image/svg+xml",
-      "sizes": "any"
+      "sizes": "any",
+      "purpose": "any"
     },
     {
       "src": "favicon.ico",
@@ -15,16 +19,20 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "theme_color": "#8a2d1d",
   "background_color": "#f0eadd"
 }

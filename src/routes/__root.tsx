@@ -61,23 +61,56 @@ interface MyRouterContext {
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);root.setAttribute('data-theme',mode);root.style.colorScheme=resolved;}catch(e){}})();`
 
+const SITE_URL = 'https://fiirman.my.id'
+const SITE_NAME = 'Firman Lestari'
+const SITE_TITLE = 'Firman Lestari — Folios & Marginalia'
+const SITE_DESCRIPTION =
+  'Curious person who became a software engineer, with interests far beyond tech and always exploring nerdy ideas and random deep dives.'
+const SITE_AUTHOR = 'Firman Lestari'
+const OG_IMAGE = `${SITE_URL}/logo512.png`
+
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
+      { charSet: 'utf-8' },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        content: 'width=device-width, initial-scale=1, viewport-fit=cover',
       },
-      {
-        title: 'Firman Lestari',
-      },
-      {
-        name: 'description',
-        content: 'Notes, articles, and other ephemera by Firman Lestari.',
-      },
+      { title: SITE_TITLE },
+      { name: 'description', content: SITE_DESCRIPTION },
+      { name: 'author', content: SITE_AUTHOR },
+      { name: 'robots', content: 'index, follow, max-image-preview:large' },
+      { name: 'theme-color', content: '#8a2d1d' },
+      { name: 'color-scheme', content: 'light dark' },
+      { name: 'format-detection', content: 'telephone=no' },
+
+      /* Open Graph */
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: SITE_NAME },
+      { property: 'og:title', content: SITE_TITLE },
+      { property: 'og:description', content: SITE_DESCRIPTION },
+      { property: 'og:url', content: SITE_URL },
+      { property: 'og:locale', content: 'en_US' },
+      { property: 'og:image', content: OG_IMAGE },
+      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:width', content: '512' },
+      { property: 'og:image:height', content: '512' },
+      { property: 'og:image:alt', content: `${SITE_NAME} — site emblem` },
+
+      /* Twitter Card */
+      { name: 'twitter:card', content: 'summary' },
+      { name: 'twitter:title', content: SITE_TITLE },
+      { name: 'twitter:description', content: SITE_DESCRIPTION },
+      { name: 'twitter:image', content: OG_IMAGE },
+      { name: 'twitter:image:alt', content: `${SITE_NAME} — site emblem` },
+
+      /* Apple / Windows tile */
+      { name: 'apple-mobile-web-app-title', content: SITE_NAME },
+      { name: 'application-name', content: SITE_NAME },
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+      { name: 'msapplication-TileColor', content: '#8a2d1d' },
     ],
     links: [
       {
@@ -101,30 +134,25 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         href: '/fonts/unifrakturcook-latin-700-normal.woff2',
         crossOrigin: 'anonymous',
       },
-      {
-        rel: 'icon',
-        type: 'image/svg+xml',
-        href: '/favicon.svg',
-      },
+      { rel: 'canonical', href: SITE_URL },
+      /* ?v=2 cache-bust — browsers cache favicons aggressively; bump
+         this when public/favicon.* assets change. */
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg?v=2' },
       {
         rel: 'icon',
         type: 'image/x-icon',
-        href: '/favicon.ico',
-        sizes: '32x32',
+        href: '/favicon.ico?v=2',
+        sizes: '16x16 32x32 48x48',
       },
+      { rel: 'shortcut icon', href: '/favicon.ico?v=2' },
       {
         rel: 'apple-touch-icon',
-        href: '/logo192.png',
-        sizes: '192x192',
+        href: '/apple-touch-icon.png?v=2',
+        sizes: '180x180',
       },
-      {
-        rel: 'manifest',
-        href: '/manifest.json',
-      },
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
+      { rel: 'mask-icon', href: '/favicon.svg?v=2', color: '#8a2d1d' },
+      { rel: 'manifest', href: '/manifest.json' },
+      { rel: 'stylesheet', href: appCss },
     ],
   }),
   shellComponent: RootDocument,

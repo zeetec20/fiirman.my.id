@@ -12,6 +12,11 @@ export function ArticleProgress() {
 	const fillRef = useRef<HTMLSpanElement | null>(null);
 	const tipRef = useRef<HTMLDivElement | null>(null);
 	const labelRef = useRef<HTMLSpanElement | null>(null);
+	const tipWidthRef = useRef<number>(0);
+
+	useEffect(() => {
+		if (tipRef.current) tipWidthRef.current = tipRef.current.offsetWidth;
+	}, []);
 
 	useEffect(() => {
 		let ticking = false;
@@ -23,13 +28,12 @@ export function ArticleProgress() {
 				fillRef.current.style.transform = `scaleX(${ratio})`;
 			}
 			if (tipRef.current) {
-				const w = window.innerWidth;
-				// Keep the marker inside the viewport at both ends.
-				const tipWidth = tipRef.current.offsetWidth;
-				const travel = Math.max(0, w - tipWidth - 12);
-				tipRef.current.style.transform = `translate3d(${Math.round(
-					ratio * travel,
-				)}px, 0, 0)`;
+				/* Position via calc() against 100vw so we don't read
+				   window.innerWidth (forced layout) every frame. Tip width
+				   is cached once on mount; 12px is the same right-edge gap
+				   from the original implementation. */
+				const reserve = tipWidthRef.current + 12;
+				tipRef.current.style.transform = `translate3d(calc(${ratio} * (100vw - ${reserve}px)), 0, 0)`;
 			}
 			if (labelRef.current) {
 				const pct = Math.round(ratio * 100);
@@ -44,10 +48,13 @@ export function ArticleProgress() {
 		};
 		update();
 		window.addEventListener("scroll", onScroll, { passive: true });
-		window.addEventListener("resize", update);
+		/* No resize listener — Chrome mobile fires a resize storm during
+		   URL-bar collapse/expand, and each tick forces extra layout reads
+		   outside the rAF gate. Scroll already fires throughout URL-bar
+		   transitions (scrollTop changes as viewport grows/shrinks), so
+		   the rAF path already covers viewport changes. */
 		return () => {
 			window.removeEventListener("scroll", onScroll);
-			window.removeEventListener("resize", update);
 		};
 	}, []);
 
