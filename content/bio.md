@@ -1,10 +1,7 @@
 # About
 
-Firman Lestari — software engineer. Writes about Git, version control, and the
-quiet craft of moving bits from one place to another without losing them.
+Four years at the trade. JavaScript and TypeScript across both ends of the wire, now mostly grounded in React and the modern frameworks built around it Vite and Next.js.
 
-This page is a placeholder. A proper bio will be transcribed from LinkedIn
-([linkedin.com/in/firmanlestari](https://www.linkedin.com/in/firmanlestari))
-once the author gets around to it.
+On the backend, newer ground tends to win the attention: Strapi, Bun, Hono. The occasional excursion into Rust. Unopinionated frameworks suit better than rigid ones the freedom to reach for the right library for the right shape of work matters more than convention.
 
-In the meantime, see the **[articles](/articles)** archive.
+What draws the work forward: scalable, maintainable systems; a better developer experience for the next hands on the keys; and software that earns its place by what it lets people do.

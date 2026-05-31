@@ -139,6 +139,7 @@ export function GithubActivity({ className = "" }: { className?: string }) {
 
 	return (
 		<section className={className} aria-label="GitHub contributions">
+			<div className="gh-scroll">
 			<svg
 				className="gh-grid"
 				viewBox={`0 0 ${width} ${height}`}
@@ -191,6 +192,7 @@ export function GithubActivity({ className = "" }: { className?: string }) {
 					}),
 				)}
 			</svg>
+			</div>
 
 			<div className="flex items-baseline justify-between mt-3 small-caps text-xs text-fg-muted">
 				<span>
@@ -211,6 +213,7 @@ function ActivitySkeleton({ className = "" }: { className?: string }) {
 			aria-label="Loading GitHub contributions"
 			aria-busy="true"
 		>
+			<div className="gh-scroll">
 			<svg
 				className="gh-grid gh-shimmer"
 				viewBox={`0 0 ${width} ${height}`}
@@ -249,6 +252,7 @@ function ActivitySkeleton({ className = "" }: { className?: string }) {
 					}),
 				)}
 			</svg>
+			</div>
 
 			<div className="flex items-baseline justify-between mt-3 small-caps text-xs text-fg-muted">
 				<span className="gh-shimmer-text">Counting the keystrokes…</span>
