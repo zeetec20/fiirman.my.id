@@ -2,6 +2,7 @@ import { GlyphBookClosed, GlyphBookOpen } from "./glyphs";
 import { thumbnailUrl } from "../lib/articles";
 import { hashSeed, pickSubset } from "../lib/random";
 import { AspectRatio } from "./ui/aspect-ratio";
+import { CornerCarving } from "./corner-carving";
 
 const DUST_POOL = 5;
 const SCRATCH_POOL = 5;
@@ -37,6 +38,7 @@ export function ArticleThumbnail({
 	seed,
 	aspect = "natural",
 	priority = false,
+	carved = false,
 }: {
 	src?: string | null;
 	alt: string;
@@ -58,6 +60,12 @@ export function ArticleThumbnail({
 	 * pulls the image in the first request wave instead of deferring.
 	 */
 	priority?: boolean;
+	/**
+	 * Render four-corner manuscript carving overlays. Reserved for the
+	 * article-detail hero — list/card thumbnails stay clean so the
+	 * detail page reads as a distinct destination.
+	 */
+	carved?: boolean;
 }) {
 	const resolved = thumbnailUrl(src);
 	const isPlaceholder =
@@ -141,9 +149,19 @@ export function ArticleThumbnail({
 			</div>
 	);
 
+	/* Carving sits as a sibling of the frame, inside a relative wrapper,
+	   so its negative-offset corner + edge ornaments overflow outward
+	   without being clipped by .thumbnail-frame's overflow:hidden. */
+	const framed = (
+		<div className="relative">
+			{isFeature ? <AspectRatio ratio={3 / 2}>{frame}</AspectRatio> : frame}
+			{carved ? <CornerCarving /> : null}
+		</div>
+	);
+
 	return (
 		<figure className={className}>
-			{isFeature ? <AspectRatio ratio={3 / 2}>{frame}</AspectRatio> : frame}
+			{framed}
 			{showCaption ? (
 				<figcaption className="small-caps text-xs text-fg-muted mt-2">
 					{caption ?? "PHOTO · PLACEHOLDER"}

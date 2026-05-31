@@ -1,0 +1,23 @@
+[
+  {
+    "date": "2026-06-01",
+    "macrostructure": "component",
+    "theme": "design.md",
+    "enrichment": "none",
+    "brief": "thumbnail carving rebuilt as border-overhang ornaments (PortraitCorner-style 4 corners + Fleuron mid-edge marks)"
+  },
+  {
+    "date": "2026-06-01",
+    "macrostructure": "component",
+    "theme": "design.md",
+    "enrichment": "none",
+    "brief": "carved prop on ArticleThumbnail · article-detail hero only · heavier corner ornament"
+  },
+  {
+    "date": "2026-06-01",
+    "macrostructure": "component",
+    "theme": "design.md",
+    "enrichment": "none",
+    "brief": "thumbnail corner carvings + body image frame"
+  }
+]

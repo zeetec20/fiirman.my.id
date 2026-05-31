@@ -7,66 +7,45 @@ writer: zeetec20
 tag: [GitHub, Markdown]
 source: github
 ---
+
 # **How I Make my GitHub Profile Look Cool With Markdown**
 
 <div align="middle">
     <img class="img-thumbnail radius" src="/article/how-i-make-my-github-profile-look-cool-with-markdown/image1.jpg" alt="Sample Cool GitHub Profile" style="width: 95%;">
 </div>
 
-<br>
-
-Is it my first article on this site. I hope you can be helped with my article. And for the first time I want to write about Github profile because yesterday I 
+Is it my first article on this site. I hope you can be helped with my article. And for the first time I want to write about Github profile because yesterday I
 try to change my GitHub profile and is it make my GitHub profile look so cool, and how make it so easy. For example, I will use my second GitHub account.
 
-<br>
-<br>
-
-## **1. Create a repository with a name same as GitHub username**
+## 1. Create a repository with a name same as GitHub username
 
 <div align="middle">
     <img class="img-thumbnail radius" src="/article/how-i-make-my-github-profile-look-cool-with-markdown/image2.jpg" alt="Sample Cool GitHub Profile" style="width: 95%;">
 </div>
 
-<br>
-
 Create your repository, but make sure the name repository same as username github, and don't forget check **Add a README** file. The readme on repository is the file what we setting for github profile, if all done click create the repository.
 
-<br>
-<br>
-
-## **2. Edit README on your repository  as you like**
+## **2. Edit README on your repository as you like**
 
 <div align="middle">
-    <img class="img-thumbnail radius" src="/article/how-i-make-my-github-profile-look-cool-with-markdown/image3.jpg" alt="Sample Cool GitHub Profile" style="width: 95%;">jhyuyufyfuy
+    <img class="img-thumbnail radius" src="/article/how-i-make-my-github-profile-look-cool-with-markdown/image3.jpg" alt="Sample Cool GitHub Profile" style="width: 95%;">
 </div>
-
-<br>
 
 First time create a repository you will get this. Now you can start editing your readme, for creating a cool github profile you just need this file. README is file markdown, what is markdown ? Markdown is a lightweight markup language, from markdown can processed to html, so can I write html on markdown ? Yes you can, but markdown has their own method and format for writing. Back to editing markdown, you will see an example on your readme, try removing the comment and just leave the first sentence and list with emoticon. After that you can commit your changes, and go to your github profile.
 
-<br>
-<br>
-
-## **3. Look at it! you have cool GitHub profile**
+## 3. Look at it! you have cool GitHub profile
 
 <div align="middle">
     <img class="img-thumbnail radius" src="/article/how-i-make-my-github-profile-look-cool-with-markdown/image4.jpg" alt="Sample Cool GitHub Profile" style="width: 95%;">
 </div>
 
-<br>
-
 It's cool right ? Yes, first time using this feature I feel it to. But is not enough, your github profile is still too boring, you can add images, GIFs, or badges to describe yourself and make your github profile cool. If confused you can see my mine readme or if you are too lazy to make it, you can duplicate my mine.
-
-<br>
-<br>
 
 ### **README.md**
 
 It is README.md I use
 <br>
 [Go to Repository](https://github.com/zeetec20/zeetec20)
-
-<br>
 
 ```markdown
 <div align="center">
@@ -94,14 +73,14 @@ It is README.md I use
 
 <br>
 
-**Languages and Tools:**  
+**Languages and Tools:**
 
 <code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/flutter/flutter.png"></code>
 <code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/dart/dart.png"></code>
 <code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/android/android.png"></code>
 <code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/javascript/javascript.png"></code>
 <code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/react/react.png"></code>
-<code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png"></code>    
+<code><img height="20" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png"></code>
 
 <br>
 

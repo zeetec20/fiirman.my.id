@@ -46,6 +46,10 @@ const processor = unified()
 	.use(remarkGfm)
 	.use(remarkRehype, { allowDangerousHtml: true })
 	.use(rehypeRaw)
+	/* rehypeCopyButton MUST run before shiki — it reads the language
+	   from <code class="language-xx">, which shiki strips during
+	   tokenization. */
+	.use(rehypeCopyButton)
 	.use(rehypeShikiFromHighlighter, highlighter, {
 		themes: {
 			light: "min-light",
@@ -54,7 +58,6 @@ const processor = unified()
 		defaultColor: false,
 		fallbackLanguage: "text",
 	})
-	.use(rehypeCopyButton)
 	.use(rehypeStringify, { allowDangerousHtml: true });
 
 export async function markdownToHtml(markdown: string): Promise<string> {

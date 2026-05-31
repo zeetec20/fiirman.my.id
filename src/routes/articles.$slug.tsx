@@ -69,7 +69,7 @@ function ArticlePage() {
 			</header>
 
 			<div className="mt-10 max-w-3xl mx-auto">
-				<ArticleThumbnail src={article.thumbnail} alt={article.title} />
+				<ArticleThumbnail src={article.thumbnail} alt={article.title} carved />
 			</div>
 
 			<RuleDouble className="my-10 max-w-prose mx-auto" />

@@ -10,16 +10,11 @@ source: github
 
 Git stash is one of features from Git Version Control, you can use this feature for saving your work temporally on your device without committing. Sometimes programmers need to switch tasks immediately even if the changes don’t ready to commit, and the sad truth is git can’t provide checkout to another branch or create a new branch without having previous changes when your current branch still has changed, so it’s the time you need to use git stash.
 
-<br/>
 <div align="middle">
     <img class="img-thumbnail radius" src="/article/whats-git-stash/image1.png" alt="Life Cycle Files" style="width: 95%;">
 </div>
-<br/>
 
 Before you stash changes in your project, you need to know the life cycle of status files in git. So I will explain the meaning of life cycle status files, in git files have few statuses (untracked, unmodified, modified, staged) when you create a new file it will be stated untracked and after you complete the content then need to commit the file, you need to run command **`git add <your file>`**, it is called state staged. So staged is a condition before commit, then after all files are ready on staged you can commit all staged files. After the process before, every file will be stated unmodified and when you change it again the file will be stated as modified. And what after modified? Absolutely the life cycle will continue to repeat.
-
-<br/>
-<br/>
 
 ### **Stash Files**
 
@@ -28,7 +23,6 @@ Back to the stash file, when files have many statuses absolutely git stash also 
 <div align="middle">
     <img class="img-thumbnail radius" src="/article/whats-git-stash/image2.png" alt="Option of Git Stash" style="width: 95%;">
 </div>
-<br/>
 
 - **Stash Modified**
   The basic stash is only stashed files modified not including untracked and Ignored files, for do this you need to run the command **`git stash`** it will reset your changes and back your files to before you change.
@@ -40,9 +34,6 @@ Back to the stash file, when files have many statuses absolutely git stash also 
 
 And I have some tips about stashing files, For your information you can add a message when you do stash files, for a sample **`git stash save “some descriptive text” -u`**, It will help you to find out the important stash from your list.
 
-<br/>
-<br/>
-
 ### **Apply Stash**
 
 So after we stash files, how do we apply again the stash? First, we need to check the list of stash and pick the stash which you need to apply for your branch.
@@ -53,7 +44,6 @@ So after we stash files, how do we apply again the stash? First, we need to chec
    <div align="middle">
        <img class="img-thumbnail radius" src="/article/whats-git-stash/image3.png" alt="List of Stash" style="width: 95%;">
    </div>
-   <br/>
 
 2. **Apply Stash**
 

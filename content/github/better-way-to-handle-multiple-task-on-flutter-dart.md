@@ -8,11 +8,9 @@ tag: [Flutter, Dart, Mobile App, Concurrency]
 source: github
 ---
 
-# **Better way to handle multiple task on Flutter / Dart**
-
 <br/>
 
-[Concurrency](https://en.wikipedia.org/wiki/Concurrency_(computer_science)), in this article we will discuss about this topic, and it’s key to run multiple task in better way. Then what is concurrency, in computer science concurrency is a the abillity to dealing with lots or multiple things at once. Dart is able you to use concurrency, automaticlly you can also use on Flutter. By the way before you read all this article you must understanding about fundamental dart, future function. 
+[Concurrency](<https://en.wikipedia.org/wiki/Concurrency_(computer_science)>), in this article we will discuss about this topic, and it’s key to run multiple task in better way. Then what is concurrency, in computer science concurrency is a the abillity to dealing with lots or multiple things at once. Dart is able you to use concurrency, automaticlly you can also use on Flutter. By the way before you read all this article you must understanding about fundamental dart, future function.
 
 If we talk about concurrency, I have some reason why you must implement on your application:
 
@@ -22,8 +20,6 @@ If we talk about concurrency, I have some reason why you must implement on your 
 4. Less code is a less space used
 
 Okay after you understanding about concurrency lets enter code section, I will code in one file, cause we will just need little code to try concurrency, for the task we will use API for the sample. And on the code you will meet 3 function with name concurrency, mediocre, once these function we will describe and comparing when we use concurrency and when not use it, then we still have 3 other function with first name getUsers these functions is have a role for the task.
-
-<br/>
 
 This the code what we talked about earlier, you can check it. And for make easier to explaining I will split the code.
 
@@ -94,7 +90,6 @@ void main(List<String> args) async {
   await concurrency();
 }
 ```
-<br/>
 
 By the way if you want try the code you must installed dart, and make some file with name main.dart then put the code into the new file. After this just run the file like below on your terminal.
 
@@ -102,9 +97,6 @@ By the way if you want try the code you must installed dart, and make some file 
 dart main.dart
 
 ```
-
-<br/>
-<br/>
 
 ### **Concurrency**
 
@@ -128,9 +120,6 @@ Future concurrency() async {
 
 ```
 
-<br/>
-<br/>
-
 ### **Mediocre**
 
 Function mediocre, this is a usual method to execute multiple task in there I just call in sequence.
@@ -150,9 +139,6 @@ Future mediocre() async {
 }
 ```
 
-<br/>
-<br/>
-
 ### **Once**
 
 Function once is I writing for comparing speed execution with other function
@@ -170,9 +156,6 @@ Future once() async {
 }
 ```
 
-<br/>
-<br/>
-
 ### **Comparing speed execution**
 
 After we try to execute all functions concurrency, mediocre and once, we got this. You can see on below we have some image to describe perform concurrency when measured by time. In function concurrency we run 3 task but time execute is not very different with function once which them run 1 task.
@@ -180,7 +163,5 @@ After we try to execute all functions concurrency, mediocre and once, we got thi
 <div align="middle">
     <img class="img-thumbnail radius" src="/article/better-way-to-handle-multiple-task-on-flutter-dart/comparing.png" alt="Comparing Result Execute" style="width: 95%;">
 </div>
-
-<br/>
 
 Learn concurrency is important if you aware with your application performance, you can see is not hard to implement on your application even your condition is on mid development cause the code so simple you just need to call **Future.wait** and put in the all task on parameter. In this case we use the API for the task but you can adapt it to your application needs.

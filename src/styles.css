@@ -462,6 +462,62 @@
   }
 }
 
+/* Manuscript thumbnail carvings — corner curls + mid-edge fleurons,
+   placed AROUND the frame edges (not over the photo) so the thumbnail
+   reads as a mounted plate with binder ornament. Modeled on
+   PortraitFrame's PortraitCorner + Fleuron marks.
+   component: thumbnail-carving · genre: editorial · theme: design.md */
+
+.thumbnail-carving {
+  position: absolute;
+  pointer-events: none;
+  color: var(--color-rubric);
+  line-height: 0;
+  z-index: 1;
+}
+
+/* Corners — small L-bracket + diamond + dot, overhanging each corner */
+.thumbnail-carving-corner { width: 28px; height: 28px; }
+.thumbnail-carving-tl { top: -10px; left: -10px; transform: rotate(0deg); }
+.thumbnail-carving-tr { top: -10px; right: -10px; transform: rotate(90deg); }
+.thumbnail-carving-br { bottom: -10px; right: -10px; transform: rotate(180deg); }
+.thumbnail-carving-bl { bottom: -10px; left: -10px; transform: rotate(-90deg); }
+
+/* Mid-edge fleurons — one per side, sitting on the rule line */
+.thumbnail-carving-edge { width: 36px; height: 12px; }
+.thumbnail-carving-top {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.thumbnail-carving-bottom {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.thumbnail-carving-left {
+  top: 50%;
+  left: -18px;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center;
+}
+.thumbnail-carving-right {
+  top: 50%;
+  right: -18px;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center;
+}
+
+/* Dark mode — keep rubric on parchment-ink ground, slightly brighter */
+:root[data-theme="dark"] .thumbnail-carving {
+  filter: drop-shadow(0 0 0.6px oklch(from var(--color-rubric) l c h / 0.5));
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] .thumbnail-carving {
+    filter: drop-shadow(0 0 0.6px oklch(from var(--color-rubric) l c h / 0.5));
+  }
+}
+
 /* Lock indicator pinned to the bottom-right of an interactive thumbnail. */
 .lock-indicator {
   position: absolute;
@@ -520,10 +576,6 @@
   line-height: var(--text-3xl--line-height);
   font-weight: 500;
   margin-top: var(--spacing-22);
-  padding-top: 1rem;
-  border-top: 2px solid var(--color-rule-heavy);
-  border-bottom: 1px solid var(--color-rule);
-  padding-bottom: 0.25rem;
 }
 
 .prose-article h3 {
@@ -532,8 +584,6 @@
   line-height: var(--text-2xl--line-height);
   font-weight: 500;
   margin-top: 3rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--color-rule);
 }
 
 .prose-article p { margin: 1rem 0; }
@@ -601,8 +651,26 @@
   max-width: 100%;
   height: auto;
   margin: 1.5rem auto;
+  padding: 6px;
+  /* Border + mat both reference theme-aware tokens — light mode shows
+     a warm rule on parchment mat; dark mode shifts both colors so the
+     image visibly integrates with the page ground in either theme. */
   border: 1px solid var(--color-rule);
+  background: var(--color-bg-aged);
   filter: sepia(0.15) contrast(1.05);
+  transition: border-color 200ms var(--ease-paper),
+              background-color 200ms var(--ease-paper);
+}
+
+/* Dark-mode tuning — sepia warms too aggressively against the cool
+   ground; pull it back. */
+:root[data-theme="dark"] .prose-article img {
+  filter: sepia(0.05) contrast(1.1);
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] .prose-article img {
+    filter: sepia(0.05) contrast(1.1);
+  }
 }
 
 .prose-article ul,
@@ -1186,9 +1254,59 @@
   }
 }
 
-/* -------- Copy button on article code blocks -------- */
+/* -------- Code block chrome: language title bar + copy button -------- */
 
-.code-block { position: relative; }
+.code-block {
+  margin: 1.5rem 0;
+}
+
+/* Title sits ABOVE the script window. Hairline border, no fill, lowercase
+   small-caps — reads as a folio label, not a tab. */
+.code-block-title {
+  display: inline-block;
+  margin: 0 0 -1px 0;
+  padding: 3px 10px;
+  font-family: var(--font-smallcaps);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+  color: var(--color-fg-muted);
+  background: var(--color-bg-aged);
+  border: 1px solid var(--color-rule);
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  text-transform: lowercase;
+  user-select: none;
+}
+
+.code-block-body {
+  position: relative;
+}
+
+/* Wrapper owns the block margin; collapse pre's own margin so we don't
+   double-space when nested inside .code-block. */
+.code-block .code-block-body pre {
+  margin: 0;
+}
+
+/* When a title is present the pre's top-left corner butts against it. */
+.code-block:has(.code-block-title) .code-block-body pre {
+  border-top-left-radius: 0;
+}
+
+/* Shell prompt — visual `$` on each non-empty line for bash/zsh/sh/shell.
+   ::before content is excluded from innerText/textContent + selection, so
+   the copy handler never picks it up. user-select: none is belt + braces. */
+.code-block[data-lang="bash"] pre .line:not(:empty)::before,
+.code-block[data-lang="sh"] pre .line:not(:empty)::before,
+.code-block[data-lang="zsh"] pre .line:not(:empty)::before,
+.code-block[data-lang="shell"] pre .line:not(:empty)::before,
+.code-block[data-lang="console"] pre .line:not(:empty)::before {
+  content: "$ ";
+  color: var(--color-fg-muted);
+  user-select: none;
+  -webkit-user-select: none;
+}
 
 .copy-code {
   position: absolute;
