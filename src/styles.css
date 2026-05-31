@@ -1063,10 +1063,10 @@
      mobile GPUs — invalidated every frame by SMIL planet motion and on
      every URL-bar resize. Drop it. */
   .bg-orbits { filter: none; }
-  /* SMIL <animateMotion> cannot be paused via CSS — hide the planets
-     entirely on mobile. Orbit rings + sun stay as static manuscript
-     geometry; the motion budget already pauses sun-pulse + sun-group. */
-  .orbit-planet { display: none; }
+  /* Planets stay visible on mobile but are positioned statically by
+     background-decoration.tsx (no SMIL animateMotion). Drop the
+     will-change layer-promotion — nothing is moving. */
+  .orbit-planet { will-change: auto; }
 }
 
 /* -------- Portrait frame — gold-leaf shimmer overlay --------

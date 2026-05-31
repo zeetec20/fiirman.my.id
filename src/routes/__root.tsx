@@ -63,7 +63,7 @@ const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getIte
 
 const SITE_URL = 'https://fiirman.my.id'
 const SITE_NAME = 'Firman Lestari'
-const SITE_TITLE = 'Firman Lestari — Folios & Marginalia'
+const SITE_TITLE = 'Firman Lestari'
 const SITE_DESCRIPTION =
   'Curious person who became a software engineer, with interests far beyond tech and always exploring nerdy ideas and random deep dives.'
 const SITE_AUTHOR = 'Firman Lestari'
@@ -135,22 +135,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         crossOrigin: 'anonymous',
       },
       { rel: 'canonical', href: SITE_URL },
-      /* ?v=2 cache-bust — browsers cache favicons aggressively; bump
+      /* ?v=3 cache-bust — browsers cache favicons aggressively; bump
          this when public/favicon.* assets change. */
-      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg?v=2' },
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg?v=3' },
       {
         rel: 'icon',
         type: 'image/x-icon',
-        href: '/favicon.ico?v=2',
+        href: '/favicon.ico?v=3',
         sizes: '16x16 32x32 48x48',
       },
-      { rel: 'shortcut icon', href: '/favicon.ico?v=2' },
+      { rel: 'shortcut icon', href: '/favicon.ico?v=3' },
       {
         rel: 'apple-touch-icon',
-        href: '/apple-touch-icon.png?v=2',
+        href: '/apple-touch-icon.png?v=3',
         sizes: '180x180',
       },
-      { rel: 'mask-icon', href: '/favicon.svg?v=2', color: '#8a2d1d' },
+      { rel: 'mask-icon', href: '/favicon.svg?v=3', color: '#8a2d1d' },
       { rel: 'manifest', href: '/manifest.json' },
       { rel: 'stylesheet', href: appCss },
     ],

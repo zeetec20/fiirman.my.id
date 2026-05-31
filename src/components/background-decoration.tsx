@@ -7,7 +7,14 @@
  * doesn't read as a uniform dot grid. Planets are differentiated by body —
  * Mercury (bare disc), Earth (disc + small moon), Saturn (disc + tilted
  * ring), Jupiter (banded disc). Sun is a rayed sunburst with halo ring.
+ *
+ * Mobile (≤768px): SMIL <animateMotion> is skipped — it can't be paused
+ * via CSS and was costing the whole page during URL-bar scroll resizes.
+ * Planets get placed at fixed ellipse angles instead so they remain
+ * visible as static manuscript geometry.
  */
+
+import { useEffect, useState } from "react";
 
 const EMBER_COUNT = 6;
 
@@ -196,6 +203,32 @@ function PlanetJupiter() {
 const PLANETS = [PlanetMercury, PlanetEarth, PlanetSaturn, PlanetJupiter] as const;
 const PLANET_PERIODS = [58, 96, 152, 218] as const;
 const PLANET_BEGINS = [-8, -34, -71, -52] as const;
+/* Static angles (degrees) for the mobile branch — spread around the
+   ellipses so the four planets don't stack at the same clock-position. */
+const PLANET_STATIC_ANGLES = [50, 145, 250, 320] as const;
+
+function ellipsePoint(
+	cx: number,
+	cy: number,
+	rx: number,
+	ry: number,
+	angleDeg: number,
+): { x: number; y: number } {
+	const a = (angleDeg * Math.PI) / 180;
+	return { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a) };
+}
+
+function useIsMobile(query = "(max-width: 768px)"): boolean {
+	const [is, setIs] = useState(false);
+	useEffect(() => {
+		const mq = window.matchMedia(query);
+		const handler = () => setIs(mq.matches);
+		handler();
+		mq.addEventListener("change", handler);
+		return () => mq.removeEventListener("change", handler);
+	}, [query]);
+	return is;
+}
 
 /** SVG path d-string for a full ellipse — used by both the visible
  *  orbit ring and the planet's animateMotion path reference. */
@@ -203,6 +236,7 @@ const ellipsePathD = (cx: number, cy: number, rx: number, ry: number) =>
 	`M ${cx - rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx + rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx - rx} ${cy} Z`;
 
 export function BackgroundDecoration() {
+	const isMobile = useIsMobile();
 	return (
 		<>
 			<svg
@@ -274,22 +308,47 @@ export function BackgroundDecoration() {
 
 					<Sun />
 
-					{PLANETS.map((Planet, i) => (
-						<g
-							key={`planet-g-${i}`}
-							className={`orbit-planet orbit-planet-${i + 1}`}
-						>
-							<Planet />
-							<animateMotion
-								dur={`${PLANET_PERIODS[i]}s`}
-								repeatCount="indefinite"
-								begin={`${PLANET_BEGINS[i]}s`}
-								rotate="0"
+					{PLANETS.map((Planet, i) => {
+						/* Mobile: drop SMIL <animateMotion> entirely (can't be
+						   CSS-paused; was thrashing on URL-bar resize). Place
+						   the planet at a fixed point on its ellipse so the
+						   diagram still reads. Desktop: original moving form. */
+						if (isMobile) {
+							const o = ORBITS[i];
+							const { x, y } = ellipsePoint(
+								o.cx,
+								o.cy,
+								o.rx,
+								o.ry,
+								PLANET_STATIC_ANGLES[i],
+							);
+							return (
+								<g
+									key={`planet-g-${i}`}
+									className={`orbit-planet orbit-planet-${i + 1}`}
+									transform={`translate(${x} ${y})`}
+								>
+									<Planet />
+								</g>
+							);
+						}
+						return (
+							<g
+								key={`planet-g-${i}`}
+								className={`orbit-planet orbit-planet-${i + 1}`}
 							>
-								<mpath href={`#orbit-path-${i}`} />
-							</animateMotion>
-						</g>
-					))}
+								<Planet />
+								<animateMotion
+									dur={`${PLANET_PERIODS[i]}s`}
+									repeatCount="indefinite"
+									begin={`${PLANET_BEGINS[i]}s`}
+									rotate="0"
+								>
+									<mpath href={`#orbit-path-${i}`} />
+								</animateMotion>
+							</g>
+						);
+					})}
 				</g>
 			</svg>
 
