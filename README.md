@@ -1,4 +1,4 @@
-# Firman Lestari — Folios & Marginalia
+# Firman Lestari
 
 Personal portfolio + writing notebook of Firman Lestari (`zeetec20`). Articles sourced from a GitHub repo and Medium RSS, rendered at build/SSR. Deployed on Cloudflare Workers via TanStack Start.
 
