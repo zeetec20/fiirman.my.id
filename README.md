@@ -1,217 +1,128 @@
-Welcome to your new TanStack Start app! 
+# Firman Lestari — Folios & Marginalia
 
-# Getting Started
+Personal portfolio + writing notebook of Firman Lestari (`zeetec20`). Articles sourced from a GitHub repo and Medium RSS, rendered at build/SSR. Deployed on Cloudflare Workers via TanStack Start.
 
-To run this application:
+Live: [fiirman.my.id](https://fiirman.my.id)
+
+---
+
+## Stack
+
+| Layer | Choice |
+|---|---|
+| Runtime | Bun ≥ 1.2 |
+| Framework | TanStack Start (Nitro Cloudflare preset) |
+| Router | TanStack Router (file-based, fully typed) |
+| Server state | TanStack Query |
+| Styling | Tailwind CSS v4 (CSS-first `@theme` block in `src/styles.css`) |
+| Components | shadcn/ui (pulled via shadcn MCP — never pasted from memory) |
+| Markdown | `react-markdown` + `rehype-raw` + `remark-gfm` |
+| Syntax highlight | Shiki via `@shikijs/rehype` (build/SSR-time only) |
+| Validation | Zod |
+| Analytics | Supabase RPC (`track_analytic` / `get_analytics`) — dynamic-imported |
+| Comments | giscus (GitHub Discussions backend, github-themed) |
+| Image opt. | sharp (build-time WebP + responsive width set) |
+| Deploy | Cloudflare Workers via Wrangler |
+
+---
+
+## Layout
+
+```
+content/
+  github/<slug>.md           # essays authored in this repo
+  medium/<slug>.md           # synced from Medium RSS
+  bio.md                     # /about body
+public/
+  article/<slug>/            # per-article images (raw + WebP variants)
+  fonts/                     # self-hosted woff2 (EB Garamond, Cormorant, UnifrakturCook)
+  favicon.svg + favicon.ico + apple-touch-icon.png   # rasterized from SVG
+  sitemap.xml                # build-time generated
+scripts/
+  build-content.ts           # markdown → src/data/articles.generated.json
+  optimize-images.ts         # sharp → 320/480/768/1080w WebP siblings
+  build-favicon-rasters.ts   # SVG → PNG + ICO multi-res
+  build-sitemap.ts           # /sitemap.xml
+  sync-medium.ts             # Medium RSS → content/medium/*.md
+src/
+  routes/                    # file-based routes (TanStack Router generated tree)
+  components/                # bespoke editorial primitives + shadcn UI
+  lib/                       # markdown pipeline, articles, supabase, utils
+  styles.css                 # @theme tokens + utilities + component CSS
+design.md                    # locked design system (parchment + ink + rubric)
+content-schema.md            # article frontmatter contract
+content-sources.md           # sync source contract
+CLAUDE.md                    # contributor contract
+```
+
+---
+
+## Commands
 
 ```bash
-bun install
-bun --bun run dev
+bun install              # deps
+bun dev                  # dev server (port 3000)
+bun run build            # production build (runs prebuild chain)
+bun run preview          # local preview of built worker
+bun run deploy           # wrangler deploy
+bun run typecheck        # tsc --noEmit
+bun run lint             # biome lint
+bun run format           # biome format --write
+bun run test             # vitest run
+
+bun run sync:content     # rebuild src/data/articles.generated.json from content/
+bun run sync:medium      # pull latest Medium posts via RSS
+bun run optimize:images  # regenerate WebP width-set for /public/article/**
+bun run build:favicons   # rasterize favicon.svg → PNG + ICO
+bun run build:sitemap    # regenerate /public/sitemap.xml
 ```
 
-# Building For Production
+`prebuild` chain: `sync:content && optimize:images && build:favicons && build:sitemap`. Runs automatically on `bun run build` and `bun run deploy`.
 
-To build this application for production:
+---
 
-```bash
-bun --bun run build
-```
+## Conventions
 
-## Testing
+Read these alongside this file before touching the codebase:
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+- [`design.md`](./design.md) — locked design system. Tokens, typography, component voice, motion.
+- [`content-schema.md`](./content-schema.md) — article frontmatter shape.
+- [`content-sources.md`](./content-sources.md) — sync contract for github/medium.
+- [`CLAUDE.md`](./CLAUDE.md) — contributor guardrails (stack lock, anti-slop rules, design vocabulary).
 
-```bash
-bun --bun run test
-```
+Highlights:
+- **Routing** — file-based under `src/routes/`. Trust the generated `routeTree.gen.ts`.
+- **Server functions** — only inside `*.server.ts` files.
+- **Forms** — React Hook Form + Zod resolver. No raw `useState` form state.
+- **Env** — every read through a Zod-validated `src/env.ts`. No bare `process.env` / `import.meta.env` in feature code.
+- **Tailwind** — design tokens from `design.md` only. No arbitrary `text-[#hex]`, no off-scale spacing.
+- **Components** — shadcn primitives first, hand-rolled when the manuscript register demands it.
+- **Images** — per-article thumbnails under `public/images/<slug>/` (per `content-schema.md`). Missing → falls back to `/public/images/placeholder/sunflower.jpg`.
+- **Design vocabulary** — masthead / kicker / dek / byline / dateline / rubric-link / rule-hair / rule-double / fleuron / portrait-frame. Never modern-web register (hero banner, card grid, CTA, pill).
 
-## Styling
+---
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## Deploy
 
-### Removing Tailwind CSS
+1. `wrangler login` (one-time).
+2. `bun run deploy` — runs the prebuild chain, builds the worker, ships to Cloudflare.
+3. Secrets: `wrangler secret put <NAME>` per the entries in `.env.example`. Public vars go in `wrangler.jsonc`.
 
-If you prefer not to use Tailwind CSS:
+Bindings (KV / D1 / R2 / DO) live in `wrangler.jsonc`. Asset binding (`./dist/client`) is required for self-hosted fonts and `/public/*` routing.
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `bun install @tailwindcss/vite tailwindcss -D`
+---
 
-## Linting & Formatting
+## Performance
 
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
+Build-time optimizations:
 
+- Images → 320/480/768/1080w WebP siblings; `srcset` + `sizes` on every `<ArticleThumbnail>`; `<link rel="preload" as="image" imagesrcset>` on home + article-detail.
+- Fonts → self-hosted woff2 (EB Garamond, Cormorant Garamond, UnifrakturCook) preloaded; `font-display: optional`; italic synthesized from variable face.
+- JS → Supabase client dynamic-imported; devtools tree-shaken in production.
+- Cache → `public/_headers` sets immutable 1y on `/assets/*`, 30d on `/article/*`, 7d on favicons.
 
-```bash
-bun --bun run lint
-bun --bun run format
-bun --bun run check
-```
+---
 
+## License
 
-## Deploy to Cloudflare Workers
-
-This project uses the Cloudflare Vite plugin (configured in `vite.config.ts`) and `wrangler.jsonc`:
-
-1. Install Wrangler: `npm install -g wrangler`
-2. Authenticate: `wrangler login`
-3. Deploy: `npx wrangler deploy`
-
-For production env vars, run `wrangler secret put MY_VAR` for each secret listed in `.env.example`. Public (non-secret) vars go in `wrangler.jsonc` under `vars`.
-
-KV, D1, R2, and Durable Object bindings are configured in `wrangler.jsonc` — see https://developers.cloudflare.com/workers/wrangler/configuration/.
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+Personal portfolio — content (essays, copy, imagery) © Firman Lestari. Code is public reference; reuse with attribution.
