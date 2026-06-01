@@ -11,7 +11,7 @@ import { RubricLink } from "../components/rubric-link";
 import { RuleHair } from "../components/rules";
 import { randomQuote } from "../data/quotes";
 import type { Article } from "../lib/article-schema";
-import { getAllArticles, thumbnailUrl } from "../lib/articles";
+import { getAllArticles, thumbnailSrcSet, thumbnailUrl } from "../lib/articles";
 import { getAnalytics } from "../lib/track-analytic";
 
 export const Route = createFileRoute("/")({
@@ -26,6 +26,8 @@ export const Route = createFileRoute("/")({
 					rel: "preload",
 					as: "image",
 					href: thumbnailUrl(featured.thumbnail),
+					imagesrcset: thumbnailSrcSet(featured.thumbnail),
+					imagesizes: "(max-width: 768px) 100vw, 720px",
 					fetchpriority: "high",
 				},
 			],

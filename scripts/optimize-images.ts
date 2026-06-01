@@ -1,12 +1,17 @@
 #!/usr/bin/env bun
 /**
  * Build-time image optimizer. Walks `/public/article/<slug>/*` and
- * `/public/images/<slug>/*` for JPG / JPEG / PNG sources, emits a `.webp`
- * sibling per source via sharp (libvips) at quality 80, max-width 1200px.
+ * `/public/images/<slug>/*` for JPG / JPEG / PNG sources, emits a width
+ * set of `.webp` siblings via sharp (libvips) at quality 80.
  *
- * Idempotent — skips conversion when a sibling `.webp` already exists and
- * is newer than the source. Per-image failures log and continue; never
- * fails the build.
+ * Three variants per source:
+ *   <name>.webp        — 1080w (canonical default `src` used by callers
+ *                        that don't read srcset)
+ *   <name>-480w.webp   — mobile card / list
+ *   <name>-768w.webp   — tablet
+ *
+ * Idempotent — skips a variant when its `.webp` already exists and is
+ * newer than the source. Per-image failures log and continue.
  *
  * Run manually: `bun run optimize:images`
  * Auto-wired into `prebuild` via package.json.
@@ -19,8 +24,14 @@ import sharp from "sharp";
 
 const ROOTS = ["public/article", "public/images"];
 const SOURCE_EXTS = new Set([".jpg", ".jpeg", ".png"]);
-const MAX_WIDTH = 1200;
 const QUALITY = 80;
+
+/* Widths to emit. `null` width = the canonical `<name>.webp` (1080w). */
+const VARIANTS: Array<{ suffix: string; width: number }> = [
+	{ suffix: "", width: 1080 },
+	{ suffix: "-480w", width: 480 },
+	{ suffix: "-768w", width: 768 },
+];
 
 async function walk(dir: string): Promise<string[]> {
 	const entries = await readdir(dir, { withFileTypes: true });
@@ -33,29 +44,34 @@ async function walk(dir: string): Promise<string[]> {
 	return out;
 }
 
-function shouldConvert(source: string): boolean {
+function destPath(source: string, suffix: string): string {
 	const { dir, name } = parse(source);
-	const webp = join(dir, `${name}.webp`);
-	if (!existsSync(webp)) return true;
-	return statSync(source).mtimeMs > statSync(webp).mtimeMs;
+	return join(dir, `${name}${suffix}.webp`);
 }
 
-async function convert(source: string): Promise<void> {
-	const { dir, name } = parse(source);
-	const dest = join(dir, `${name}.webp`);
+function shouldConvert(source: string, dest: string): boolean {
+	if (!existsSync(dest)) return true;
+	return statSync(source).mtimeMs > statSync(dest).mtimeMs;
+}
+
+async function convertVariant(
+	source: string,
+	dest: string,
+	width: number,
+): Promise<void> {
 	const before = statSync(source).size;
 	try {
 		await sharp(source)
-			.resize({ width: MAX_WIDTH, withoutEnlargement: true })
+			.resize({ width, withoutEnlargement: true })
 			.webp({ quality: QUALITY })
 			.toFile(dest);
 		const after = statSync(dest).size;
 		const pct = Math.round((1 - after / before) * 100);
 		console.log(
-			`  ✓ ${source} → ${name}.webp  ${(before / 1024).toFixed(0)}KB → ${(after / 1024).toFixed(0)}KB  (-${pct}%)`,
+			`  ✓ ${dest}  ${(before / 1024).toFixed(0)}KB → ${(after / 1024).toFixed(0)}KB  (-${pct}%, ${width}w)`,
 		);
 	} catch (err) {
-		console.warn(`  ✗ ${source} — ${(err as Error).message}`);
+		console.warn(`  ✗ ${dest} — ${(err as Error).message}`);
 	}
 }
 
@@ -76,18 +92,21 @@ async function main() {
 			const ext = parse(file).ext.toLowerCase();
 			if (!SOURCE_EXTS.has(ext)) continue;
 			scanned++;
-			if (!shouldConvert(file)) {
-				skipped++;
-				continue;
+			for (const v of VARIANTS) {
+				const dest = destPath(file, v.suffix);
+				if (!shouldConvert(file, dest)) {
+					skipped++;
+					continue;
+				}
+				await convertVariant(file, dest, v.width);
+				converted++;
 			}
-			await convert(file);
-			converted++;
 		}
 	}
 
 	const elapsed = ((Date.now() - start) / 1000).toFixed(1);
 	console.log(
-		`\nOptimized images: ${converted} converted, ${skipped} cached, ${scanned} scanned (${elapsed}s)`,
+		`\nOptimized images: ${converted} written, ${skipped} cached, ${scanned} sources (${elapsed}s)`,
 	);
 }
 

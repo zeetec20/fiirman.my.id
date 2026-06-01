@@ -10,7 +10,7 @@ import { ArticleProgress } from "../components/article-progress";
 import { BackToTop } from "../components/back-to-top";
 import { Comments } from "../components/comments";
 import { Button } from "../components/ui/button";
-import { getArticleBySlug } from "../lib/articles";
+import { getArticleBySlug, thumbnailSrcSet, thumbnailUrl } from "../lib/articles";
 import { estimateReadingMinutes } from "../lib/reading";
 import { trackAnalytic } from "../lib/track-analytic";
 
@@ -20,6 +20,22 @@ export const Route = createFileRoute("/articles/$slug")({
 		const article = getArticleBySlug(params.slug);
 		if (!article) throw notFound();
 		return { article, minutes: estimateReadingMinutes(article.body) };
+	},
+	head: ({ loaderData }) => {
+		const article = loaderData?.article;
+		if (!article?.thumbnail) return {};
+		return {
+			links: [
+				{
+					rel: "preload",
+					as: "image",
+					href: thumbnailUrl(article.thumbnail),
+					imagesrcset: thumbnailSrcSet(article.thumbnail),
+					imagesizes: "(max-width: 768px) 100vw, 720px",
+					fetchpriority: "high",
+				},
+			],
+		};
 	},
 	notFoundComponent: () => (
 		<section className="py-20 text-center">

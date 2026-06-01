@@ -32,3 +32,18 @@ export function thumbnailUrl(src: string | null | undefined): string {
 	if (!src) return PLACEHOLDER_THUMBNAIL;
 	return src.replace(/\.(jpe?g|png)$/i, ".webp");
 }
+
+/**
+ * Responsive srcset string for a thumbnail. Pairs with
+ * `optimize-images.ts` which emits `<name>-480w.webp`,
+ * `<name>-768w.webp` and `<name>.webp` (1080w canonical) per source.
+ *
+ * Browsers pick the smallest variant that satisfies the `sizes` hint —
+ * mobile fetches 480w even when the canonical `src` is the 1080w file.
+ */
+export function thumbnailSrcSet(src: string | null | undefined): string {
+	const base = thumbnailUrl(src);
+	if (base === PLACEHOLDER_THUMBNAIL) return base;
+	const stem = base.replace(/\.webp$/i, "");
+	return `${stem}-480w.webp 480w, ${stem}-768w.webp 768w, ${base} 1080w`;
+}

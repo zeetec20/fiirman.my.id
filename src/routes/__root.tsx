@@ -152,6 +152,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       { rel: 'mask-icon', href: '/favicon.svg?v=3', color: '#8a2d1d' },
       { rel: 'manifest', href: '/manifest.json' },
+      /* Preload hint discovered ahead of the parser-blocking <link>,
+         so the browser starts fetching CSS earlier on the critical
+         path — gives FCP/LCP a head start. */
+      { rel: 'preload', as: 'style', href: appCss },
       { rel: 'stylesheet', href: appCss },
     ],
   }),

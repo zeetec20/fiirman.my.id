@@ -1,8 +1,15 @@
 import { GlyphBookClosed, GlyphBookOpen } from "./glyphs";
-import { thumbnailUrl } from "../lib/articles";
+import { thumbnailUrl, thumbnailSrcSet } from "../lib/articles";
 import { hashSeed, pickSubset } from "../lib/random";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { CornerCarving } from "./corner-carving";
+
+/* Sizes hint paired with the 480/768/1080 width set. `feature` is the
+   3:2 card grid (home Latest-Stories + archive); `natural` is the
+   full-bleed hero (home featured + article-detail header). */
+const SIZES_FEATURE =
+	"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
+const SIZES_NATURAL = "(max-width: 768px) 100vw, 720px";
 
 const DUST_POOL = 5;
 const SCRATCH_POOL = 5;
@@ -95,6 +102,8 @@ export function ArticleThumbnail({
 		>
 				<img
 					src={resolved}
+					srcSet={thumbnailSrcSet(src)}
+					sizes={isFeature ? SIZES_FEATURE : SIZES_NATURAL}
 					alt={alt}
 					loading={priority ? "eager" : "lazy"}
 					fetchPriority={priority ? "high" : undefined}
