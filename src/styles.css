@@ -41,8 +41,10 @@
   line-gap-override: 0%;
 }
 
-@import "@fontsource-variable/eb-garamond/wght-italic.css";
-@import "@fontsource-variable/cormorant-garamond/wght-italic.css";
+/* Italic woff2 imports dropped — chain off the stylesheet adds ~321ms
+   on mobile (PSI Network dependency tree). Browser synthesizes italic
+   from the normal-weight variable face via CSS font-style: italic.
+   Quality dip on `<em>` / `<i>` is minor at editorial scale. */
 @import "@fontsource-variable/jetbrains-mono/wght.css";
 
 @plugin "@tailwindcss/typography";

@@ -26,9 +26,12 @@ const ROOTS = ["public/article", "public/images"];
 const SOURCE_EXTS = new Set([".jpg", ".jpeg", ".png"]);
 const QUALITY = 80;
 
-/* Widths to emit. `null` width = the canonical `<name>.webp` (1080w). */
+/* Widths to emit. 320w covers mobile hero (~378px css at DPR=1) and
+   high-DPR small-card grids (~190px × 2). The canonical `<name>.webp`
+   stays at 1080w for desktop hero. */
 const VARIANTS: Array<{ suffix: string; width: number }> = [
 	{ suffix: "", width: 1080 },
+	{ suffix: "-320w", width: 320 },
 	{ suffix: "-480w", width: 480 },
 	{ suffix: "-768w", width: 768 },
 ];

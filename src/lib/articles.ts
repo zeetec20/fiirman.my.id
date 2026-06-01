@@ -45,5 +45,5 @@ export function thumbnailSrcSet(src: string | null | undefined): string {
 	const base = thumbnailUrl(src);
 	if (base === PLACEHOLDER_THUMBNAIL) return base;
 	const stem = base.replace(/\.webp$/i, "");
-	return `${stem}-480w.webp 480w, ${stem}-768w.webp 768w, ${base} 1080w`;
+	return `${stem}-320w.webp 320w, ${stem}-480w.webp 480w, ${stem}-768w.webp 768w, ${base} 1080w`;
 }
