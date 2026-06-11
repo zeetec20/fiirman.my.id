@@ -9,9 +9,9 @@ type GiscusTheme = "light" | "dark";
 
 function resolveTheme(): GiscusTheme {
 	if (typeof document === "undefined") return "light";
-	const attr = document.documentElement.getAttribute("data-theme");
-	if (attr === "dark") return "dark";
-	if (attr === "light") return "light";
+	const root = document.documentElement;
+	if (root.classList.contains("dark")) return "dark";
+	if (root.classList.contains("light")) return "light";
 	return window.matchMedia("(prefers-color-scheme: dark)").matches
 		? "dark"
 		: "light";
@@ -23,21 +23,21 @@ function clearChildren(node: HTMLElement) {
 
 export function Comments() {
 	const ref = useRef<HTMLDivElement | null>(null);
-	const [theme, setTheme] = useState<GiscusTheme>("light");
+	const [theme, setTheme] = useState<GiscusTheme>(() => resolveTheme());
 
 	useEffect(() => {
-		setTheme(resolveTheme());
-		const observer = new MutationObserver(() => setTheme(resolveTheme()));
+		const update = () => setTheme(resolveTheme());
+		update();
+		const observer = new MutationObserver(update);
 		observer.observe(document.documentElement, {
 			attributes: true,
-			attributeFilter: ["data-theme"],
+			attributeFilter: ["class", "data-theme"],
 		});
 		const mq = window.matchMedia("(prefers-color-scheme: dark)");
-		const onMq = () => setTheme(resolveTheme());
-		mq.addEventListener("change", onMq);
+		mq.addEventListener("change", update);
 		return () => {
 			observer.disconnect();
-			mq.removeEventListener("change", onMq);
+			mq.removeEventListener("change", update);
 		};
 	}, []);
 
@@ -45,6 +45,7 @@ export function Comments() {
 		const host = ref.current;
 		if (!host) return;
 		clearChildren(host);
+		const initial = resolveTheme();
 		const script = document.createElement("script");
 		script.src = "https://giscus.app/client.js";
 		script.async = true;
@@ -58,13 +59,10 @@ export function Comments() {
 		script.setAttribute("data-reactions-enabled", "1");
 		script.setAttribute("data-emit-metadata", "0");
 		script.setAttribute("data-input-position", "bottom");
-		script.setAttribute("data-theme", theme);
+		script.setAttribute("data-theme", initial);
 		script.setAttribute("data-lang", "en");
 		script.setAttribute("data-loading", "lazy");
 		host.appendChild(script);
-		/* theme intentionally omitted from deps — script is mounted once;
-		   theme changes flow through the postMessage effect below. */
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

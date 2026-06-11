@@ -4,17 +4,16 @@
  * (texture + motion), never characters.
  *
  * Stars use three glyph variants (cross, diamond, dot) so the night sky
- * doesn't read as a uniform dot grid. Planets are differentiated by body —
- * Mercury (bare disc), Earth (disc + small moon), Saturn (disc + tilted
- * ring), Jupiter (banded disc). Sun is a rayed sunburst with halo ring.
- *
- * Mobile (≤768px): SMIL <animateMotion> is skipped — it can't be paused
- * via CSS and was costing the whole page during URL-bar scroll resizes.
- * Planets get placed at fixed ellipse angles instead so they remain
- * visible as static manuscript geometry.
+ * doesn't read as a uniform dot grid. The heliocentric orbits (sun + 4
+ * planets) are rendered by a single Lottie animation — one canvas layer
+ * replaces the SVG SMIL + parallel CSS keyframes that previously drove
+ * sun rotation, sun pulse, and four <animateMotion> planets. dotlottie
+ * pauses cleanly on tab visibility / reduced-motion / mobile, which the
+ * old SMIL pipeline could not.
  */
 
-import { useEffect, useState } from "react";
+import type { DotLottieReactProps } from "@lottiefiles/dotlottie-react";
+import { type ComponentType, useEffect, useState } from "react";
 
 const EMBER_COUNT = 6;
 
@@ -59,25 +58,6 @@ const STARS: Star[] = [
 	{ x: 88, y: 81, size: 0.5, rotate: 0, delay: 3.9, period: 5.5, tint: "muted", type: "dot" },
 ];
 
-/* Heliocentric orbits — concentric ellipses centered on a 1000×1000
-   viewBox, sun at 500,500. Each planet group rotates around centre.
-   Body shapes differ per orbit so they read as distinct celestial
-   objects: Mercury / Earth / Saturn / Jupiter. */
-/* Kepler — sun sits at one focus, ellipse centre is offset from sun
-   by c = √(rx² − ry²). Each orbit's ring is drawn shifted right of
-   sun so the diagram reads as proper orbital geometry, not a stack of
-   concentric ellipses with sun dead-centre. */
-const SUN_X = 500;
-const SUN_Y = 500;
-const focus = (rx: number, ry: number) => Math.round(Math.sqrt(rx * rx - ry * ry));
-
-const ORBITS = [
-	{ rx: 130, ry: 100, cx: SUN_X + focus(130, 100), cy: SUN_Y },
-	{ rx: 220, ry: 175, cx: SUN_X + focus(220, 175), cy: SUN_Y },
-	{ rx: 320, ry: 250, cx: SUN_X + focus(320, 250), cy: SUN_Y },
-	{ rx: 425, ry: 330, cx: SUN_X + focus(425, 330), cy: SUN_Y },
-];
-
 function StarGlyph({ s }: { s: Star }) {
 	if (s.type === "cross") {
 		const r = s.size;
@@ -105,138 +85,44 @@ function StarGlyph({ s }: { s: Star }) {
 	return <circle r={s.size} className="star-fill" />;
 }
 
-function Sun() {
-	const rays = Array.from({ length: 12 }, (_, i) => {
-		const angle = (i * 30 * Math.PI) / 180;
-		const inner = 16;
-		const outer = i % 2 === 0 ? 24 : 21;
-		return {
-			x1: 500 + Math.cos(angle) * inner,
-			y1: 500 + Math.sin(angle) * inner,
-			x2: 500 + Math.cos(angle) * outer,
-			y2: 500 + Math.sin(angle) * outer,
-			key: i,
-		};
-	});
-	return (
-		<g className="orbit-sun-group">
-			{/* Halo ring */}
-			<circle
-				cx="500"
-				cy="500"
-				r="20"
-				fill="none"
-				className="orbit-sun-halo"
-			/>
-			{/* 12 alternating rays — long/short, woodcut register */}
-			{rays.map((r) => (
-				<line
-					key={r.key}
-					x1={r.x1}
-					y1={r.y1}
-					x2={r.x2}
-					y2={r.y2}
-					className="orbit-sun-ray"
-				/>
-			))}
-			{/* Central disc */}
-			<circle cx="500" cy="500" r="10" className="orbit-sun" />
-			{/* Inner pip */}
-			<circle cx="500" cy="500" r="2.5" className="orbit-sun-pip" />
-		</g>
-	);
-}
+/* dotlottie-react ships a WASM player — defer the import to the client.
+   The component is mounted only after we've successfully loaded the
+   module in the browser; on the server (or before hydration) the orbit
+   layer stays empty, which is acceptable for a fixed decoration. */
+function OrbitsLottie() {
+	const [Player, setPlayer] = useState<ComponentType<DotLottieReactProps> | null>(null);
+	const [shouldPlay, setShouldPlay] = useState(true);
 
-/* Planets — drawn at local origin (0,0). SVG <animateMotion> with
-   <mpath> drives them along the actual orbit ellipse path so they
-   ride the visible orbit line, not a separate circular path. */
-
-function PlanetMercury() {
-	return (
-		<>
-			<circle r="5" className="planet-disc" />
-		</>
-	);
-}
-
-function PlanetEarth() {
-	return (
-		<>
-			<circle r="6.5" className="planet-disc" />
-			<circle cx="13" cy="-8" r="2" className="planet-moon" />
-		</>
-	);
-}
-
-function PlanetSaturn() {
-	return (
-		<>
-			<ellipse
-				rx="14"
-				ry="3.5"
-				fill="none"
-				className="planet-ring"
-				transform="rotate(-22)"
-			/>
-			<circle r="6.5" className="planet-disc" />
-		</>
-	);
-}
-
-function PlanetJupiter() {
-	return (
-		<>
-			<circle r="10" className="planet-disc" />
-			<line x1="-9" y1="0" x2="9" y2="0" className="planet-band" />
-			<line
-				x1="-7"
-				y1="-5"
-				x2="7"
-				y2="-5"
-				className="planet-band planet-band-soft"
-			/>
-			<circle cx="17" cy="-12" r="1.6" className="planet-moon" />
-		</>
-	);
-}
-
-const PLANETS = [PlanetMercury, PlanetEarth, PlanetSaturn, PlanetJupiter] as const;
-const PLANET_PERIODS = [58, 96, 152, 218] as const;
-const PLANET_BEGINS = [-8, -34, -71, -52] as const;
-/* Static angles (degrees) for the mobile branch — spread around the
-   ellipses so the four planets don't stack at the same clock-position. */
-const PLANET_STATIC_ANGLES = [50, 145, 250, 320] as const;
-
-function ellipsePoint(
-	cx: number,
-	cy: number,
-	rx: number,
-	ry: number,
-	angleDeg: number,
-): { x: number; y: number } {
-	const a = (angleDeg * Math.PI) / 180;
-	return { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a) };
-}
-
-function useIsMobile(query = "(max-width: 768px)"): boolean {
-	const [is, setIs] = useState(false);
 	useEffect(() => {
-		const mq = window.matchMedia(query);
-		const handler = () => setIs(mq.matches);
-		handler();
-		mq.addEventListener("change", handler);
-		return () => mq.removeEventListener("change", handler);
-	}, [query]);
-	return is;
-}
+		let cancelled = false;
+		const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+		setShouldPlay(!mq.matches);
+		const onChange = () => setShouldPlay(!mq.matches);
+		mq.addEventListener("change", onChange);
 
-/** SVG path d-string for a full ellipse — used by both the visible
- *  orbit ring and the planet's animateMotion path reference. */
-const ellipsePathD = (cx: number, cy: number, rx: number, ry: number) =>
-	`M ${cx - rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx + rx} ${cy} A ${rx} ${ry} 0 1 0 ${cx - rx} ${cy} Z`;
+		import("@lottiefiles/dotlottie-react").then((mod) => {
+			if (!cancelled) setPlayer(() => mod.DotLottieReact);
+		});
+
+		return () => {
+			cancelled = true;
+			mq.removeEventListener("change", onChange);
+		};
+	}, []);
+
+	if (!Player) return null;
+	return (
+		<Player
+			src="/lottie/orbits.json"
+			autoplay={shouldPlay}
+			loop
+			renderConfig={{ autoResize: true }}
+			style={{ width: "100%", height: "100%" }}
+		/>
+	);
+}
 
 export function BackgroundDecoration() {
-	const isMobile = useIsMobile();
 	return (
 		<>
 			<svg
@@ -285,72 +171,10 @@ export function BackgroundDecoration() {
 			<div aria-hidden="true" className="bg-age-stains" />
 			<div aria-hidden="true" className="bg-candle-glow" />
 
-			{/* Heliocentric orbits — sun + 4 distinct planets */}
-			<svg
-				aria-hidden="true"
-				className="bg-orbits"
-				viewBox="0 0 1000 1000"
-				preserveAspectRatio="xMidYMid meet"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				{/* Off-center bias: shift the whole system to the right edge so
-				    the sun sits well clear of the reading column — orbits bleed
-				    softly into the right margin, never crossing prose width. */}
-				<g transform="translate(220 -40) rotate(-6 500 500)">
-					{ORBITS.map((o, i) => (
-						<path
-							key={`orbit-${i}`}
-							id={`orbit-path-${i}`}
-							className={`orbit-ring orbit-ring-${i + 1}`}
-							d={ellipsePathD(o.cx, o.cy, o.rx, o.ry)}
-						/>
-					))}
-
-					<Sun />
-
-					{PLANETS.map((Planet, i) => {
-						/* Mobile: drop SMIL <animateMotion> entirely (can't be
-						   CSS-paused; was thrashing on URL-bar resize). Place
-						   the planet at a fixed point on its ellipse so the
-						   diagram still reads. Desktop: original moving form. */
-						if (isMobile) {
-							const o = ORBITS[i];
-							const { x, y } = ellipsePoint(
-								o.cx,
-								o.cy,
-								o.rx,
-								o.ry,
-								PLANET_STATIC_ANGLES[i],
-							);
-							return (
-								<g
-									key={`planet-g-${i}`}
-									className={`orbit-planet orbit-planet-${i + 1}`}
-									transform={`translate(${x} ${y})`}
-								>
-									<Planet />
-								</g>
-							);
-						}
-						return (
-							<g
-								key={`planet-g-${i}`}
-								className={`orbit-planet orbit-planet-${i + 1}`}
-							>
-								<Planet />
-								<animateMotion
-									dur={`${PLANET_PERIODS[i]}s`}
-									repeatCount="indefinite"
-									begin={`${PLANET_BEGINS[i]}s`}
-									rotate="0"
-								>
-									<mpath href={`#orbit-path-${i}`} />
-								</animateMotion>
-							</g>
-						);
-					})}
-				</g>
-			</svg>
+			{/* Heliocentric orbits — sun + 4 planets via Lottie */}
+			<div aria-hidden="true" className="bg-orbits-lottie">
+				<OrbitsLottie />
+			</div>
 
 			<div aria-hidden="true" className="bg-ember-field">
 				{Array.from({ length: EMBER_COUNT }).map((_, i) => (

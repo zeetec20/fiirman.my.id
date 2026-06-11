@@ -888,14 +888,16 @@
   100% { opacity: 0.95; }
 }
 
-/* -------- Heliocentric orbits — astrolabe with distinct bodies --------
-   Fixed full-viewport SVG centered, z -1, painted in DOM after candle so
-   hairlines remain crisp through the warm blur. Sun is a rayed sunburst
-   with halo ring; planets are differentiated bodies (Mercury / Earth /
-   Saturn / Jupiter). Each planet group rotates around the viewBox centre
-   (500,500) at Keplerian-ish periods. */
+/* -------- Heliocentric orbits — Lottie astrolabe --------
+   Fixed full-viewport container holding a single Lottie canvas that
+   renders the sun + 4 planets. The inner player element is sized to
+   COVER the viewport while preserving the comp's 1944:1080 aspect —
+   this mirrors SVG preserveAspectRatio="xMidYMid slice", so on
+   portrait viewports the comp fills vertically with horizontal overflow
+   cropped (no ugly letterbox bands), and on landscape it matches the
+   viewport size 1:1 keeping the sun's world position pixel-accurate. */
 
-.bg-orbits {
+.bg-orbits-lottie {
   position: fixed;
   top: 0;
   left: 0;
@@ -903,112 +905,28 @@
   height: 100lvh;
   pointer-events: none;
   z-index: -1;
-  /* Softening filter — pushes orbits + sun behind the content plane.
-     Just enough to separate from sharp text/links without losing the
-     manuscript-diagram register. */
+  overflow: hidden;
   filter: blur(0.5px);
+  opacity: 0.95;
 }
 
-:root[data-theme="dark"] .bg-orbits { filter: blur(0.6px); }
+.bg-orbits-lottie > * {
+  --comp-aspect: calc(1400 / 778);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100lvw, 100lvh * var(--comp-aspect));
+  height: max(100lvh, 100lvw / var(--comp-aspect));
+  transform: translate(-50%, -50%);
+}
+
+:root[data-theme="dark"] .bg-orbits-lottie { filter: blur(0.6px); }
 @media (prefers-color-scheme: dark) {
-  :root[data-theme="auto"] .bg-orbits { filter: blur(0.6px); }
-}
-
-.orbit-ring {
-  fill: none;
-  stroke: var(--color-rule-heavy);
-  stroke-width: 0.8;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.12;
-}
-
-/* Sun ------------------------------------------------------------------ */
-.orbit-sun-group {
-  transform-origin: 500px 500px;
-  animation: sun-rotate 320s linear infinite;
-  will-change: transform;
-}
-.orbit-sun {
-  fill: var(--color-rubric);
-  opacity: 0.62;
-  animation: orbit-sun-pulse 7s ease-in-out infinite;
-  will-change: opacity;
-}
-.orbit-sun-pip {
-  fill: var(--color-rubric-fg);
-  opacity: 0.55;
-}
-.orbit-sun-halo {
-  stroke: var(--color-rubric);
-  stroke-width: 0.5;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.35;
-}
-.orbit-sun-ray {
-  stroke: var(--color-rubric);
-  stroke-width: 1.2;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.55;
-}
-
-@keyframes sun-rotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-@keyframes orbit-sun-pulse {
-  0%, 100% { opacity: 0.48; }
-  50%      { opacity: 0.85; }
-}
-
-/* Planets — perfect-circle discs + Saturn ring + Jupiter bands ------- */
-.planet-disc { fill: var(--color-rubric); opacity: 0.65; }
-.planet-moon { fill: var(--color-fg-muted); opacity: 0.75; }
-.planet-ring {
-  stroke: var(--color-rubric);
-  stroke-width: 1.1;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.7;
-  /* Extra softening on the tilted ellipse + horizontal bands so they
-     don't read as hard geometric shapes against the blurred field. */
-  filter: blur(0.3px);
-}
-.planet-band {
-  stroke: var(--color-bg);
-  stroke-width: 0.9;
-  stroke-linecap: round;
-  opacity: 0.55;
-  filter: blur(0.3px);
-}
-.planet-band-soft { opacity: 0.35; }
-
-/* Planet motion driven by SVG <animateMotion> (SMIL) in markup —
-   each planet rides its own orbit path. No CSS keyframes needed. */
-.orbit-planet { will-change: transform; }
-
-/* Dark-mode lift ------------------------------------------------------- */
-:root[data-theme="dark"] .orbit-ring       { opacity: 0.28; }
-:root[data-theme="dark"] .orbit-sun        { opacity: 0.92; }
-:root[data-theme="dark"] .orbit-sun-halo   { opacity: 0.55; }
-:root[data-theme="dark"] .orbit-sun-ray    { opacity: 0.75; }
-:root[data-theme="dark"] .planet-disc      { opacity: 0.88; }
-:root[data-theme="dark"] .planet-moon      { opacity: 0.88; }
-:root[data-theme="dark"] .planet-ring      { opacity: 0.85; }
-@media (prefers-color-scheme: dark) {
-  :root[data-theme="auto"] .orbit-ring     { opacity: 0.28; }
-  :root[data-theme="auto"] .orbit-sun      { opacity: 0.92; }
-  :root[data-theme="auto"] .orbit-sun-halo { opacity: 0.55; }
-  :root[data-theme="auto"] .orbit-sun-ray  { opacity: 0.75; }
-  :root[data-theme="auto"] .planet-disc    { opacity: 0.88; }
-  :root[data-theme="auto"] .planet-moon    { opacity: 0.88; }
-  :root[data-theme="auto"] .planet-ring    { opacity: 0.85; }
+  :root[data-theme="auto"] .bg-orbits-lottie { filter: blur(0.6px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .star,
-  .orbit-sun,
-  .orbit-sun-group,
-  .orbit-planet { animation: none; }
+  .star { animation: none; }
   .star-muted, .star-rubric { opacity: 0.4; }
 }
 
