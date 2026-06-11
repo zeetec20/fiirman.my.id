@@ -117,7 +117,6 @@ function OrbitsLottie() {
 			autoplay={shouldPlay}
 			loop
 			renderConfig={{ autoResize: true }}
-			style={{ width: "100%", height: "100%" }}
 		/>
 	);
 }

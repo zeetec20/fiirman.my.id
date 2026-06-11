@@ -17,14 +17,12 @@ const OUT = resolve(__dirname, "../public/lottie/orbits.json");
 
 const FR = 30;
 const OP = 9600; // 320s — chosen so sun rotation closes cleanly
-/* Comp deliberately smaller than the cover-fit lottie div on landscape
-   so the CSS cover-fit upscales the geometry (~1.39× on 1920×1080).
-   Aspect 1.8 preserved. Orbit-4 right clips at comp x=W, but that
-   point maps to viewport pixel 1932 — off-screen on 1920-wide viewport.
-   Hard floor: H ≥ 778 so sun_y world (≈358) stays above orbit-4 top
-   delta (-356) without clipping orbit-4's top arc at comp y=0. */
-const W = 1400;
-const H = 778;
+/* Comp sized so orbit-4's full rotated bounds fit inside [0,W]×[0,H]
+   with margin (was 1400×778 — orbit-4 right edge clipped at world
+   x=1561, top edge clipped at world y=-1.2). Aspect 2.25 here; the
+   CSS cover-fit upscales geometry ~1.35× on 1920×1080. */
+const W = 1800;
+const H = 800;
 
 const K = 0.5522847498307933; // cubic-bezier ellipse constant
 
@@ -464,15 +462,16 @@ function pushLayer(layer) {
 
 // 1) Root null — anchored at local sun-center (SUN_X, SUN_Y); position
 //    field names the world coords where the sun should land. Derived
-//    from the original SVG desktop sun pixel target (1198, 497):
-//    sun_world = (0.6224, 0.2557) × W to compensate for the cover-fit
-//    upscale (1944/W on a 1920×1080 viewport). For W=1400 this is
-//    (871, 358) — orbits read ~1.39× larger than addendum-2.
+//    from the original SVG desktop sun pixel target (1198, 497) on a
+//    1920×1080 viewport. With cover-fit scale = 1080/H = 1.35 and
+//    horizontal overflow (W·1.35 − 1920)/2 = 225:
+//      sun_world.x = (1198 + 225) / 1.35 ≈ 1054
+//      sun_world.y = 497 / 1.35 ≈ 368
 const rootInd = pushLayer({
 	ty: 3,
 	nm: "Root",
 	sr: 1,
-	ks: layerTransform({ p: [871, 358, 0], a: [SUN_X, SUN_Y, 0], r: -6 }),
+	ks: layerTransform({ p: [1054, 368, 0], a: [SUN_X, SUN_Y, 0], r: -6 }),
 	ao: 0,
 	ip: 0,
 	op: OP,
