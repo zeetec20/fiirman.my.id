@@ -89,10 +89,12 @@ function MastheadTitle() {
  * below in small caps, double-rule beneath.
  */
 export function Masthead() {
+	/* UTC for SSR/CSR stability — local-tz drift triggers hydration mismatch
+	   around midnight. See __root.tsx for the same fix. */
 	const today = new Date();
-	const dd = String(today.getDate()).padStart(2, "0");
-	const mm = String(today.getMonth() + 1).padStart(2, "0");
-	const yyyy = today.getFullYear();
+	const dd = String(today.getUTCDate()).padStart(2, "0");
+	const mm = String(today.getUTCMonth() + 1).padStart(2, "0");
+	const yyyy = today.getUTCFullYear();
 	const todayKey = `${dd}-${mm}-${yyyy}`;
 	const vol = toRoman(Math.max(1, yyyy - VOLUME_EPOCH_YEAR));
 	const no = toRoman(dayOfYear(today));

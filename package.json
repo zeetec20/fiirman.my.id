@@ -20,6 +20,9 @@
     "optimize:images": "bun run scripts/optimize-images.ts",
     "build:sitemap": "bun run scripts/build-sitemap.ts",
     "build:favicons": "bun run scripts/build-favicon-rasters.ts",
+    "lh": "lhci autorun",
+    "lh:collect": "lhci collect",
+    "lh:assert": "lhci assert",
     "predev": "bun run sync:content",
     "prebuild": "bun run sync:content && bun run optimize:images && bun run build:favicons && bun run build:sitemap"
   },
@@ -61,11 +64,13 @@
     "tailwindcss": "^4.1.18",
     "tw-animate-css": "^1.4.0",
     "unified": "^11.0.5",
+    "web-vitals": "^5.3.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.5",
     "@cloudflare/workers-types": "^4.20250115.0",
+    "@lhci/cli": "^0.15.1",
     "@tanstack/devtools-vite": "latest",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.0",

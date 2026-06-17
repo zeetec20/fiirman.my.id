@@ -14,32 +14,36 @@ import type { Article } from "../lib/article-schema";
 import { getAllArticles, thumbnailSrcSet, thumbnailUrl } from "../lib/articles";
 import { getAnalytics } from "../lib/track-analytic";
 
+const SITE_URL = "https://fiirman.my.id";
+
 export const Route = createFileRoute("/")({
 	component: Home,
 	loader: () => ({ articles: getAllArticles(), quote: randomQuote() }),
 	head: ({ loaderData }) => {
+		const links: Array<Record<string, string>> = [
+			{ rel: "canonical", href: SITE_URL },
+		];
 		const featured = loaderData?.articles[0];
-		if (!featured?.thumbnail) return {};
-		return {
-			links: [
-				{
-					rel: "preload",
-					as: "image",
-					href: thumbnailUrl(featured.thumbnail),
-					imagesrcset: thumbnailSrcSet(featured.thumbnail),
-					imagesizes: "(max-width: 768px) 100vw, 720px",
-					fetchpriority: "high",
-				},
-			],
-		};
+		if (featured?.thumbnail) {
+			links.push({
+				rel: "preload",
+				as: "image",
+				href: thumbnailUrl(featured.thumbnail),
+				imageSrcSet: thumbnailSrcSet(featured.thumbnail),
+				imageSizes: "(max-width: 768px) 100vw, 720px",
+				fetchPriority: "high",
+			});
+		}
+		return { links };
 	},
 });
 
 function todayKey(): string {
+	/* UTC for SSR/CSR stability — see __root.tsx for rationale. */
 	const d = new Date();
-	const dd = String(d.getDate()).padStart(2, "0");
-	const mm = String(d.getMonth() + 1).padStart(2, "0");
-	const yyyy = d.getFullYear();
+	const dd = String(d.getUTCDate()).padStart(2, "0");
+	const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+	const yyyy = d.getUTCFullYear();
 	return `${dd}-${mm}-${yyyy}`;
 }
 

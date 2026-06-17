@@ -3,7 +3,7 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { BackgroundDecoration } from '../components/background-decoration'
 import { Masthead } from '../components/masthead'
 import { Dateline, toRoman } from '../components/dateline'
@@ -113,6 +113,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { name: 'msapplication-TileColor', content: '#8a2d1d' },
     ],
     links: [
+      /* Only preload the body face (LCP candidate). Cormorant + UnifrakturCook
+         are display/gothic faces below the fold; `font-display: optional`
+         (styles.css) prevents CLS so they can load without competing for
+         first-paint bandwidth. */
       {
         rel: 'preload',
         as: 'font',
@@ -120,21 +124,16 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         href: '/fonts/eb-garamond-latin-wght-normal.woff2',
         crossOrigin: 'anonymous',
       },
+      /* preconnect to third-party origins used below the fold (about page) */
       {
-        rel: 'preload',
-        as: 'font',
-        type: 'font/woff2',
-        href: '/fonts/cormorant-garamond-latin-wght-normal.woff2',
+        rel: 'preconnect',
+        href: 'https://avatars.githubusercontent.com',
         crossOrigin: 'anonymous',
       },
-      {
-        rel: 'preload',
-        as: 'font',
-        type: 'font/woff2',
-        href: '/fonts/unifrakturcook-latin-700-normal.woff2',
-        crossOrigin: 'anonymous',
-      },
-      { rel: 'canonical', href: SITE_URL },
+      { rel: 'preconnect', href: 'https://open.spotify.com' },
+      /* No site-wide canonical: per-route head() emits the canonical for
+         that route. A static root canonical would duplicate with the
+         per-route one and trigger Lighthouse's "invalid canonical" audit. */
       /* ?v=3 cache-bust — browsers cache favicons aggressively; bump
          this when public/favicon.* assets change. */
       { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg?v=3' },
@@ -159,11 +158,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  /* Use UTC so SSR (Cloudflare = UTC) and the browser produce the same
+     string. Local-tz Date() drifts by one day around midnight and triggers
+     a full client re-render via React's hydration-mismatch path. */
   const today = new Date()
-  const dd = String(today.getDate()).padStart(2, '0')
-  const mm = String(today.getMonth() + 1).padStart(2, '0')
-  const yyyy = today.getFullYear()
+  const dd = String(today.getUTCDate()).padStart(2, '0')
+  const mm = String(today.getUTCMonth() + 1).padStart(2, '0')
+  const yyyy = today.getUTCFullYear()
   const todayKey = `${dd}-${mm}-${yyyy}`
+
+  useEffect(() => {
+    /* Prod-only: dev hot-reload flooding the table is pointless. The
+       reporter and the web-vitals chunk are both dynamic-imported so
+       nothing ships in the bundle unless the gate passes. */
+    if (!import.meta.env.PROD) return
+    import('../lib/vitals').then((m) => m.reportWebVitals())
+  }, [])
 
   return (
     <html lang="en" data-theme="auto" suppressHydrationWarning>
@@ -241,7 +251,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               <a
                 href="https://github.com/zeetec20/fiirman.my.id"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-rubric border-b border-current hover:border-transparent transition-[border-color] duration-[120ms]"
               >
                 github.com/zeetec20/fiirman.my.id

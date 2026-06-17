@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+
+/* GithubActivity is below the fold and fetches the GitHub API.
+   Lazy-load to keep its bundle + network call off the critical path. */
+const GithubActivity = lazy(() =>
+  import("../components/github-activity").then((m) => ({
+    default: m.GithubActivity,
+  })),
+);
 import { Fleuron } from "../components/fleuron";
-import { GithubActivity } from "../components/github-activity";
 import { Kicker } from "../components/kicker";
 import { PortraitFrame } from "../components/portrait-frame";
 import { RubricLink } from "../components/rubric-link";
@@ -9,7 +17,11 @@ import { Card, CardContent } from "../components/ui/card";
 import { getAllArticles } from "../lib/articles";
 import { getBioHtml } from "../lib/bio";
 
-const AVATAR_URL = "https://avatars.githubusercontent.com/u/47957217?size=480";
+/* 240px is twice the displayed CSS size (~120px at typical column width).
+   Covers DPR=2 without shipping the 480px GitHub avatar. */
+const AVATAR_URL = "https://avatars.githubusercontent.com/u/47957217?size=240";
+const AVATAR_SRCSET =
+  "https://avatars.githubusercontent.com/u/47957217?size=240 1x, https://avatars.githubusercontent.com/u/47957217?size=480 2x";
 
 /**
  * Spotify embed — currently a public classical playlist as placeholder.
@@ -24,11 +36,40 @@ const SPOTIFY_EMBED_URL =
 const SPOTIFY_LABEL = "From the author's desk";
 const SPOTIFY_EMBED_HEIGHT = 152;
 
+const SITE_URL = "https://fiirman.my.id";
+const PAGE_TITLE = "The Author — Firman Lestari";
+const PAGE_DESCRIPTION =
+  "A short notice from the desk: who I am, what I work on, and what plays while I write.";
+
 export const Route = createFileRoute("/about")({
   component: About,
   loader: () => ({
     articles: getAllArticles(),
     bioHtml: getBioHtml(),
+  }),
+  head: () => ({
+    meta: [
+      { title: PAGE_TITLE },
+      { name: "description", content: PAGE_DESCRIPTION },
+      { property: "og:title", content: PAGE_TITLE },
+      { property: "og:description", content: PAGE_DESCRIPTION },
+      { property: "og:url", content: `${SITE_URL}/about` },
+    ],
+    links: [
+      { rel: "canonical", href: `${SITE_URL}/about` },
+      /* Avatar is the LCP element. Preload must match the <img> src/srcset
+         exactly or the browser fetches both URLs. We ship 240 1x / 480 2x;
+         imageSrcSet on the preload lets the browser pick the right one
+         based on DPR before the <img> tag is parsed. */
+      {
+        rel: "preload",
+        as: "image",
+        href: AVATAR_URL,
+        imageSrcSet: AVATAR_SRCSET,
+        fetchPriority: "high",
+        crossOrigin: "anonymous",
+      },
+    ],
   }),
 });
 
@@ -46,10 +87,13 @@ function About() {
           >
             <img
               src={AVATAR_URL}
+              srcSet={AVATAR_SRCSET}
               alt="Firman Lestari"
               width={400}
               height={400}
-              loading="lazy"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               className="w-full aspect-square object-cover block thumbnail-engraved"
             />
           </PortraitFrame>
@@ -96,15 +140,7 @@ function About() {
         </div>
         <Card className="rounded-sm border-rule ring-0 bg-bg-aged/60 py-0 gap-0 overflow-hidden">
           <CardContent className="p-1">
-            <iframe
-              title={`Spotify · ${SPOTIFY_LABEL}`}
-              src={SPOTIFY_EMBED_URL}
-              width="100%"
-              height={SPOTIFY_EMBED_HEIGHT}
-              loading="lazy"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              className="block w-full border-0"
-            />
+            <SpotifyEmbed />
           </CardContent>
         </Card>
       </section>
@@ -118,7 +154,11 @@ function About() {
           A year in keystrokes.
         </h2>
       </header>
-      <GithubActivity className="max-w-page mx-auto px-2" />
+      <LazyOnVisible minHeight={140}>
+        <Suspense fallback={null}>
+          <GithubActivity className="max-w-page mx-auto px-2" />
+        </Suspense>
+      </LazyOnVisible>
 
       <RuleHair className="my-12 max-w-prose mx-auto" />
 
@@ -132,5 +172,68 @@ function About() {
         </RubricLink>
       </div>
     </section>
+  );
+}
+
+/**
+ * Renders `children` only after the placeholder scrolls into view. Reserves
+ * `minHeight` while empty so there's no layout shift when children mount.
+ */
+function LazyOnVisible({
+  children,
+  minHeight,
+  rootMargin = "200px",
+}: {
+  children: React.ReactNode;
+  minHeight: number;
+  rootMargin?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (visible) return;
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver !== "function") {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setVisible(true);
+            io.disconnect();
+            return;
+          }
+        }
+      },
+      { rootMargin },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [visible, rootMargin]);
+
+  return (
+    <div ref={ref} style={{ minHeight }}>
+      {visible ? children : null}
+    </div>
+  );
+}
+
+function SpotifyEmbed() {
+  return (
+    <LazyOnVisible minHeight={SPOTIFY_EMBED_HEIGHT}>
+      <iframe
+        title={`Spotify · ${SPOTIFY_LABEL}`}
+        src={SPOTIFY_EMBED_URL}
+        width="100%"
+        height={SPOTIFY_EMBED_HEIGHT}
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        className="block w-full border-0"
+      />
+    </LazyOnVisible>
   );
 }

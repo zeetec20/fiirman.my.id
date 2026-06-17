@@ -1,0 +1,40 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Start preview server
+        run: |
+          bun run preview --port 3000 --host 127.0.0.1 &
+          npx --yes wait-on http://127.0.0.1:3000 --timeout 60000
+
+      - name: Run Lighthouse CI
+        run: bun run lh:collect && bun run lh:assert
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 14

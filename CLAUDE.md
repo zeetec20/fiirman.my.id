@@ -37,7 +37,12 @@ bun run deploy         # wrangler deploy
 bun run typecheck      # tsc --noEmit
 bun run lint           # configured linter (TBD: biome vs eslint)
 bun run sync:medium    # pull latest Medium posts via RSS
+bun run lh             # Lighthouse CI autorun (build, collect, assert)
+bun run lh:collect     # Collect Lighthouse runs against the configured URLs
+bun run lh:assert      # Assert against budgets in lighthouserc.json
 ```
+
+Lighthouse CI also runs on every PR to `master` via `.github/workflows/lighthouse.yml`. Budgets: perf ≥ 95, a11y = 100, BP ≥ 95, SEO = 100, LCP < 2.5 s, CLS < 0.1.
 
 ---
 

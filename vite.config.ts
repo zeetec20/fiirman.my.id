@@ -9,6 +9,11 @@ import { cloudflare } from '@cloudflare/vite-plugin'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  build: {
+    /* Source maps for production debugging + Lighthouse's
+       valid-source-maps audit. */
+    sourcemap: true,
+  },
   plugins: [
     devtools(),
     cloudflare({ viteEnvironment: { name: 'ssr' } }),

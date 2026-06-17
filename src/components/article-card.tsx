@@ -17,9 +17,11 @@ import { RuleHair } from "./rules";
 export function ArticleCard({
 	article,
 	showThumbnail = true,
+	priority = false,
 }: {
 	article: Article;
 	showThumbnail?: boolean;
+	priority?: boolean;
 }) {
 	const tagLine = article.tag.slice(0, 3).join(" · ").toUpperCase();
 	return (
@@ -35,6 +37,7 @@ export function ArticleCard({
 						alt={article.title}
 						interactive
 						aspect="feature"
+						priority={priority}
 					/>
 				</Link>
 			) : null}

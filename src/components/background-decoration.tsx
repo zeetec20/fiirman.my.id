@@ -88,25 +88,74 @@ function StarGlyph({ s }: { s: Star }) {
 /* dotlottie-react ships a WASM player — defer the import to the client.
    The component is mounted only after we've successfully loaded the
    module in the browser; on the server (or before hydration) the orbit
-   layer stays empty, which is acceptable for a fixed decoration. */
+   layer stays empty, which is acceptable for a fixed decoration.
+
+   Three early-exit gates before the WASM payload is requested:
+     1. Save-Data header / `effectiveType` ≤ 3g — respect bandwidth budget.
+     2. Viewport < 768px — CSS already pauses orbits at mobile; shipping
+        the WASM serves no purpose there.
+     3. `prefers-reduced-motion` — already honored for autoplay below;
+        also skip the import entirely.
+   The remaining defer-to-idle keeps the chunk off the LCP critical path
+   even on desktop. */
+type NetworkInformation = {
+	saveData?: boolean;
+	effectiveType?: "slow-2g" | "2g" | "3g" | "4g";
+};
+
+function shouldSkipOrbits(): boolean {
+	const conn = (
+		navigator as Navigator & { connection?: NetworkInformation }
+	).connection;
+	if (conn?.saveData) return true;
+	if (
+		conn?.effectiveType === "slow-2g" ||
+		conn?.effectiveType === "2g" ||
+		conn?.effectiveType === "3g"
+	)
+		return true;
+	if (window.matchMedia("(max-width: 768px)").matches) return true;
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+		return true;
+	return false;
+}
+
 function OrbitsLottie() {
 	const [Player, setPlayer] = useState<ComponentType<DotLottieReactProps> | null>(null);
 	const [shouldPlay, setShouldPlay] = useState(true);
 
 	useEffect(() => {
+		if (shouldSkipOrbits()) return;
+
 		let cancelled = false;
 		const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
 		setShouldPlay(!mq.matches);
 		const onChange = () => setShouldPlay(!mq.matches);
 		mq.addEventListener("change", onChange);
 
-		import("@lottiefiles/dotlottie-react").then((mod) => {
-			if (!cancelled) setPlayer(() => mod.DotLottieReact);
-		});
+		const loadPlayer = () => {
+			import("@lottiefiles/dotlottie-react").then((mod) => {
+				if (!cancelled) setPlayer(() => mod.DotLottieReact);
+			});
+		};
+
+		const win = window as Window & {
+			requestIdleCallback?: (cb: () => void) => number;
+			cancelIdleCallback?: (id: number) => void;
+		};
+		const hasIdle = typeof win.requestIdleCallback === "function";
+		const handle = hasIdle
+			? (win.requestIdleCallback as (cb: () => void) => number)(loadPlayer)
+			: window.setTimeout(loadPlayer, 200);
 
 		return () => {
 			cancelled = true;
 			mq.removeEventListener("change", onChange);
+			if (hasIdle && typeof win.cancelIdleCallback === "function") {
+				win.cancelIdleCallback(handle as number);
+			} else {
+				window.clearTimeout(handle as number);
+			}
 		};
 	}, []);
 

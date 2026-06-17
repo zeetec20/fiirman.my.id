@@ -23,19 +23,37 @@ export const Route = createFileRoute("/articles/$slug")({
 	},
 	head: ({ loaderData }) => {
 		const article = loaderData?.article;
-		if (!article?.thumbnail) return {};
-		return {
-			links: [
-				{
-					rel: "preload",
-					as: "image",
-					href: thumbnailUrl(article.thumbnail),
-					imagesrcset: thumbnailSrcSet(article.thumbnail),
-					imagesizes: "(max-width: 768px) 100vw, 720px",
-					fetchpriority: "high",
-				},
-			],
-		};
+		if (!article) return {};
+		const SITE_URL = "https://fiirman.my.id";
+		const url = `${SITE_URL}/articles/${article.slug}`;
+		const meta = [
+			{ title: `${article.title} — Firman Lestari` },
+			{ name: "description", content: article.description },
+			{ property: "og:type", content: "article" },
+			{ property: "og:title", content: article.title },
+			{ property: "og:description", content: article.description },
+			{ property: "og:url", content: url },
+		];
+		if (article.thumbnail) {
+			meta.push({
+				property: "og:image",
+				content: `${SITE_URL}${thumbnailUrl(article.thumbnail)}`,
+			});
+		}
+		const links: Array<Record<string, string>> = [
+			{ rel: "canonical", href: url },
+		];
+		if (article.thumbnail) {
+			links.push({
+				rel: "preload",
+				as: "image",
+				href: thumbnailUrl(article.thumbnail),
+				imageSrcSet: thumbnailSrcSet(article.thumbnail),
+				imageSizes: "(max-width: 768px) 100vw, 720px",
+				fetchPriority: "high",
+			});
+		}
+		return { meta, links };
 	},
 	notFoundComponent: () => (
 		<section className="py-20 text-center">
@@ -116,7 +134,7 @@ function ArticlePage() {
 								<a
 									href={article.sourceUrl}
 									target="_blank"
-									rel="noreferrer"
+									rel="noopener noreferrer"
 								>
 									Read on Medium and continue the discussion &rarr;
 								</a>
