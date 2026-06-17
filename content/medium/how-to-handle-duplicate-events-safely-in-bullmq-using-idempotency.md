@@ -18,7 +18,6 @@ source: medium
 sourceUrl: >-
   https://medium.com/@jusles363/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency-1e896f0352c1?source=rss-de2e53234d37------2
 ---
-
 Idempotency is actually a concept that we often use in software engineering without realizing it. In many cases, we already apply this pattern because it helps us build more reliable systems with fewer bugs.
 
 So, what is idempotency?
@@ -36,13 +35,13 @@ The case is about sending upgrade offer emails to free trial users after they re
 Repository: [https://github.com/zeetec20/express-idempotency](https://github.com/zeetec20/express-idempotency)  
 Stack:
 
-- Runtime: Bun + TypeScript (using Nix flake)
-- Web: Express + zod
-- Queue: BullMQ + Redis
-- Database: MySQL + Drizzle ORM
-- Dashboard: bull-board
-- Infrastructure: docker-compose
-- Architecture: single process (server + worker together)
+-   Runtime: Bun + TypeScript (using Nix flake)
+-   Web: Express + zod
+-   Queue: BullMQ + Redis
+-   Database: MySQL + Drizzle ORM
+-   Dashboard: bull-board
+-   Infrastructure: docker-compose
+-   Architecture: single process (server + worker together)
 
 Project structure:
 
@@ -75,26 +74,26 @@ The flow in this project is pretty straightforward.
 
 Every 12 hours, the cron job scans users that:
 
-- still use the free plan
-- registered between 7 and 10 days ago
+-   still use the free plan
+-   registered between 7 and 10 days ago
 
 After getting the candidate users, the system checks Redis to see whether the offer email was already sent before.
 
 If the Redis key already exists:
 
-- skip the user
+-   skip the user
 
 If the Redis key does not exist:
 
-- send the email
-- if success → save Redis key
-- if failed → do not save the key, so the next cron execution can retry again
+-   send the email
+-   if success → save Redis key
+-   if failed → do not save the key, so the next cron execution can retry again
 
 Because of this approach, it doesn’t matter if:
 
-- BullMQ retries the job
-- the scheduler accidentally runs twice
-- the endpoint gets triggered multiple times
+-   BullMQ retries the job
+-   the scheduler accidentally runs twice
+-   the endpoint gets triggered multiple times
 
 The user will still only receive one email.
 
@@ -144,8 +143,10 @@ The reason I use Redis instead of adding a new field into the users table is bec
 
 Using Redis also makes the process simpler and faster:
 
-- fast read/write
-- flexible TTL expiration
-- no need to update the user row every time an email is sent
+-   fast read/write
+-   flexible TTL expiration
+-   no need to update the user row every time an email is sent
 
 So overall, idempotency is not only about avoiding duplicate actions, but also about making systems safer when retries, crashes, or duplicated events happen unexpectedly.
+
+![](/article/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency/img-1.jpg)

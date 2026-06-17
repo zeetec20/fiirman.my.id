@@ -18,7 +18,6 @@ source: medium
 sourceUrl: >-
   https://medium.com/@jusles363/enforcing-branch-protection-without-upgrading-your-github-plan-be252860bd6d?source=rss-de2e53234d37------2
 ---
-
 I think every team project should have a rule that prevents developers from pushing code directly to the master or main branch. Directly pushing to these branches can be risky because it may accidentally overwrite someone else’s work and introduce issues into the codebase.
 
 It also bypasses many important parts of the development workflow. Without creating a Pull Request (PR), there is no opportunity for code review, automated testing, linting, or other quality checks that may be configured in the project. As a result, bugs or code quality issues can reach the main branch more easily.
@@ -35,7 +34,7 @@ For the branch protection case discussed in this article, we can use Git hooks o
 
 The installation depends on the package manager you use. In this example, I am using Bun:
 
-```bash
+```text
 bun add -d husky
 bunx husky init
 ```
@@ -44,7 +43,7 @@ bunx husky init
 
 Add the following script to your pre-commit file:
 
-```bash
+```text
 protected="master"
 branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
 
@@ -64,7 +63,7 @@ This hook prevents repository members from creating commits directly on the prot
 
 Add the following script to your pre-push file:
 
-```bash
+```text
 protected="master"
 zero="0000000000000000000000000000000000000000"
 
@@ -96,15 +95,15 @@ The following messages will be shown depending on the action:
 
 ✖ Pushing to '$protected' is blocked. Open a PR from a feature branch.
 
-- When someone tries to push directly to the protected branch.
+-   When someone tries to push directly to the protected branch.
 
 ✖ Force push to '$protected' is blocked.
 
-- When someone tries to force push to the protected branch.
+-   When someone tries to force push to the protected branch.
 
 ✖ Deleting remote '$protected' is blocked.
 
-- When someone tries to delete the protected branch from the remote repository.
+-   When someone tries to delete the protected branch from the remote repository.
 
 ### Limitations
 
@@ -112,9 +111,11 @@ Using Husky allows us to effectively protect the master or main branch in local 
 
 For example, Git hooks can be skipped using the --no-verify flag:
 
-```bash
+```text
 git commit --no-verify -m "your message"
 git push --no-verify
 ```
 
 Because of this limitation, Husky should be considered an additional layer of protection rather than a complete replacement for GitHub’s server-side branch protection rules.
+
+![](/article/enforcing-branch-protection-without-upgrading-your-github-plan/img-1.jpg)
