@@ -2,16 +2,19 @@
 @import 'tw-animate-css';
 
 /* Self-hosted fonts.
-   - EB Garamond, Cormorant Garamond, UnifrakturCook: preloaded + font-display: optional
-     so the visible Georgia→Garamond swap never happens on first paint. Cached for
-     subsequent visits.
-   - Italic + mono variants kept on the default fontsource @import (font-display: swap)
-     since they are rarely above the fold. */
+   - EB Garamond, Cormorant Garamond, UnifrakturCook: all preloaded in
+     `src/routes/__root.tsx` + `font-display: swap`. The metrics-matched
+     `Garamond Fallback` below absorbs the swap with zero CLS, and `swap`
+     (vs. `optional`) guarantees the real face renders on every refresh
+     instead of intermittently skipping when the 100 ms `optional` window
+     closes mid-paint.
+   - Italic + mono variants kept on the default fontsource @import
+     (font-display: swap) since they are rarely above the fold. */
 
 @font-face {
   font-family: 'EB Garamond Variable';
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   font-weight: 100 900;
   src: url('/fonts/eb-garamond-latin-wght-normal.woff2')
     format('woff2-variations');
@@ -19,7 +22,7 @@
 @font-face {
   font-family: 'Cormorant Garamond Variable';
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   font-weight: 100 900;
   src: url('/fonts/cormorant-garamond-latin-wght-normal.woff2')
     format('woff2-variations');
@@ -27,7 +30,7 @@
 @font-face {
   font-family: 'UnifrakturCook';
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   font-weight: 700;
   src: url('/fonts/unifrakturcook-latin-700-normal.woff2') format('woff2');
 }

@@ -113,15 +113,30 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { name: 'msapplication-TileColor', content: '#8a2d1d' },
     ],
     links: [
-      /* Only preload the body face (LCP candidate). Cormorant + UnifrakturCook
-         are display/gothic faces below the fold; `font-display: optional`
-         (styles.css) prevents CLS so they can load without competing for
-         first-paint bandwidth. */
+      /* All three faces preloaded. Pairs with `font-display: swap` (styles.css):
+         the metrics-matched Garamond fallback absorbs the swap (zero CLS) and
+         preloading guarantees the real face arrives close to first paint on
+         cold cache instead of waiting for CSS to discover the @font-face rule
+         several hundred ms later. */
       {
         rel: 'preload',
         as: 'font',
         type: 'font/woff2',
         href: '/fonts/eb-garamond-latin-wght-normal.woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        href: '/fonts/cormorant-garamond-latin-wght-normal.woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        href: '/fonts/unifrakturcook-latin-700-normal.woff2',
         crossOrigin: 'anonymous',
       },
       /* preconnect to third-party origins used below the fold (about page) */
