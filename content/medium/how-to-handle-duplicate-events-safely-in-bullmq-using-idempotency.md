@@ -148,5 +148,3 @@ Using Redis also makes the process simpler and faster:
 -   no need to update the user row every time an email is sent
 
 So overall, idempotency is not only about avoiding duplicate actions, but also about making systems safer when retries, crashes, or duplicated events happen unexpectedly.
-
-![](/article/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency/img-1.jpg)

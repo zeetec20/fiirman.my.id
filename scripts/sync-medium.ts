@@ -56,9 +56,17 @@ function detectLanguage(code: string): string {
 	// YAML
 	if (/^\s*[A-Za-z_][\w-]*\s*:\s*\S/m.test(head) && /^---\s*$/m.test(head))
 		return "yaml";
-	// Bash / shell
+	// Bash / shell. Runs after the box-art guard above so ASCII diagrams that
+	// happen to contain shell-looking words stay "text".
 	if (/^#!\/(?:usr\/)?bin\/(?:bash|sh|zsh)/m.test(head)) return "bash";
 	if (/^\s*\$\s+\S/m.test(head)) return "bash";
+	// Shell control syntax (Medium RSS strips the lang, so these blocks would
+	// otherwise fall through to "text").
+	if (/\bif\s+\[|^\s*then\b|^\s*fi\b|^\s*done\b|^\s*esac\b|\bcase\s+.+\s+in\b|\bwhile\s+read\b|^\s*exit\s+\d/m.test(head))
+		return "bash";
+	// Lines starting with a common CLI command.
+	if (/^\s*(?:git|bun|bunx|npm|npx|pnpm|yarn|cd|echo|export|source|curl|wget|sudo|apt|brew|chmod|chown|mkdir|rm|cp|mv|docker|kubectl)\s+\S/m.test(head))
+		return "bash";
 	// SQL
 	if (/\b(SELECT|INSERT|UPDATE|DELETE|CREATE TABLE)\b/i.test(head)) return "sql";
 	// Python
@@ -154,7 +162,11 @@ async function downloadImage(url: string, dest: string): Promise<boolean> {
 function extractImageUrls(html: string): string[] {
 	const urls: string[] = [];
 	for (const match of html.matchAll(/<img[^>]+src=["']([^"']+)["'][^>]*>/g)) {
-		urls.push(match[1]);
+		const src = match[1];
+		// Skip Medium's 1x1 view-tracking pixel that trails content:encoded.
+		// Left in, it becomes a bogus img-N.jpg linked at the end of the body.
+		if (/medium\.com\/_\/stat|\/_\/stat\b/.test(src)) continue;
+		urls.push(src);
 	}
 	return urls;
 }
@@ -171,6 +183,12 @@ async function processItem(item: RssItem) {
 	await mkdir(assetDir, { recursive: true });
 
 	let body = item["content:encoded"];
+	// Drop Medium's trailing 1x1 view-tracking pixel <img> before anything else,
+	// or turndown renders it as a remote ![](…/_/stat?…) at the end of the body.
+	body = body.replace(
+		/<img[^>]+src=["'][^"']*\/_\/stat[^"']*["'][^>]*>/g,
+		"",
+	);
 	const imgUrls = extractImageUrls(body);
 
 	let thumbnail = "";

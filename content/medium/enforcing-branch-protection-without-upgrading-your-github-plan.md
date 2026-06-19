@@ -34,7 +34,7 @@ For the branch protection case discussed in this article, we can use Git hooks o
 
 The installation depends on the package manager you use. In this example, I am using Bun:
 
-```text
+```bash
 bun add -d husky
 bunx husky init
 ```
@@ -43,7 +43,7 @@ bunx husky init
 
 Add the following script to your pre-commit file:
 
-```text
+```bash
 protected="master"
 branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
 
@@ -63,7 +63,7 @@ This hook prevents repository members from creating commits directly on the prot
 
 Add the following script to your pre-push file:
 
-```text
+```bash
 protected="master"
 zero="0000000000000000000000000000000000000000"
 
@@ -111,11 +111,9 @@ Using Husky allows us to effectively protect the master or main branch in local 
 
 For example, Git hooks can be skipped using the --no-verify flag:
 
-```text
+```bash
 git commit --no-verify -m "your message"
 git push --no-verify
 ```
 
 Because of this limitation, Husky should be considered an additional layer of protection rather than a complete replacement for GitHub’s server-side branch protection rules.
-
-![](/article/enforcing-branch-protection-without-upgrading-your-github-plan/img-1.jpg)

@@ -1439,7 +1439,9 @@
 /* Title sits ABOVE the script window. Hairline border, no fill, lowercase
    small-caps — reads as a folio label, not a tab. */
 .code-block-title {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin: 0 0 -1px 0;
   padding: 3px 10px;
   font-family: var(--font-smallcaps);
@@ -1453,6 +1455,15 @@
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   text-transform: lowercase;
   user-select: none;
+}
+
+/* Line icon inherits the title's muted ink; sized to sit on the small-caps
+   baseline without inflating the strip. */
+.code-block-title svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  opacity: 0.85;
 }
 
 .code-block-body {

@@ -37,7 +37,7 @@ const SPOTIFY_LABEL = "From the author's desk";
 const SPOTIFY_EMBED_HEIGHT = 152;
 
 const SITE_URL = "https://fiirman.my.id";
-const PAGE_TITLE = "The Author — Firman Lestari";
+const PAGE_TITLE = "The Author — Firman Justisio Lestari";
 const PAGE_DESCRIPTION =
   "A short notice from the desk: who I am, what I work on, and what plays while I write.";
 
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/about")({
   component: About,
   loader: () => ({
     articles: getAllArticles(),
-    bioHtml: getBioHtml(),
+    sanitizedBioMarkup: getBioHtml(),
   }),
   head: () => ({
     meta: [
@@ -74,7 +74,7 @@ export const Route = createFileRoute("/about")({
 });
 
 function About() {
-  const { bioHtml } = Route.useLoaderData();
+  const { sanitizedBioMarkup } = Route.useLoaderData();
 
   return (
     <section className="py-8">
@@ -88,7 +88,7 @@ function About() {
             <img
               src={AVATAR_URL}
               srcSet={AVATAR_SRCSET}
-              alt="Firman Lestari"
+              alt="Firman Justisio Lestari"
               width={400}
               height={400}
               loading="eager"
@@ -98,7 +98,7 @@ function About() {
             />
           </PortraitFrame>
           <p className="small-caps text-xs text-fg-muted mt-4 text-center tracking-wider">
-            Firman Lestari · ZEETEC20 · Compositor of these pages
+            Firman Justisio Lestari · ZEETEC20 · Compositor of these pages
           </p>
         </div>
         <div className="md:col-span-8">
@@ -118,8 +118,8 @@ function About() {
       {/* Bio body — sourced from content/bio.md */}
       <div
         className="prose-article has-drop-cap"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted, pre-rendered SSR content
-        dangerouslySetInnerHTML={{ __html: bioHtml }}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: build-time, rehype-sanitize'd markdown output (see markdownToHtml)
+        dangerouslySetInnerHTML={{ __html: sanitizedBioMarkup }}
       />
 
       <RuleDouble className="my-12" />
@@ -232,6 +232,10 @@ function SpotifyEmbed() {
         height={SPOTIFY_EMBED_HEIGHT}
         loading="lazy"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        /* Minimal sandbox: scripts for the player, popups so "open in
+           Spotify" can launch. Deliberately NO allow-same-origin — pairing
+           it with allow-scripts lets a frame escape its own sandbox. */
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-presentation"
         className="block w-full border-0"
       />
     </LazyOnVisible>

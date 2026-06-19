@@ -1,5 +1,6 @@
 import type { Element, Root } from "hast";
 import { visit } from "unist-util-visit";
+import { langIcon } from "./lang-icons";
 
 /**
  * Wraps every <pre> in a <figure class="code-block">. When the inner <code>
@@ -14,23 +15,25 @@ import { visit } from "unist-util-visit";
  * The click handler lives in ArticleBody (event delegation).
  */
 
-function extractLanguage(pre: Element): string | null {
+/**
+ * Resolve the fence language from <code class="language-xx">. Defaults to
+ * "text" when the class is absent, empty, or already a plain-text alias — so
+ * every code block carries a concrete language (and thus a title + icon).
+ */
+function resolveLanguage(pre: Element): string {
 	const code = pre.children.find(
 		(c): c is Element => c.type === "element" && c.tagName === "code",
 	);
-	if (!code) return null;
-	const cls = code.properties?.className;
-	if (!Array.isArray(cls)) return null;
-	for (const c of cls) {
-		if (typeof c !== "string") continue;
-		if (!c.startsWith("language-")) continue;
-		const lang = c.slice("language-".length).toLowerCase();
-		if (!lang || lang === "text" || lang === "plain" || lang === "plaintext") {
-			return null;
+	const cls = code?.properties?.className;
+	if (Array.isArray(cls)) {
+		for (const c of cls) {
+			if (typeof c !== "string" || !c.startsWith("language-")) continue;
+			const lang = c.slice("language-".length).toLowerCase();
+			if (lang && lang !== "plain" && lang !== "plaintext") return lang;
+			break;
 		}
-		return lang;
 	}
-	return null;
+	return "text";
 }
 
 export function rehypeCopyButton() {
@@ -48,7 +51,7 @@ export function rehypeCopyButton() {
 				}
 			}
 
-			const lang = extractLanguage(node);
+			const lang = resolveLanguage(node);
 
 			const body: Element = {
 				type: "element",
@@ -70,19 +73,23 @@ export function rehypeCopyButton() {
 				],
 			};
 
-			const figureChildren: Element[] = [];
-			if (lang) {
-				figureChildren.push({
-					type: "element",
-					tagName: "figcaption",
-					properties: {
-						className: ["code-block-title"],
-						"data-lang": lang,
+			const title: Element = {
+				type: "element",
+				tagName: "figcaption",
+				properties: {
+					className: ["code-block-title"],
+					"data-lang": lang,
+				},
+				children: [
+					langIcon(lang),
+					{
+						type: "element",
+						tagName: "span",
+						properties: { className: ["code-block-lang"] },
+						children: [{ type: "text", value: lang }],
 					},
-					children: [{ type: "text", value: lang }],
-				});
-			}
-			figureChildren.push(body);
+				],
+			};
 
 			const wrapper: Element = {
 				type: "element",
@@ -90,9 +97,9 @@ export function rehypeCopyButton() {
 				properties: {
 					className: ["code-block"],
 					"data-code-block": true,
-					...(lang ? { "data-lang": lang } : {}),
+					"data-lang": lang,
 				},
-				children: figureChildren,
+				children: [title, body],
 			};
 			parent.children[idx] = wrapper;
 			return ["skip", idx + 1];

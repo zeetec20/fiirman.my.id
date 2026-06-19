@@ -14,6 +14,7 @@ import { SocialLinks } from '../components/social-links'
 import { ThemeToggle } from '../components/theme-toggle'
 import { Toaster } from '../components/ui/sonner'
 import { TooltipProvider } from '../components/ui/tooltip'
+import { personSchema } from '../lib/person-schema'
 
 import appCss from '../styles.css?url'
 
@@ -66,7 +67,7 @@ const SITE_NAME = 'Firman Lestari'
 const SITE_TITLE = 'Firman Lestari'
 const SITE_DESCRIPTION =
   'Curious person who became a software engineer, with interests far beyond tech and always exploring nerdy ideas and random deep dives.'
-const SITE_AUTHOR = 'Firman Lestari'
+const SITE_AUTHOR = 'Firman Justisio Lestari'
 const OG_IMAGE = `${SITE_URL}/logo512.png`
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -111,6 +112,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
       { name: 'msapplication-TileColor', content: '#8a2d1d' },
+
+      /* Person JSON-LD — site-wide. Claims the full name + bylines/handle
+         under one entity for SEO. TanStack serializes & escapes this into
+         a <script type="application/ld+json"> tag. */
+      { 'script:ld+json': personSchema },
     ],
     links: [
       /* All three faces preloaded. Pairs with `font-display: swap` (styles.css):

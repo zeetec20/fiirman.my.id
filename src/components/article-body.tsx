@@ -3,16 +3,20 @@ import { toast } from "sonner";
 import { copyToClipboard } from "../lib/clipboard";
 
 /**
- * Renders pre-rendered HTML produced by the build-time markdown pipeline.
+ * Renders HTML produced by the build-time markdown pipeline.
  * Copy buttons are injected at SSR by rehypeCopyButton; here we wire one
  * delegated click listener on the container so route remounts don't strand
  * stale listeners on individual <pre> elements.
+ *
+ * Contract: `sanitizedMarkup` MUST be output of `markdownToHtml`, which
+ * runs rehype-sanitize at the trust boundary. Never pass it raw/untrusted
+ * HTML — sanitization is the caller's guarantee, not done again here.
  */
 export function ArticleBody({
-	html,
+	sanitizedMarkup,
 	withDropCap = true,
 }: {
-	html: string;
+	sanitizedMarkup: string;
 	withDropCap?: boolean;
 }) {
 	const ref = useRef<HTMLDivElement | null>(null);
@@ -57,8 +61,8 @@ export function ArticleBody({
 		<div
 			ref={ref}
 			className={className}
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted, pre-rendered SSR content
-			dangerouslySetInnerHTML={{ __html: html }}
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: build-time, rehype-sanitize'd markdown output (see markdownToHtml)
+			dangerouslySetInnerHTML={{ __html: sanitizedMarkup }}
 		/>
 	);
 }

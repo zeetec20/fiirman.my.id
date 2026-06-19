@@ -10,9 +10,14 @@ import { cloudflare } from '@cloudflare/vite-plugin'
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
   build: {
-    /* Source maps for production debugging + Lighthouse's
-       valid-source-maps audit. */
-    sourcemap: true,
+    /* No source maps in the production build. Emitting them publishes the
+       full original source (incl. bundled library internals) as world-
+       readable .js.map artifacts next to the bundle — an info-disclosure
+       surface and the source of react-doctor artifact-secret-leak /
+       artifact-baas-authority-surface findings. Lighthouse's
+       valid-source-maps is an informational (unweighted) audit, so this
+       does not affect the Best-Practices score. */
+    sourcemap: false,
   },
   plugins: [
     devtools(),

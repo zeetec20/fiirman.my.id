@@ -108,7 +108,7 @@ function ArticlePage() {
 
 			<RuleDouble className="my-10 max-w-prose mx-auto" />
 
-			<ArticleBody html={article.body} />
+			<ArticleBody sanitizedMarkup={article.body} />
 
 			<RuleDouble className="my-12 max-w-prose mx-auto" />
 
