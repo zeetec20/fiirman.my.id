@@ -15,6 +15,7 @@ import { ThemeToggle } from '../components/theme-toggle'
 import { Toaster } from '../components/ui/sonner'
 import { TooltipProvider } from '../components/ui/tooltip'
 import { personSchema } from '../lib/person-schema'
+import { websiteSchema } from '../lib/website-schema'
 
 import appCss from '../styles.css?url'
 
@@ -117,6 +118,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
          under one entity for SEO. TanStack serializes & escapes this into
          a <script type="application/ld+json"> tag. */
       { 'script:ld+json': personSchema },
+      { 'script:ld+json': websiteSchema },
     ],
     links: [
       /* All three faces preloaded. Pairs with `font-display: swap` (styles.css):

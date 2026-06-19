@@ -11,6 +11,7 @@ const SITE_URL = "https://fiirman.my.id";
 export const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${SITE_URL}/#person`,
   name: "Firman Justisio Lestari",
   alternateName: ["Firman Lestari", "ZEETEC20"],
   url: SITE_URL,
