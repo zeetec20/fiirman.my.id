@@ -1,28 +1,12 @@
 [
   {
-    "name": "minScore",
-    "expected": 0.95,
-    "actual": 0.85,
-    "values": [
-      0.79,
-      0.82,
-      0.85
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditProperty": "performance",
-    "auditId": "categories",
-    "level": "error",
-    "url": "http://localhost:3000/"
-  },
-  {
     "name": "maxNumericValue",
     "expected": 2500,
-    "actual": 3667.4325,
+    "actual": 3158.211749999999,
     "values": [
-      4435.166399999999,
-      4216.0554,
-      3667.4325
+      3158.211749999999,
+      3235.6889,
+      3252.2584000000006
     ],
     "operator": "<=",
     "passed": false,
@@ -33,29 +17,13 @@
     "auditDocumentationLink": "https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/"
   },
   {
-    "name": "minScore",
-    "expected": 0.95,
-    "actual": 0.89,
-    "values": [
-      0.83,
-      0.87,
-      0.89
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditProperty": "performance",
-    "auditId": "categories",
-    "level": "error",
-    "url": "http://localhost:3000/articles"
-  },
-  {
     "name": "maxNumericValue",
     "expected": 2500,
-    "actual": 3356.4778499999998,
+    "actual": 3529.4873,
     "values": [
-      4065.56225,
-      3577.9478,
-      3356.4778499999998
+      3558.1168,
+      3556.2138,
+      3529.4873
     ],
     "operator": "<=",
     "passed": false,
@@ -66,45 +34,13 @@
     "auditDocumentationLink": "https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/"
   },
   {
-    "name": "minScore",
-    "expected": 0.95,
-    "actual": 0.94,
-    "values": [
-      0.93,
-      0.93,
-      0.94
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditProperty": "performance",
-    "auditId": "categories",
-    "level": "error",
-    "url": "http://localhost:3000/about"
-  },
-  {
-    "name": "minScore",
-    "expected": 0.95,
-    "actual": 0.93,
-    "values": [
-      0.93,
-      0.93,
-      0.93
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditProperty": "best-practices",
-    "auditId": "categories",
-    "level": "error",
-    "url": "http://localhost:3000/about"
-  },
-  {
     "name": "maxNumericValue",
     "expected": 2500,
-    "actual": 2728.4015,
+    "actual": 2913.2291000000005,
     "values": [
-      2893.6276000000003,
-      2894.8921,
-      2728.4015
+      3232.6121999999996,
+      2913.2291000000005,
+      2919.06095
     ],
     "operator": "<=",
     "passed": false,

@@ -1,9 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArticleCard } from "../components/article-card";
+import { SIZES_FEATURE } from "../components/article-thumbnail";
 import { Kicker } from "../components/kicker";
 import { RuleDouble } from "../components/rules";
 import { parseFrontmatterDate } from "../lib/article-schema";
-import { getAllArticles } from "../lib/articles";
+import {
+	getAllArticles,
+	thumbnailSrcSet,
+	thumbnailUrl,
+} from "../lib/articles";
 
 const SITE_URL = "https://fiirman.my.id";
 const PAGE_TITLE = "Folios — Firman Lestari";
@@ -13,16 +18,34 @@ const PAGE_DESCRIPTION =
 export const Route = createFileRoute("/articles/")({
 	component: ArchiveIndex,
 	loader: () => ({ articles: getAllArticles() }),
-	head: () => ({
-		meta: [
-			{ title: PAGE_TITLE },
-			{ name: "description", content: PAGE_DESCRIPTION },
-			{ property: "og:title", content: PAGE_TITLE },
-			{ property: "og:description", content: PAGE_DESCRIPTION },
-			{ property: "og:url", content: `${SITE_URL}/articles` },
-		],
-		links: [{ rel: "canonical", href: `${SITE_URL}/articles` }],
-	}),
+	head: ({ loaderData }) => {
+		const links: Array<Record<string, string>> = [
+			{ rel: "canonical", href: `${SITE_URL}/articles` },
+		];
+		/* First card is the LCP element — preload its thumbnail with the
+		   same srcset/sizes as the <img> (see index.tsx for the pattern). */
+		const first = loaderData?.articles[0];
+		if (first?.thumbnail) {
+			links.push({
+				rel: "preload",
+				as: "image",
+				href: thumbnailUrl(first.thumbnail),
+				imageSrcSet: thumbnailSrcSet(first.thumbnail),
+				imageSizes: SIZES_FEATURE,
+				fetchPriority: "high",
+			});
+		}
+		return {
+			meta: [
+				{ title: PAGE_TITLE },
+				{ name: "description", content: PAGE_DESCRIPTION },
+				{ property: "og:title", content: PAGE_TITLE },
+				{ property: "og:description", content: PAGE_DESCRIPTION },
+				{ property: "og:url", content: `${SITE_URL}/articles` },
+			],
+			links,
+		};
+	},
 });
 
 function ArchiveIndex() {

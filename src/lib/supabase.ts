@@ -27,10 +27,16 @@ export async function getSupabase(): Promise<SupabaseClient | null> {
 		return null;
 	}
 
-	/* Bot exclusion: Lighthouse/automation set navigator.webdriver. Skipping
-	   keeps synthetic traffic out of analytics and network errors out of the
-	   console when the Supabase host is unreachable (CI has no network). */
-	if (navigator.webdriver) {
+	/* Bot/local exclusion. `navigator.webdriver` covers real automation in
+	   prod. The hostname check covers Lighthouse CI + dev: LH 12 no longer
+	   marks its UA or sets webdriver under chrome-launcher, and a failing
+	   Supabase RPC logs an unsuppressable network error to the console,
+	   which fails the best-practices audit. Localhost traffic has no
+	   analytics value anyway. */
+	if (
+		navigator.webdriver ||
+		["localhost", "127.0.0.1"].includes(window.location.hostname)
+	) {
 		cached = null;
 		return null;
 	}

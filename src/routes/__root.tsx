@@ -1,8 +1,4 @@
-import {
-  HeadContent,
-  Scripts,
-  createRootRouteWithContext,
-} from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { Suspense, lazy, useEffect } from 'react'
 import { BackgroundDecoration } from '../components/background-decoration'
 import { Masthead } from '../components/masthead'
@@ -14,14 +10,42 @@ import { RubricLink } from '../components/rubric-link'
 import { RuleDouble, RuleHair } from '../components/rules'
 import { SocialLinks } from '../components/social-links'
 import { ThemeToggle } from '../components/theme-toggle'
-import { Toaster } from '../components/ui/sonner'
 import { TooltipProvider } from '../components/ui/tooltip'
+
+/* Toast outlet lazy-mounted so sonner stays out of the entry chunk — it's
+   only needed after user interaction (e.g. copy-code toasts), never for
+   first paint. */
+const Toaster = lazy(() =>
+  import('../components/ui/sonner').then((m) => ({ default: m.Toaster })),
+)
 import { personSchema } from '../lib/person-schema'
 import { websiteSchema } from '../lib/website-schema'
 
 import appCss from '../styles.css?url'
 
-import type { QueryClient } from '@tanstack/react-query'
+/* react-query was removed — no queries anywhere; the ssr-query integration
+   and QueryClient context were pure boilerplate costing ~13K gz in the
+   pre-LCP window. Re-add via @tanstack/react-router-ssr-query when an
+   actual server-state need appears. */
+
+/* Never executes: keeps styles.css in the client build as an async-chunk
+   asset so emit-inline-css (vite.config.ts) can capture it. A plain
+   side-effect import would make TanStack Start auto-inject a
+   render-blocking <link data-precedence> for the sheet — the whole point
+   of inlining is to avoid that request; the ?url import alone is dev-only
+   and would be tree-shaken from prod, dropping the CSS build entirely. */
+if ((globalThis as { __KEEP_CSS_CHUNK__?: boolean }).__KEEP_CSS_CHUNK__) {
+  void import('../styles-emit')
+}
+
+/* Full processed sheet, inlined into <head> in prod (see emit-inline-css in
+   vite.config.ts) — removes the render-blocking CSS request. Server build
+   only: the SSR guard is compile-time, so neither the import nor the CSS
+   string reaches the client bundle. Dev keeps the <link> for HMR. */
+const INLINE_CSS =
+  import.meta.env.PROD && import.meta.env.SSR
+    ? (await import('../data/inline-css.generated')).css
+    : ''
 
 /**
  * Dev-only devtools mount. `import.meta.env.DEV` is a Vite compile-time
@@ -32,16 +56,11 @@ import type { QueryClient } from '@tanstack/react-query'
  */
 const DevtoolsMount = import.meta.env.DEV
   ? lazy(async () => {
-      const [
-        { TanStackDevtools },
-        { TanStackRouterDevtoolsPanel },
-        qdModule,
-      ] = await Promise.all([
-        import('@tanstack/react-devtools'),
-        import('@tanstack/react-router-devtools'),
-        import('../integrations/tanstack-query/devtools'),
-      ])
-      const TanStackQueryDevtools = qdModule.default
+      const [{ TanStackDevtools }, { TanStackRouterDevtoolsPanel }] =
+        await Promise.all([
+          import('@tanstack/react-devtools'),
+          import('@tanstack/react-router-devtools'),
+        ])
       return {
         default: () => (
           <TanStackDevtools
@@ -51,17 +70,12 @@ const DevtoolsMount = import.meta.env.DEV
                 name: 'Tanstack Router',
                 render: <TanStackRouterDevtoolsPanel />,
               },
-              TanStackQueryDevtools,
             ]}
           />
         ),
       }
     })
   : null
-
-interface MyRouterContext {
-  queryClient: QueryClient
-}
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);root.setAttribute('data-theme',mode);root.style.colorScheme=resolved;}catch(e){}})();`
 
@@ -73,7 +87,7 @@ const SITE_DESCRIPTION =
 const SITE_AUTHOR = 'Firman Justisio Lestari'
 const OG_IMAGE = `${SITE_URL}/logo512.png`
 
-export const Route = createRootRouteWithContext<MyRouterContext>()({
+export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -123,14 +137,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { 'script:ld+json': websiteSchema },
     ],
     links: [
-      /* Body + display faces preloaded. Pairs with `font-display: swap`
-         (styles.css): the metrics-matched Garamond fallback absorbs the swap
-         (zero CLS) and preloading guarantees the real face arrives close to
-         first paint on cold cache instead of waiting for CSS to discover the
-         @font-face rule several hundred ms later. UnifrakturCook (masthead
-         blackletter only) is deliberately NOT preloaded — its 17K would
-         compete with the LCP image on slow connections; it loads via normal
-         @font-face discovery and swaps in without layout shift. */
+      /* All three display faces preloaded + `font-display: optional`
+         (styles.css). Measured on the throttled-mobile profile across
+         repeated A/B runs: preloading is worth ~0.5s of FCP versus
+         @font-face discovery, at no LCP cost; `optional` keeps the faces
+         off the render critical path (no swap, zero CLS) — real face when
+         it wins the 100ms window (the common case with preload), else the
+         metrics-matched Garamond fallback for the visit. */
       {
         rel: 'preload',
         as: 'font',
@@ -143,6 +156,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         as: 'font',
         type: 'font/woff2',
         href: '/fonts/cormorant-garamond-latin-wght-normal.woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        as: 'font',
+        type: 'font/woff2',
+        href: '/fonts/unifrakturcook-latin-700-normal.woff2',
         crossOrigin: 'anonymous',
       },
       /* No site-wide canonical: per-route head() emits the canonical for
@@ -165,7 +185,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       { rel: 'mask-icon', href: '/favicon.svg?v=3', color: '#8a2d1d' },
       { rel: 'manifest', href: '/manifest.json' },
-      { rel: 'stylesheet', href: appCss },
+      ...(import.meta.env.DEV ? [{ rel: 'stylesheet', href: appCss }] : []),
     ],
   }),
   shellComponent: RootDocument,
@@ -221,6 +241,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" data-theme="auto" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {import.meta.env.PROD ? (
+          /* Server renders the full sheet; the client renders an empty
+             string and React's hydration adopts the server DOM without
+             diffing dangerouslySetInnerHTML — the CSS stays put. */
+          <style
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: INLINE_CSS }}
+          />
+        ) : null}
         <HeadContent />
       </head>
       <body className="font-serif text-base bg-bg text-fg relative isolate">
@@ -310,7 +339,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </footer>
         </TooltipProvider>
 
-        <Toaster position="bottom-right" />
+        <Suspense fallback={null}>
+          <Toaster position="bottom-right" />
+        </Suspense>
 
         {DevtoolsMount ? (
           <Suspense fallback={null}>

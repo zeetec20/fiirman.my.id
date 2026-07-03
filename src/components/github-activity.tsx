@@ -177,6 +177,10 @@ export function GithubActivity({ className = "" }: { className?: string }) {
 						if (!day) return null;
 						const x = LEFT_PAD + wi * COL;
 						const y = TOP_PAD + di * COL;
+						/* No per-rect <title>: the svg is role="img" with an
+						   aria-label, so descendants are presentational for AT
+						   anyway, and 365 title nodes of inherited-then-scaled
+						   text (6px effective) fail Lighthouse's font-size audit. */
 						return (
 							<rect
 								key={day.date}
@@ -187,9 +191,7 @@ export function GithubActivity({ className = "" }: { className?: string }) {
 								height={CELL}
 								rx={1.5}
 								ry={1.5}
-							>
-								<title>{`${day.count} contributions on ${day.date}`}</title>
-							</rect>
+							/>
 						);
 					}),
 				)}

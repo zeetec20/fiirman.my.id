@@ -104,6 +104,18 @@ async function buildBio(): Promise<{ html: string }> {
 
 async function main() {
 	const start = Date.now();
+
+	/* Stub for the inline-CSS module so typecheck and the server build
+	   resolve before the first client build overwrites it with the real
+	   sheet (see emit-inline-css in vite.config.ts). */
+	const inlineCssPath = join(ROOT_DIR, "src/data/inline-css.generated.ts");
+	if (!(await Bun.file(inlineCssPath).exists())) {
+		await Bun.write(
+			inlineCssPath,
+			`/* Auto-generated stub — overwritten by emit-inline-css (vite.config.ts). */\nexport const css: string = "";\n`,
+		);
+	}
+
 	const [articles, bio] = await Promise.all([buildArticles(), buildBio()]);
 
 	const index = articles.map(({ body: _body, ...meta }) => meta);

@@ -3,18 +3,21 @@
 
 /* Self-hosted fonts.
    - EB Garamond, Cormorant Garamond, UnifrakturCook: all preloaded in
-     `src/routes/__root.tsx` + `font-display: swap`. The metrics-matched
-     `Garamond Fallback` below absorbs the swap with zero CLS, and `swap`
-     (vs. `optional`) guarantees the real face renders on every refresh
-     instead of intermittently skipping when the 100 ms `optional` window
-     closes mid-paint.
+     `src/routes/__root.tsx` + `font-display: optional`. Reversal of the
+     earlier `swap` decision: with `swap`, Lighthouse's throttled-mobile
+     model puts all ~96K of woff2 on the first-paint critical path (~+0.8s
+     FCP on every page); `optional` takes them off it and eliminates late
+     swaps entirely (zero CLS). The preloads mean the real faces still win
+     the 100ms render window on decent connections; on genuinely slow ones
+     the metrics-matched `Garamond Fallback` below sticks for the visit —
+     the intended trade.
    - Italic + mono variants kept on the default fontsource @import
      (font-display: swap) since they are rarely above the fold. */
 
 @font-face {
   font-family: 'EB Garamond Variable';
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   font-weight: 100 900;
   src: url('/fonts/eb-garamond-latin-wght-normal.woff2')
     format('woff2-variations');
@@ -22,7 +25,7 @@
 @font-face {
   font-family: 'Cormorant Garamond Variable';
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   font-weight: 100 900;
   src: url('/fonts/cormorant-garamond-latin-wght-normal.woff2')
     format('woff2-variations');
@@ -30,7 +33,7 @@
 @font-face {
   font-family: 'UnifrakturCook';
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   font-weight: 700;
   src: url('/fonts/unifrakturcook-latin-700-normal.woff2') format('woff2');
 }
@@ -869,6 +872,12 @@
   pointer-events: none;
   z-index: -3;
   opacity: 0.14;
+  /* Same fractal-noise params as the old full-viewport <svg> filter, but
+     rasterized once as a 240px tile and repeated — full-screen feTurbulence
+     stalls first paint for seconds on software rasterizers. */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+  background-repeat: repeat;
+  background-size: 240px 240px;
 }
 
 :root[data-theme='dark'] .bg-paper-grain {
@@ -880,33 +889,9 @@
   }
 }
 
-.bg-age-stains {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -2;
-  opacity: 0.18;
-  /* Light mode: no warm stains (the parchment ground reads cleaner without
-     them). Dark mode override below restores cool age tones. */
-  background-image: none;
-}
-
-/* Dark-mode age stains removed too — `bg-age-stains` stays as inert
-   fixed layer (kept for DOM stability) but paints nothing. */
-
-/* Candle glow — soft warm pulsing centerpiece behind content. */
-
-@keyframes candle-glow-pulse {
-  0%,
-  100% {
-    opacity: 0.18;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.32;
-    transform: translate(-50%, -50%) scale(1.08);
-  }
-}
+/* Age stains + candle glow removed entirely — both painted nothing in
+   either theme, but the glow's animated 90lv-viewport blur(40px) layer
+   still cost the compositor every frame. */
 
 @keyframes ember-rise {
   0% {
@@ -925,24 +910,6 @@
   }
 }
 
-.bg-candle-glow {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 90lvw;
-  height: 90lvh;
-  pointer-events: none;
-  z-index: -1;
-  /* Light mode: no warm halo (the candle-glow read as a red mist on
-     parchment). Dark mode override below restores the warm centerpiece. */
-  background: none;
-  transform: translate(-50%, -50%);
-  animation: candle-glow-pulse 6s ease-in-out infinite;
-  filter: blur(40px);
-}
-
-/* Dark-mode candle glow removed too — `bg-candle-glow` element stays in
-   DOM for stability but paints nothing in either theme. */
 
 .bg-ember-field {
   position: fixed;

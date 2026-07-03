@@ -55,7 +55,7 @@ export const Route = createFileRoute("/articles/$slug")({
 				as: "image",
 				href: thumbnailUrl(article.thumbnail),
 				imageSrcSet: thumbnailSrcSet(article.thumbnail),
-				imageSizes: "(max-width: 768px) 100vw, 720px",
+				imageSizes: "(max-width: 768px) calc(100vw - 2rem), 720px",
 				fetchPriority: "high",
 			});
 		}

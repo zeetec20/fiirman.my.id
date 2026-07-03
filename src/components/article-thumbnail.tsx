@@ -1,7 +1,6 @@
 import { GlyphBookClosed, GlyphBookOpen } from "./glyphs";
 import { thumbnailUrl, thumbnailSrcSet } from "../lib/articles";
 import { hashSeed, pickSubset } from "../lib/random";
-import { AspectRatio } from "./ui/aspect-ratio";
 import { CornerCarving } from "./corner-carving";
 
 /* Sizes hint paired with the 320/480/672/768/1080 width set. `feature`
@@ -10,9 +9,9 @@ import { CornerCarving } from "./corner-carving";
    subtracts the page gutter (px-4 → 2rem total) so the browser picks
    672w instead of over-fetching 768w; the desktop stop is the measured
    3-col grid column (~352px), not a viewport fraction. */
-const SIZES_FEATURE =
+export const SIZES_FEATURE =
 	"(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 352px";
-const SIZES_NATURAL = "(max-width: 768px) 100vw, 720px";
+const SIZES_NATURAL = "(max-width: 768px) calc(100vw - 2rem), 720px";
 
 const DUST_POOL = 5;
 const SCRATCH_POOL = 5;
@@ -166,7 +165,9 @@ export function ArticleThumbnail({
 	   without being clipped by .thumbnail-frame's overflow:hidden. */
 	const framed = (
 		<div className="relative">
-			{isFeature ? <AspectRatio ratio={3 / 2}>{frame}</AspectRatio> : frame}
+			{/* Native CSS aspect-ratio — replaced the radix AspectRatio
+			    padding-hack wrapper; same 3:2 box, no JS. */}
+			{isFeature ? <div className="aspect-3/2">{frame}</div> : frame}
 			{carved ? <CornerCarving /> : null}
 		</div>
 	);

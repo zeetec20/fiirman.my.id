@@ -173,25 +173,13 @@ function OrbitsLottie() {
 export function BackgroundDecoration() {
 	return (
 		<>
-			<svg
-				aria-hidden="true"
-				className="bg-paper-grain"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<filter id="paper-noise">
-					<feTurbulence
-						type="fractalNoise"
-						baseFrequency="0.9"
-						numOctaves="3"
-						stitchTiles="stitch"
-					/>
-					<feColorMatrix
-						type="matrix"
-						values="0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.55 0"
-					/>
-				</filter>
-				<rect width="100%" height="100%" filter="url(#paper-noise)" />
-			</svg>
+			{/* Paper grain — small feTurbulence tile repeated via CSS (same
+			    pattern as the thumbnail grains). The previous full-viewport
+			    <svg><rect filter> forced Chrome to software-rasterize fractal
+			    noise across the whole screen before first paint (~2s stall in
+			    headless/low-end environments); a 240px tile rasters once and
+			    repeats for free. */}
+			<div aria-hidden="true" className="bg-paper-grain" />
 
 			{/* Starry night — varied glyphs (cross / diamond / dot), twinkle */}
 			<svg
@@ -215,9 +203,6 @@ export function BackgroundDecoration() {
 					</g>
 				))}
 			</svg>
-
-			<div aria-hidden="true" className="bg-age-stains" />
-			<div aria-hidden="true" className="bg-candle-glow" />
 
 			{/* Heliocentric orbits — sun + 4 planets via Lottie */}
 			<div aria-hidden="true" className="bg-orbits-lottie">

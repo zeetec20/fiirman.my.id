@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
 				as: "image",
 				href: thumbnailUrl(featured.thumbnail),
 				imageSrcSet: thumbnailSrcSet(featured.thumbnail),
-				imageSizes: "(max-width: 768px) 100vw, 720px",
+				imageSizes: "(max-width: 768px) calc(100vw - 2rem), 720px",
 				fetchPriority: "high",
 			});
 		}

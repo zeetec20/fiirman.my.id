@@ -52,3 +52,4 @@ todos.json
 
 # Build-time content snapshots (regenerated via `bun run sync:content`).
 src/data/*.generated.json
+src/data/inline-css.generated.ts
