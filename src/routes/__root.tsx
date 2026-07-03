@@ -7,7 +7,9 @@ import { Suspense, lazy, useEffect } from 'react'
 import { BackgroundDecoration } from '../components/background-decoration'
 import { Masthead } from '../components/masthead'
 import { Dateline, toRoman } from '../components/dateline'
+import { Dek } from '../components/dek'
 import { Fleuron } from '../components/fleuron'
+import { Kicker } from '../components/kicker'
 import { RubricLink } from '../components/rubric-link'
 import { RuleDouble, RuleHair } from '../components/rules'
 import { SocialLinks } from '../components/social-links'
@@ -178,7 +180,35 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: NotFound,
 })
+
+// ponytail: inline next to RootDocument — one file, not reused elsewhere yet.
+function NotFound() {
+  return (
+    <section className="text-center py-20">
+      <Kicker>Not Found</Kicker>
+      <div className="my-6 text-rubric flex justify-center">
+        <Fleuron variant="flourish" />
+      </div>
+      <p className="font-serif-display text-headline text-rubric leading-none">
+        404
+      </p>
+      <h1 className="font-serif-display text-4xl text-fg mt-2">
+        Page Not Found
+      </h1>
+      <div className="max-w-prose mx-auto mt-6">
+        <Dek>
+          The folio you sought was never bound — or has since been struck from
+          the record. Return to the frontispiece.
+        </Dek>
+      </div>
+      <p className="mt-8">
+        <RubricLink to="/">&larr; Back to the Frontispiece</RubricLink>
+      </p>
+    </section>
+  )
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   /* Use UTC so SSR (Cloudflare = UTC) and the browser produce the same

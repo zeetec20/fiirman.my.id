@@ -15,7 +15,7 @@
     "lint": "biome lint",
     "check": "biome check",
     "deploy": "bun run build && wrangler deploy",
-    "sync:medium": "bun run scripts/sync-medium.ts",
+    "sync:medium": "bun run scripts/sync-medium.ts && bun run optimize:images",
     "sync:content": "bun run scripts/build-content.ts",
     "optimize:images": "bun run scripts/optimize-images.ts",
     "build:sitemap": "bun run scripts/build-sitemap.ts",
