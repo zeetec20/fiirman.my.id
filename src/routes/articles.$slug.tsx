@@ -10,16 +10,22 @@ import { ArticleProgress } from "../components/article-progress";
 import { BackToTop } from "../components/back-to-top";
 import { Comments } from "../components/comments";
 import { Button } from "../components/ui/button";
-import { getArticleBySlug, thumbnailSrcSet, thumbnailUrl } from "../lib/articles";
+import { fetchArticleBody } from "../lib/article-body";
+import { getArticleMeta, thumbnailSrcSet, thumbnailUrl } from "../lib/articles";
 import { estimateReadingMinutes } from "../lib/reading";
 import { trackAnalytic } from "../lib/track-analytic";
 
 export const Route = createFileRoute("/articles/$slug")({
 	component: ArticlePage,
-	loader: ({ params }) => {
-		const article = getArticleBySlug(params.slug);
-		if (!article) throw notFound();
-		return { article, minutes: estimateReadingMinutes(article.body) };
+	loader: async ({ params }) => {
+		const meta = getArticleMeta(params.slug);
+		if (!meta) throw notFound();
+		const body = await fetchArticleBody({ data: params.slug });
+		if (body === null) throw notFound();
+		return {
+			article: { ...meta, body },
+			minutes: estimateReadingMinutes(body),
+		};
 	},
 	head: ({ loaderData }) => {
 		const article = loaderData?.article;

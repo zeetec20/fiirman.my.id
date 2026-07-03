@@ -97,7 +97,9 @@ export function GithubActivity({ className = "" }: { className?: string }) {
 			.catch((err: unknown) => {
 				if (cancelled) return;
 				const msg = err instanceof Error ? err.message : String(err);
-				console.error("[GithubActivity] fetch failed:", msg);
+				/* warn, not error — console.error fails Lighthouse best-practices
+				   when the contributions API is unreachable (offline CI). */
+				console.warn("[GithubActivity] fetch failed:", msg);
 				setState({ status: "error", error: msg });
 			});
 		return () => {

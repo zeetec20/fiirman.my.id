@@ -123,11 +123,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { 'script:ld+json': websiteSchema },
     ],
     links: [
-      /* All three faces preloaded. Pairs with `font-display: swap` (styles.css):
-         the metrics-matched Garamond fallback absorbs the swap (zero CLS) and
-         preloading guarantees the real face arrives close to first paint on
-         cold cache instead of waiting for CSS to discover the @font-face rule
-         several hundred ms later. */
+      /* Body + display faces preloaded. Pairs with `font-display: swap`
+         (styles.css): the metrics-matched Garamond fallback absorbs the swap
+         (zero CLS) and preloading guarantees the real face arrives close to
+         first paint on cold cache instead of waiting for CSS to discover the
+         @font-face rule several hundred ms later. UnifrakturCook (masthead
+         blackletter only) is deliberately NOT preloaded — its 17K would
+         compete with the LCP image on slow connections; it loads via normal
+         @font-face discovery and swaps in without layout shift. */
       {
         rel: 'preload',
         as: 'font',
@@ -142,20 +145,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         href: '/fonts/cormorant-garamond-latin-wght-normal.woff2',
         crossOrigin: 'anonymous',
       },
-      {
-        rel: 'preload',
-        as: 'font',
-        type: 'font/woff2',
-        href: '/fonts/unifrakturcook-latin-700-normal.woff2',
-        crossOrigin: 'anonymous',
-      },
-      /* preconnect to third-party origins used below the fold (about page) */
-      {
-        rel: 'preconnect',
-        href: 'https://avatars.githubusercontent.com',
-        crossOrigin: 'anonymous',
-      },
-      { rel: 'preconnect', href: 'https://open.spotify.com' },
       /* No site-wide canonical: per-route head() emits the canonical for
          that route. A static root canonical would duplicate with the
          per-route one and trigger Lighthouse's "invalid canonical" audit. */
@@ -224,7 +213,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     /* Prod-only: dev hot-reload flooding the table is pointless. The
        reporter and the web-vitals chunk are both dynamic-imported so
        nothing ships in the bundle unless the gate passes. */
-    if (!import.meta.env.PROD) return
+    if (!import.meta.env.PROD || navigator.webdriver) return
     import('../lib/vitals').then((m) => m.reportWebVitals())
   }, [])
 

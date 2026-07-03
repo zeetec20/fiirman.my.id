@@ -27,12 +27,15 @@ const SOURCE_EXTS = new Set([".jpg", ".jpeg", ".png"]);
 const QUALITY = 80;
 
 /* Widths to emit. 320w covers mobile hero (~378px css at DPR=1) and
-   high-DPR small-card grids (~190px × 2). The canonical `<name>.webp`
-   stays at 1080w for desktop hero. */
+   high-DPR small-card grids (~190px × 2). 672w matches the full-width
+   mobile card at DPR≈1.75 (LH emulation: 380 css px × 1.75 ≈ 665) so
+   Lighthouse's responsive-images audit doesn't flag the 768w jump.
+   The canonical `<name>.webp` stays at 1080w for desktop hero. */
 const VARIANTS: Array<{ suffix: string; width: number }> = [
 	{ suffix: "", width: 1080 },
 	{ suffix: "-320w", width: 320 },
 	{ suffix: "-480w", width: 480 },
+	{ suffix: "-672w", width: 672 },
 	{ suffix: "-768w", width: 768 },
 ];
 

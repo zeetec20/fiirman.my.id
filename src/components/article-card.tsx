@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { Article } from "../lib/article-schema";
+import type { ArticleMeta } from "../lib/article-schema";
 import { ArticleThumbnail } from "./article-thumbnail";
 import { Byline } from "./byline";
 import { Kicker } from "./kicker";
@@ -19,7 +19,7 @@ export function ArticleCard({
 	showThumbnail = true,
 	priority = false,
 }: {
-	article: Article;
+	article: ArticleMeta;
 	showThumbnail?: boolean;
 	priority?: boolean;
 }) {

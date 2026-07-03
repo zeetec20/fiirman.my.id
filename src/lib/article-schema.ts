@@ -17,8 +17,14 @@ export const articleFrontmatter = z.object({
 
 export type ArticleFrontmatter = z.infer<typeof articleFrontmatter>;
 
-export type Article = ArticleFrontmatter & {
+/** List/card shape — everything except the rendered body. This is what
+ *  ships in loader payloads and the client bundle; `body` stays server-side
+ *  (see src/lib/article-body.ts) so page payloads stay small. */
+export type ArticleMeta = ArticleFrontmatter & {
 	slug: string;
+};
+
+export type Article = ArticleMeta & {
 	body: string;
 };
 

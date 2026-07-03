@@ -14,14 +14,15 @@ import { PortraitFrame } from "../components/portrait-frame";
 import { RubricLink } from "../components/rubric-link";
 import { RuleDouble, RuleHair } from "../components/rules";
 import { Card, CardContent } from "../components/ui/card";
-import { getAllArticles } from "../lib/articles";
 import { getBioHtml } from "../lib/bio";
 
-/* 240px is twice the displayed CSS size (~120px at typical column width).
-   Covers DPR=2 without shipping the 480px GitHub avatar. */
-const AVATAR_URL = "https://avatars.githubusercontent.com/u/47957217?size=240";
+/* Self-hosted webp copies of the GitHub avatar (u/47957217) — converted
+   once via sharp. Local + webp: no third-party origin on the LCP path,
+   passes modern-image-formats, cacheable with our immutable headers.
+   240px is twice the displayed CSS size (~120px); 480 covers DPR=2. */
+const AVATAR_URL = "/images/author/avatar-240.webp";
 const AVATAR_SRCSET =
-  "https://avatars.githubusercontent.com/u/47957217?size=240 1x, https://avatars.githubusercontent.com/u/47957217?size=480 2x";
+  "/images/author/avatar-240.webp 1x, /images/author/avatar-480.webp 2x";
 
 /**
  * Spotify embed — currently a public classical playlist as placeholder.
@@ -44,7 +45,6 @@ const PAGE_DESCRIPTION =
 export const Route = createFileRoute("/about")({
   component: About,
   loader: () => ({
-    articles: getAllArticles(),
     sanitizedBioMarkup: getBioHtml(),
   }),
   head: () => ({
@@ -67,7 +67,6 @@ export const Route = createFileRoute("/about")({
         href: AVATAR_URL,
         imageSrcSet: AVATAR_SRCSET,
         fetchPriority: "high",
-        crossOrigin: "anonymous",
       },
     ],
   }),

@@ -21,13 +21,17 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Start preview server
-        run: |
-          bun run preview --port 3000 --host 127.0.0.1 &
-          npx --yes wait-on http://127.0.0.1:3000 --timeout 60000
+      # No manual preview server: lhci's startServerCommand boots
+      # `wrangler dev` per run, which matches the production Workers
+      # stack (a second server on :3000 would conflict and get audited
+      # instead).
+      - name: Lighthouse (mobile)
+        run: bun run lh
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Run Lighthouse CI
-        run: bun run lh:collect && bun run lh:assert
+      - name: Lighthouse (desktop)
+        run: bun run lh:desktop
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
 

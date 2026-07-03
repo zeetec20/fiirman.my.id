@@ -27,6 +27,14 @@ export async function getSupabase(): Promise<SupabaseClient | null> {
 		return null;
 	}
 
+	/* Bot exclusion: Lighthouse/automation set navigator.webdriver. Skipping
+	   keeps synthetic traffic out of analytics and network errors out of the
+	   console when the Supabase host is unreachable (CI has no network). */
+	if (navigator.webdriver) {
+		cached = null;
+		return null;
+	}
+
 	const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 	const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 

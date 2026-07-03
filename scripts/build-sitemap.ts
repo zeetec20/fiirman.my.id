@@ -2,7 +2,7 @@
 /**
  * Generate /public/sitemap.xml from the synced article snapshot.
  *
- * Reads src/data/articles.generated.json (produced by sync:content) and
+ * Reads src/data/articles-index.generated.json (produced by sync:content) and
  * emits a Google-spec sitemap covering the three static routes plus one
  * <url> per article. Runs as part of the prebuild chain, after sync:content
  * and optimize:images, before vite build.
@@ -15,7 +15,7 @@ import { join } from "node:path";
 
 const SITE_URL = "https://fiirman.my.id";
 const ROOT = join(import.meta.dir, "..");
-const ARTICLES_JSON = join(ROOT, "src/data/articles.generated.json");
+const ARTICLES_JSON = join(ROOT, "src/data/articles-index.generated.json");
 const OUT = join(ROOT, "public/sitemap.xml");
 
 type ArticleLite = {

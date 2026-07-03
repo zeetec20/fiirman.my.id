@@ -10,7 +10,7 @@ import { Kicker } from "../components/kicker";
 import { RubricLink } from "../components/rubric-link";
 import { RuleHair } from "../components/rules";
 import { randomQuote } from "../data/quotes";
-import type { Article } from "../lib/article-schema";
+import type { ArticleMeta } from "../lib/article-schema";
 import { getAllArticles, thumbnailSrcSet, thumbnailUrl } from "../lib/articles";
 import { getAnalytics } from "../lib/track-analytic";
 
@@ -55,7 +55,7 @@ function Home() {
 	/* Popularity overlay — fetch view counts from Supabase, sort articles
 	   desc by count. Falls back to newest-first ordering when analytics is
 	   unconfigured, errors, or returns empty (new install, all-zero state). */
-	const [popular, setPopular] = useState<Article[]>(() =>
+	const [popular, setPopular] = useState<ArticleMeta[]>(() =>
 		articles.slice(0, Math.min(5, articles.length)),
 	);
 	const [popularLoading, setPopularLoading] = useState(true);

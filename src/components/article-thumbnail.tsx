@@ -4,11 +4,14 @@ import { hashSeed, pickSubset } from "../lib/random";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { CornerCarving } from "./corner-carving";
 
-/* Sizes hint paired with the 480/768/1080 width set. `feature` is the
-   3:2 card grid (home Latest-Stories + archive); `natural` is the
-   full-bleed hero (home featured + article-detail header). */
+/* Sizes hint paired with the 320/480/672/768/1080 width set. `feature`
+   is the 3:2 card grid (home Latest-Stories + archive); `natural` is the
+   full-bleed hero (home featured + article-detail header). Mobile stop
+   subtracts the page gutter (px-4 → 2rem total) so the browser picks
+   672w instead of over-fetching 768w; the desktop stop is the measured
+   3-col grid column (~352px), not a viewport fraction. */
 const SIZES_FEATURE =
-	"(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
+	"(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 352px";
 const SIZES_NATURAL = "(max-width: 768px) 100vw, 720px";
 
 const DUST_POOL = 5;
