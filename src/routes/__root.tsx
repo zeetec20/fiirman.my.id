@@ -28,24 +28,12 @@ import appCss from '../styles.css?url'
    pre-LCP window. Re-add via @tanstack/react-router-ssr-query when an
    actual server-state need appears. */
 
-/* Never executes: keeps styles.css in the client build as an async-chunk
-   asset so emit-inline-css (vite.config.ts) can capture it. A plain
-   side-effect import would make TanStack Start auto-inject a
-   render-blocking <link data-precedence> for the sheet — the whole point
-   of inlining is to avoid that request; the ?url import alone is dev-only
-   and would be tree-shaken from prod, dropping the CSS build entirely. */
-if ((globalThis as { __KEEP_CSS_CHUNK__?: boolean }).__KEEP_CSS_CHUNK__) {
-  void import('../styles-emit')
-}
-
-/* Full processed sheet, inlined into <head> in prod (see emit-inline-css in
-   vite.config.ts) — removes the render-blocking CSS request. Server build
-   only: the SSR guard is compile-time, so neither the import nor the CSS
-   string reaches the client bundle. Dev keeps the <link> for HMR. */
-const INLINE_CSS =
-  import.meta.env.PROD && import.meta.env.SSR
-    ? (await import('../data/inline-css.generated')).css
-    : ''
+/* CSS ships as a plain always-on <link> (see head() below). An inline-CSS
+   pipeline was tried and reverted: rendering the sheet as a server-only
+   <style> broke styling on client-side navigation (the client's empty
+   __html won the head reconciliation), and it bought no measured FCP —
+   the mobile profile is font/bandwidth-bound, not CSS-request-bound. The
+   separate file is also immutable-cached for a year (public/_headers). */
 
 /**
  * Dev-only devtools mount. `import.meta.env.DEV` is a Vite compile-time
@@ -185,7 +173,7 @@ export const Route = createRootRoute({
       },
       { rel: 'mask-icon', href: '/favicon.svg?v=3', color: '#8a2d1d' },
       { rel: 'manifest', href: '/manifest.json' },
-      ...(import.meta.env.DEV ? [{ rel: 'stylesheet', href: appCss }] : []),
+      { rel: 'stylesheet', href: appCss },
     ],
   }),
   shellComponent: RootDocument,
@@ -241,15 +229,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" data-theme="auto" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        {import.meta.env.PROD ? (
-          /* Server renders the full sheet; the client renders an empty
-             string and React's hydration adopts the server DOM without
-             diffing dangerouslySetInnerHTML — the CSS stays put. */
-          <style
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: INLINE_CSS }}
-          />
-        ) : null}
         <HeadContent />
       </head>
       <body className="font-serif text-base bg-bg text-fg relative isolate">
