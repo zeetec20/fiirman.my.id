@@ -16,7 +16,7 @@ tag:
   - teamwork
 source: medium
 sourceUrl: >-
-  https://medium.com/@jusles363/enforcing-branch-protection-without-upgrading-your-github-plan-be252860bd6d?source=rss-de2e53234d37------2
+  https://firmanlestari.medium.com/enforcing-branch-protection-without-upgrading-your-github-plan-be252860bd6d?source=rss-de2e53234d37------2
 ---
 I think every team project should have a rule that prevents developers from pushing code directly to the master or main branch. Directly pushing to these branches can be risky because it may accidentally overwrite someone else’s work and introduce issues into the codebase.
 

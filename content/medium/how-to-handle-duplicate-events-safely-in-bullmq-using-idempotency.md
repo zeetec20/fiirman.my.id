@@ -16,7 +16,7 @@ tag:
   - software-engineering
 source: medium
 sourceUrl: >-
-  https://medium.com/@jusles363/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency-1e896f0352c1?source=rss-de2e53234d37------2
+  https://firmanlestari.medium.com/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency-1e896f0352c1?source=rss-de2e53234d37------2
 ---
 Idempotency is actually a concept that we often use in software engineering without realizing it. In many cases, we already apply this pattern because it helps us build more reliable systems with fewer bugs.
 

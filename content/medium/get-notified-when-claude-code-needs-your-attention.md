@@ -15,7 +15,7 @@ tag:
   - developer-tools
 source: medium
 sourceUrl: >-
-  https://medium.com/@jusles363/get-notified-when-claude-code-needs-your-attention-8b83f29b1689?source=rss-de2e53234d37------2
+  https://firmanlestari.medium.com/get-notified-when-claude-code-needs-your-attention-8b83f29b1689?source=rss-de2e53234d37------2
 ---
 When working with Claude Code, it’s common to start a long prompt and then switch to another task. Maybe you’re reading documentation, replying to messages, working on another project, or simply waiting for Claude to finish. Sometimes you even end up doom scrolling and completely forget that Claude is still running in the background.
 
