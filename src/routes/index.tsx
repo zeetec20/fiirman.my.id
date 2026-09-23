@@ -43,16 +43,16 @@ function Home() {
 
         {/* Two-Column Split Layout: Exactly 4 Articles Aligned Flush */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-stretch mt-8 sm:mt-12">
-          {/* Left Column: Article 1 - The Biggest UI Frontispiece */}
+          {/* Left Column: Article 1 - The Biggest UI Frontispiece (Narrower) */}
           {leadArticle && (
-            <div className="md:col-span-6 flex flex-col justify-between h-full">
+            <div className="md:col-span-5 flex flex-col justify-between h-full">
               <ArticleCard article={leadArticle} variant="lead" />
             </div>
           )}
 
-          {/* Right Column: Follow 3 Articles (Articles 2, 3, 4) */}
+          {/* Right Column: Follow 3 Articles (Articles 2, 3, 4) (Wider) */}
           <section
-            className="md:col-span-6 flex flex-col justify-between h-full"
+            className="md:col-span-7 flex flex-col justify-between h-full"
             aria-label="Newest Articles"
           >
             {/* Section Heading: Clean typography without icons/flourishes */}

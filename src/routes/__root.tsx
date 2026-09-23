@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { NotFoundPage } from "@/components/NotFoundPage";
 import { PaperDesignShaderBackground } from "@/components/ui/paper-design-shader-background";
 import appCss from "@/styles.css?url";
 
@@ -12,11 +13,11 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Firman Lestari — De Litteris et Codicibus" },
+      { title: "Firman Lestari" },
       {
         name: "description",
         content:
-          "Personal portfolio, distributed systems research, and technical manuscripts of Firman Lestari.",
+          "Personal space for Firman Lestari's thoughts, notes, projects",
       },
     ],
     links: [
@@ -36,6 +37,7 @@ export const Route = createRootRoute({
   }),
   component: RootComponent,
   errorComponent: RootErrorComponent,
+  notFoundComponent: NotFoundPage,
 });
 
 function RootErrorComponent({

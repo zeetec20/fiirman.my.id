@@ -73,7 +73,7 @@ export function ArticleCard({
       <article
         className={`group flex items-start sm:items-stretch gap-4 ${className}`}
       >
-        <div className="relative w-24 sm:w-28 h-24 sm:h-auto sm:self-stretch shrink-0 overflow-hidden rounded-xs bg-black/40 shadow-smooth-md group-hover:shadow-smooth-lg transition-shadow duration-300">
+        <div className="relative w-28 sm:w-36 md:w-40 lg:w-48 h-24 sm:h-auto sm:self-stretch shrink-0 overflow-hidden rounded-xs bg-black/40 shadow-smooth-md group-hover:shadow-smooth-lg transition-shadow duration-300">
           <DitherImage
             src={article.coverImage}
             alt={article.title}
