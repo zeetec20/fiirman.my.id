@@ -12,7 +12,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Biography, technical competencies, and GitHub activity ledger of Firman Lestari.",
+          "Personal space for Firman Lestari's thoughts, notes, projects",
       },
     ],
   }),

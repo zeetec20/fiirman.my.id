@@ -13,7 +13,7 @@ export const Route = createFileRoute("/projects")({
       {
         name: "description",
         content:
-          "System architectures, distributed protocols, storage engines, and open-source tooling detailed in a unified showcase dossier.",
+          "Biography, technical competencies, and GitHub activity ledger of Firman Lestari.",
       },
     ],
   }),

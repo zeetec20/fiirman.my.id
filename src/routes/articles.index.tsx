@@ -7,6 +7,16 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { articlesData } from "@/data/articles";
 
 export const Route = createFileRoute("/articles/")({
+  head: () => ({
+    meta: [
+      { title: "Thoughts and Notes // Firman Lestari" },
+      {
+        name: "description",
+        content:
+          "Personal space for Firman Lestari's thoughts, notes, projects",
+      },
+    ],
+  }),
   component: ArticlesPage,
 });
 
