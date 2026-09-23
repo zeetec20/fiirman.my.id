@@ -1,0 +1,7 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Host: https://fiirman.my.id
+Sitemap: https://fiirman.my.id/sitemap.xml

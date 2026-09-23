@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-gothic: "UnifrakturMaguntia", serif;
+  --font-serif: "Newsreader", "Times New Roman", Times, Georgia, serif;
+  --font-mono: "Space Mono", "Courier New", Courier, monospace;
+}
+
+:root {
+  --font-gothic: "UnifrakturMaguntia", serif;
+  --font-newsreader: "Newsreader", "Times New Roman", Times, Georgia, serif;
+  --font-space-mono: "Space Mono", "Courier New", Courier, monospace;
+  --bg-page: #f5f1e9;
+  --paper-bg: rgba(255, 253, 248, 0.85);
+  --paper-border: rgba(40, 35, 30, 0.12);
+  --paper-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+  --shadow-smooth-sm: 0 2px 8px -2px rgba(28, 25, 23, 0.07), 0 1px 3px rgba(28, 25, 23, 0.04);
+  --shadow-smooth-md: 0 8px 24px -4px rgba(28, 25, 23, 0.08), 0 3px 8px -2px rgba(28, 25, 23, 0.04);
+  --shadow-smooth-lg: 0 16px 44px -8px rgba(28, 25, 23, 0.10), 0 6px 16px -4px rgba(28, 25, 23, 0.05);
+  --ink-primary: #1c1917;
+  --ink-secondary: #57534e;
+  --ink-muted: #78716c;
+  --divider: rgba(40, 35, 30, 0.14);
+  --divider-subtle: rgba(40, 35, 30, 0.08);
+  --accent: #e0a000;
+  --accent-soft: rgba(224, 160, 0, 0.14);
+  --accent-border: rgba(224, 160, 0, 0.38);
+  --texture-opacity: 0.05;
+  --texture-blend: multiply;
+}
+
+.dark {
+  --bg-page: #0a0908;
+  --paper-bg: rgba(18, 16, 15, 0.75);
+  --paper-border: rgba(237, 233, 225, 0.1);
+  --paper-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+  --shadow-smooth-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-smooth-md: 0 8px 24px -4px rgba(0, 0, 0, 0.55), 0 3px 8px -2px rgba(0, 0, 0, 0.35);
+  --shadow-smooth-lg: 0 16px 44px -8px rgba(0, 0, 0, 0.65), 0 6px 16px -4px rgba(0, 0, 0, 0.45);
+  --ink-primary: #ece7de;
+  --ink-secondary: #9c978d;
+  --ink-muted: #6b675e;
+  --divider: rgba(236, 231, 222, 0.15);
+  --divider-subtle: rgba(236, 231, 222, 0.08);
+  --accent: #ffb930;
+  --accent-soft: rgba(255, 185, 48, 0.14);
+  --accent-border: rgba(255, 185, 48, 0.4);
+  --texture-opacity: 0.07;
+  --texture-blend: screen;
+}
+
+.shadow-smooth-sm {
+  box-shadow: var(--shadow-smooth-sm);
+}
+
+.shadow-smooth-md {
+  box-shadow: var(--shadow-smooth-md);
+}
+
+.shadow-smooth-lg {
+  box-shadow: var(--shadow-smooth-lg);
+}
+
+html {
+  background-color: var(--bg-page);
+}
+
+body {
+  background-color: transparent;
+  color: var(--ink-primary);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection Color */
+::selection {
+  background-color: var(--accent);
+  color: #1c1917;
+}
+
+.dark ::selection {
+  color: #0a0908;
+}
+
+/* Custom Woodcut Theme Switcher Flare Effects */
+.theme-flare-sun {
+  transform-origin: top right;
+  filter: drop-shadow(-1px 1px 2px rgba(224, 160, 0, 0.35));
+  transition:
+    filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease;
+}
+.group:hover .theme-flare-sun {
+  filter: drop-shadow(-2px 2px 6px rgba(224, 160, 0, 0.7))
+    drop-shadow(-4px 4px 14px rgba(245, 158, 11, 0.35));
+  transform: scale(1.03);
+}
+
+.theme-flare-moon {
+  transform-origin: top right;
+  filter: drop-shadow(-1px 1px 2px rgba(255, 255, 255, 0.25));
+  transition:
+    filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease;
+}
+.group:hover .theme-flare-moon {
+  filter: drop-shadow(-2px 2px 6px rgba(255, 255, 255, 0.7))
+    drop-shadow(-4px 4px 14px rgba(255, 255, 255, 0.35));
+  transform: scale(1.03);
+}
+
+/* ==========================================================================
+   Syntax Highlighting - Archival Editorial Manuscript Palette
+   ========================================================================== */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.hljs-type,
+.hljs-title.class_ {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.hljs-title.function_,
+.hljs-function {
+  color: #4338ca;
+}
+
+.hljs-string,
+.hljs-regexp {
+  color: #15803d;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #c2410c;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #78716c;
+  font-style: italic;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: #d97706;
+}
+
+.hljs-attr,
+.hljs-attribute {
+  color: #0d9488;
+}
+
+.hljs-punctuation,
+.hljs-operator {
+  color: #57534e;
+}
+
+.hljs-variable,
+.hljs-params {
+  color: #1c1917;
+}
+
+/* Dark Mode Tokens */
+.dark .hljs-keyword,
+.dark .hljs-selector-tag {
+  color: #ffb930;
+}
+
+.dark .hljs-type,
+.dark .hljs-title.class_ {
+  color: #38bdf8;
+}
+
+.dark .hljs-title.function_,
+.dark .hljs-function {
+  color: #818cf8;
+}
+
+.dark .hljs-string,
+.dark .hljs-regexp {
+  color: #34d399;
+}
+
+.dark .hljs-number,
+.dark .hljs-literal {
+  color: #fb923c;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #6b675e;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-symbol {
+  color: #fbbf24;
+}
+
+.dark .hljs-attr,
+.dark .hljs-attribute {
+  color: #2dd4bf;
+}
+
+.dark .hljs-punctuation,
+.dark .hljs-operator {
+  color: #9c978d;
+}
+
+.dark .hljs-variable,
+.dark .hljs-params {
+  color: #ece7de;
+}

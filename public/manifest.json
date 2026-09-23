@@ -1,0 +1,38 @@
+{
+  "short_name": "Firman Lestari",
+  "name": "Firman Justisio Lestari",
+  "description": "Firman Justisio Lestari is a curious person who became a software engineer, with interests far beyond tech and always exploring nerdy ideas and random deep dives.",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#8a2d1d",
+  "background_color": "#f0eadd"
+}
