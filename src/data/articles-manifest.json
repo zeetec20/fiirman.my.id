@@ -1,0 +1,143 @@
+[
+  {
+    "slug": "the-uuid-package-is-optional-now",
+    "docId": "FOLIO-2026-M290",
+    "title": "The uuid Package Is Optional Now",
+    "coverImage": "/article/the-uuid-package-is-optional-now/thumbnail.jpg",
+    "date": "August 5, 2026",
+    "readingTime": "2 min",
+    "tags": [
+      "optimization",
+      "uuid",
+      "javascript",
+      "nodejs",
+      "software-engineering"
+    ],
+    "excerpt": "Almost all of my projects use the uuid dependency. However, I recently realized that the dependency is no longer necessary if you’re only generating UUID v4. Both modern browsers and Node.js already provide a built-in API for this.",
+    "lead": "Almost all of my projects use the `uuid` dependency. However, I recently realized that the dependency is no longer necessary if you’re only generating **UUID v4**. Both modern browsers and Node.js already provide a built-in API for this.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "get-notified-when-claude-code-needs-your-attention",
+    "docId": "FOLIO-2026-M916",
+    "title": "Get Notified When Claude Code Needs Your Attention",
+    "coverImage": "/article/get-notified-when-claude-code-needs-your-attention/thumbnail.jpg",
+    "date": "July 2, 2026",
+    "readingTime": "2 min",
+    "tags": [
+      "claude-code",
+      "notifications",
+      "ai",
+      "ai-tools",
+      "developer-tools"
+    ],
+    "excerpt": "When working with Claude Code, it’s common to start a long prompt and then switch to another task. Maybe you’re reading documentation, replying to messages, working on another project, or simply waiti",
+    "lead": "When working with Claude Code, it’s common to start a long prompt and then switch to another task. Maybe you’re reading documentation, replying to messages, working on another project, or simply waiting for Claude to finish. Sometimes you even end up doom scrolling and completely forget that Claude is still running in the background.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "enforcing-branch-protection-without-upgrading-your-github-plan",
+    "docId": "FOLIO-2026-M778",
+    "title": "Enforcing Branch Protection Without Upgrading Your GitHub Plan",
+    "coverImage": "/article/enforcing-branch-protection-without-upgrading-your-github-plan/thumbnail.jpg",
+    "date": "June 17, 2026",
+    "readingTime": "3 min",
+    "tags": [
+      "automated",
+      "software-engineering",
+      "security",
+      "git",
+      "teamwork"
+    ],
+    "excerpt": "I think every team project should have a rule that prevents developers from pushing code directly to the master or main branch. Directly pushing to these branches can be risky because it may accidenta",
+    "lead": "I think every team project should have a rule that prevents developers from pushing code directly to the master or main branch. Directly pushing to these branches can be risky because it may accidentally overwrite someone else’s work and introduce issues into the codebase.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency",
+    "docId": "FOLIO-2026-M169",
+    "title": "How to Handle Duplicate Events Safely in BullMQ Using Idempotency",
+    "coverImage": "/article/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency/thumbnail.jpg",
+    "date": "May 21, 2026",
+    "readingTime": "4 min",
+    "tags": [
+      "software-architecture",
+      "software-development",
+      "idempotency",
+      "bullmq",
+      "software-engineering"
+    ],
+    "excerpt": "Idempotency is actually a concept that we often use in software engineering without realizing it. In many cases, we already apply this pattern because it helps us build more reliable systems with fewe",
+    "lead": "Idempotency is actually a concept that we often use in software engineering without realizing it. In many cases, we already apply this pattern because it helps us build more reliable systems with fewer bugs.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "whats-git-stash",
+    "docId": "FOLIO-2023-002",
+    "title": "What's git stash?",
+    "coverImage": "/article/whats-git-stash/thumbnail.jpg",
+    "date": "June 11, 2023",
+    "readingTime": "4 min",
+    "tags": ["Git", "Version Control", "Workflow", "Developer Productivity"],
+    "excerpt": "Saving unfinished work temporarily without polluting git commit history: a tactical guide to managing, inspecting, and applying stashes.",
+    "lead": "Software development demands frequent context switching. Urgent hotfixes, pull request reviews, and spontaneous meetings often arise before code is ready to commit. `git stash` shelves uncommitted changes cleanly.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "how-to-merge-or-modify-type-on-typescript",
+    "docId": "FOLIO-2023-001",
+    "title": "How to Merge or Modify Types in TypeScript",
+    "coverImage": "/article/how-to-merge-or-modify-type-on-typescript/thumbnail.jpg",
+    "date": "February 17, 2023",
+    "readingTime": "4 min",
+    "tags": ["TypeScript", "Type Systems", "Utility Types", "Omit", "Generics"],
+    "excerpt": "Using utility types like Omit and intersection types to extend, overwrite, and safely compose complex TypeScript object types.",
+    "lead": "Static typing in TypeScript dramatically eliminates runtime bugs by predicting input and output shapes. However, complex interfaces frequently require surgical modifications — stripping fields, altering nullability, or merging schemas.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "better-way-to-handle-multiple-task-on-flutter-dart",
+    "docId": "FOLIO-2022-001",
+    "title": "Better Way to Handle Multiple Tasks on Flutter / Dart",
+    "coverImage": "/article/better-way-to-handle-multiple-task-on-flutter-dart/thumbnail.jpg",
+    "date": "August 16, 2022",
+    "readingTime": "5 min",
+    "tags": ["Flutter", "Dart", "Concurrency", "Isolates", "Mobile"],
+    "excerpt": "Concurrency in Dart: executing parallel asynchronous tasks and heavy computations without blocking the Flutter UI thread.",
+    "lead": "Concurrency is the ability to deal with multiple things at once. In Flutter, running heavy computational tasks on the main isolate introduces stutter and dropped frames. Mastering `Future.wait` and Dart Isolates unlocks fluid application performance.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "css-function-min-max-and-clamp-is-incredible",
+    "docId": "FOLIO-2022-002",
+    "title": "CSS Functions min(), max(), and clamp() Are Incredible",
+    "coverImage": "/article/css-function-min-max-and-clamp-is-incredible/thumbnail.jpg",
+    "date": "July 28, 2022",
+    "readingTime": "4 min",
+    "tags": ["CSS", "Responsive Design", "Fluid Layouts", "Frontend"],
+    "excerpt": "How mathematical functions in modern CSS simplify responsive typography and fluid container sizing without nested media queries.",
+    "lead": "Responsive design traditionally meant writing layers of media query breakpoints. With modern CSS functions `min()`, `max()`, and `clamp()`, elements scale fluidly across viewports with mathematical elegance.",
+    "content": "",
+    "headings": []
+  },
+  {
+    "slug": "how-i-make-my-github-profile-look-cool-with-markdown",
+    "docId": "FOLIO-2021-001",
+    "title": "How I Make My GitHub Profile Look Cool With Markdown",
+    "coverImage": "/article/how-i-make-my-github-profile-look-cool-with-markdown/thumbnail.jpg",
+    "date": "October 28, 2021",
+    "readingTime": "4 min",
+    "tags": ["GitHub", "Markdown", "Developer Portfolio", "Workflow"],
+    "excerpt": "Crafting an expressive and professional developer dossier using GitHub special repository profile features and clean markdown formatting.",
+    "lead": "Your GitHub profile is often the first technical footprint other engineers and hiring leads examine. By creating a repository matching your username, you unlock a custom front-page portfolio rendered directly from Markdown.",
+    "content": "",
+    "headings": []
+  }
+]

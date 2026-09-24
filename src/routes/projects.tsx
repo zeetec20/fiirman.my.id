@@ -121,7 +121,7 @@ function ProjectsPage() {
                           href={proj.links.demo}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xs bg-[var(--accent)] text-stone-950 font-bold text-[10px] sm:text-[11px] tracking-wider hover:opacity-90 transition-opacity shadow-xs"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xs bg-[var(--accent)] text-[var(--accent-foreground)] font-bold text-[10px] sm:text-[11px] tracking-wider hover:opacity-90 transition-opacity shadow-xs"
                         >
                           <span>LIVE DEPLOYMENT</span>
                           <ExternalLink className="w-3 h-3" />

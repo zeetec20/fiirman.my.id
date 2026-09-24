@@ -53,7 +53,7 @@ export function ThemeToggle() {
       {/* Gentle Solar Flare Aura (Light Mode Hover - warm golden decay) */}
       <div
         aria-hidden="true"
-        className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 origin-top-right pointer-events-none transition-all duration-300 ease-out bg-[radial-gradient(circle_at_top_right,rgba(224,160,0,0.28)_0%,rgba(245,158,11,0.09)_45%,transparent_75%)] ${
+        className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 origin-top-right pointer-events-none transition-all duration-300 ease-out bg-[radial-gradient(circle_at_top_right,rgba(255,185,48,0.28)_0%,rgba(255,185,48,0.09)_45%,transparent_75%)] ${
           theme === "light"
             ? "opacity-0 group-hover:opacity-100 scale-100 group-hover:scale-104"
             : "opacity-0 pointer-events-none"
@@ -74,12 +74,12 @@ export function ThemeToggle() {
       <div className="relative w-full h-full overflow-visible origin-top-right">
         {/* Golden Linocut Sun (Visible in Light Mode) */}
         <img
-          src="/theme/sun-yellow-corner.png"
+          src="/theme/sun-yellow-corner-128w.webp"
           alt="Celestial Sun (switch to dark mode)"
-          width={400}
-          height={400}
+          width={64}
+          height={64}
           loading="eager"
-          decoding="sync"
+          decoding="async"
           className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-sun origin-top-right ${
             theme === "light"
               ? "opacity-100 scale-100"
@@ -89,12 +89,12 @@ export function ThemeToggle() {
 
         {/* Luminous White Moon (Visible in Dark Mode) */}
         <img
-          src="/theme/moon-white-corner.png"
+          src="/theme/moon-white-corner-128w.webp"
           alt="Lunar Moon (switch to light mode)"
-          width={400}
-          height={400}
+          width={64}
+          height={64}
           loading="eager"
-          decoding="sync"
+          decoding="async"
           className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-moon origin-top-right ${
             theme === "dark"
               ? "opacity-100 scale-100"

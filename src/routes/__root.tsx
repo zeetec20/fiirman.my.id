@@ -21,15 +21,19 @@ export const Route = createRootRoute({
       },
     ],
     links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
+        rel: "preload",
+        href: "/fonts/newsreader-latin-wght-normal.woff2",
+        as: "font",
+        type: "font/woff2",
         crossOrigin: "anonymous",
       },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=UnifrakturMaguntia&display=swap",
+        rel: "preload",
+        href: "/fonts/unifrakturmaguntia-latin-400-normal.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico" },
@@ -61,7 +65,7 @@ function RootErrorComponent({
         <button
           type="button"
           onClick={reset}
-          className="px-3 py-1 text-xs font-mono font-semibold bg-[var(--accent)] text-stone-950 rounded-xs hover:opacity-90 transition-opacity cursor-pointer"
+          className="px-3 py-1 text-xs font-mono font-semibold bg-[var(--accent)] text-[var(--accent-foreground)] rounded-xs hover:opacity-90 transition-opacity cursor-pointer"
         >
           Retry Operation
         </button>

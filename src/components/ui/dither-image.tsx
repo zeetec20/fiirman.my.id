@@ -27,6 +27,7 @@ interface DitherImageProps {
   fill?: boolean;
   priority?: boolean;
   sizes?: string;
+  srcSet?: string;
   pixelSize?: number;
   hoverReveal?: boolean;
 }
@@ -36,12 +37,29 @@ export function DitherImage({
   alt,
   className = "",
   priority = false,
+  sizes,
+  srcSet,
   pixelSize = 2,
   hoverReveal = true,
 }: DitherImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDithered, setIsDithered] = useState(false);
+
+  const basePath = src.replace(/\.[^.]+$/, "");
+  const isArticleImage = src.startsWith("/article/");
+  const effectiveSrc =
+    isArticleImage && !src.endsWith(".webp") ? `${basePath}.webp` : src;
+  const effectiveSrcSet =
+    srcSet ||
+    (isArticleImage
+      ? `${basePath}-320w.webp 320w, ${basePath}-480w.webp 480w, ${basePath}-672w.webp 672w, ${basePath}-768w.webp 768w`
+      : undefined);
+  const effectiveSizes =
+    sizes ||
+    (priority
+      ? "(min-width: 1024px) 500px, (min-width: 768px) 45vw, 100vw"
+      : undefined);
 
   useEffect(() => {
     let isCancelled = false;
@@ -51,7 +69,7 @@ export function DitherImage({
 
     const img = new window.Image();
     img.crossOrigin = "anonymous";
-    img.src = src;
+    img.src = effectiveSrc;
 
     const processDither = () => {
       if (isCancelled) return;
@@ -155,16 +173,19 @@ export function DitherImage({
       isCancelled = true;
       observer.disconnect();
     };
-  }, [src, pixelSize]);
+  }, [effectiveSrc, pixelSize]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">
-      {/* Base standard image for zero-dependency universal rendering */}
+      {/* Base standard image with modern responsive WebP format */}
       <img
-        src={src}
+        src={effectiveSrc}
+        srcSet={effectiveSrcSet}
+        sizes={effectiveSizes}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
-        decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+        decoding={priority ? "sync" : "async"}
         className={`w-full h-full object-cover ${className}`}
       />
 

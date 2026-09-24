@@ -107,71 +107,37 @@ export function parseFrontmatter(raw: string): {
   return { data, content };
 }
 
-function loadAllArticles(): Article[] {
-  const rawModules = import.meta.glob<string>("../../content/articles/*.md", {
+import articlesManifest from "./articles-manifest.json";
+
+export const articlesData: Article[] = articlesManifest as Article[];
+
+const rawArticleLoaders = import.meta.glob<string>(
+  "../../content/articles/*.md",
+  {
     query: "?raw",
     import: "default",
-    eager: true,
-  });
+  },
+);
 
-  const articles: Article[] = [];
+export async function getArticleBySlug(
+  slug: string,
+): Promise<Article | undefined> {
+  const summary = articlesData.find((a) => a.slug === slug);
+  if (!summary) return undefined;
 
-  for (const [filePath, rawContent] of Object.entries(rawModules)) {
-    const { data, content } = parseFrontmatter(rawContent);
-
-    // Fallback slug from filename
+  for (const [filePath, loader] of Object.entries(rawArticleLoaders)) {
     const filenameSlug = filePath.split("/").pop()?.replace(/\.md$/, "");
-    const slug =
-      (typeof data.slug === "string" ? data.slug : filenameSlug) || "";
-
-    // Extract lead (first non-empty paragraph before the first heading)
-    const paragraphs = content.split("\n\n").map((p) => p.trim());
-    const firstParagraph =
-      paragraphs.find((p) => p && !p.startsWith("#") && !p.startsWith("!")) ||
-      "";
-    const lead =
-      firstParagraph || (typeof data.excerpt === "string" ? data.excerpt : "");
-
-    const headings = extractHeadings(content);
-
-    const article: Article = {
-      slug,
-      docId:
-        typeof data.docId === "string"
-          ? data.docId
-          : `FOLIO-${slug.toUpperCase()}`,
-      title:
-        typeof data.title === "string" ? data.title : "Untitled Manuscript",
-      coverImage: typeof data.coverImage === "string" ? data.coverImage : "",
-      date: typeof data.date === "string" ? data.date : "Recent",
-      readingTime:
-        typeof data.readingTime === "string" ? data.readingTime : "3 min",
-      tags: Array.isArray(data.tags)
-        ? data.tags.filter((t): t is string => typeof t === "string")
-        : [],
-      excerpt:
-        typeof data.excerpt === "string"
-          ? data.excerpt
-          : lead.replace(/[*_`#]/g, "").slice(0, 200),
-      lead,
-      content,
-      headings,
-    };
-
-    articles.push(article);
+    if (filenameSlug === slug) {
+      const rawContent = await loader();
+      const { content } = parseFrontmatter(rawContent);
+      const headings = extractHeadings(content);
+      return {
+        ...summary,
+        content,
+        headings,
+      };
+    }
   }
 
-  // Sort articles chronologically descending (newest first)
-  articles.sort((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
-    if (!Number.isNaN(dateA) && !Number.isNaN(dateB)) {
-      return dateB - dateA;
-    }
-    return b.docId.localeCompare(a.docId);
-  });
-
-  return articles;
+  return summary;
 }
-
-export const articlesData: Article[] = loadAllArticles();

@@ -81,7 +81,7 @@ export function SocialLinks({
               }
               aria-label={s.name}
               title={s.name}
-              className="p-1.5 rounded-full text-[var(--ink-secondary)] hover:text-[var(--accent)] hover:backdrop-blur-md hover:bg-white/60 dark:hover:bg-white/[0.08] transition-all focus:outline-hidden focus:ring-1 focus:ring-[var(--accent)]"
+              className="p-1.5 rounded-full text-[var(--ink-secondary)] hover:text-[var(--accent)] transition-colors focus:outline-hidden focus:ring-1 focus:ring-[var(--accent)]"
             >
               {icon}
             </a>

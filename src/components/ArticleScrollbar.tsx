@@ -120,7 +120,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
         <div className="relative h-full w-full flex flex-col justify-between items-end pointer-events-auto">
           {/* Compass Header: Woodcut Pocket Compass & Real-Time Percentage */}
           <div className="flex items-center gap-2 mb-4 select-none shrink-0">
-            <span className="font-mono text-[10px] font-bold text-[#E99C0E] dark:text-[var(--accent)] tracking-widest">
+            <span className="font-mono text-[10px] font-bold text-[var(--accent)] tracking-widest">
               {scrollPercent}%
             </span>
             <div className="w-[22px] flex items-center justify-center">
@@ -236,7 +236,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
                             <span
                               className={`block rounded-l-xs transition-all duration-200 mr-[10px] ${
                                 isSubReached
-                                  ? `w-4 h-[1.5px] bg-amber-600 dark:bg-[var(--accent)] dark:shadow-[0_0_6px_var(--accent)]`
+                                  ? `w-4 h-[1.5px] bg-[var(--accent)] dark:shadow-[0_0_6px_var(--accent)]`
                                   : `${widthClass} h-[1px] bg-stone-400/70 dark:bg-stone-700/60`
                               }`}
                             />
@@ -257,7 +257,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               title="Return to top"
               aria-label="Return to top of manuscript"
-              className="w-[22px] flex items-center justify-center text-stone-500 hover:text-[#E99C0E] dark:text-[var(--ink-muted)] dark:hover:text-[var(--accent)] transition-colors p-0 cursor-pointer"
+              className="w-[22px] flex items-center justify-center text-stone-500 hover:text-[var(--accent)] dark:text-[var(--ink-muted)] dark:hover:text-[var(--accent)] transition-colors p-0 cursor-pointer"
             >
               <svg
                 className="w-5 h-5"

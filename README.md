@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# fiirman.my.id 🌐
 
-## Getting Started
+> Personal portfolio, engineering dossier, and technical blog of **Firman Justisio Lestari**.  
+> Live at [fiirman.my.id](https://fiirman.my.id)
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📖 About The Project
+
+**fiirman.my.id** is a personal website and portfolio designed with an editorial, document-style aesthetic. It showcases software engineering projects, work history, technical competencies, and long-form engineering articles.
+
+Instead of a generic template, this site embraces a tactile "engineering dossier" theme featuring clean typography, subtle paper textures, stamps, and interactive background shaders.
+
+### ✨ Key Features
+
+- **⚡ Modern Full-Stack SSR**: Built with TanStack Start and React 19 for type-safe routing and fast server-side rendering.
+- **📰 Automated Article Sync**: A custom build script fetches articles from Medium RSS, converts them into clean local Markdown files, and generates a structured manifest with zero duplicates.
+- **🎨 Editorial Document Design**: Monochromatic aesthetic with dark/light themes, ink accents, dithered visuals, and custom canvas shaders.
+- **☁️ Edge Deployed**: Deployed to Cloudflare Workers with minimal latency around the globe.
+- **⚡ Supercharged DX**: Powered by Bun and Vite 8 for near-instant build times and hot-reloading.
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technology | Purpose |
+|---|---|---|
+| **Framework & SSR** | [TanStack Start](https://tanstack.com/start) & [TanStack Router](https://tanstack.com/router) | Full-stack React framework with 100% type-safe routing |
+| **UI Library** | [React 19](https://react.dev) | Component architecture & modern React primitives |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com) | Utility-first, high-performance CSS engine |
+| **Visuals & Icons** | [Lucide React](https://lucide.dev) & [@paper-design/shaders-react](https://paper.design) | Minimalist iconography and interactive shader backgrounds |
+| **Runtime & Package Manager** | [Bun](https://bun.sh) | Ultra-fast JavaScript runtime and package manager |
+| **Bundler** | [Vite 8](https://vite.dev) | Modern frontend build tool |
+| **Hosting & Edge** | [Cloudflare Workers](https://workers.cloudflare.com) via [Wrangler](https://developers.cloudflare.com/workers/wrangler/) | Serverless edge deployment |
+| **Linter & Formatter** | [Biome](https://biomejs.dev) | Blazing fast code formatting and linting |
+| **Content Pipeline** | `fast-xml-parser`, `marked`, `highlight.js` | Parses Medium RSS, converts to Markdown, and formats code blocks |
+
+---
+
+## 📁 Repository Structure
+
+```text
+fiirman.my.id/
+├── content/              # Local markdown articles synced from Medium
+├── public/               # Static assets (images, fonts, stamps, icons)
+├── scripts/
+│   └── sync-medium.ts    # Build-time RSS sync script
+├── src/
+│   ├── components/       # UI components (Header, Footer, Shaders, etc.)
+│   ├── data/             # Bio, quotes, projects data, and article manifest
+│   ├── routes/           # File-based routes for TanStack Router
+│   ├── router.tsx        # Router configuration
+│   └── styles.css        # Global Tailwind CSS definitions
+├── vite.config.ts        # Vite, Cloudflare, and Tailwind plugins
+└── wrangler.jsonc        # Cloudflare Workers configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
 
-## Learn More
+Ensure you have **Bun** installed on your system. If not, install it via:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation & Local Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/zeetec20/fiirman.my.id.git
+   cd fiirman.my.id
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies:**
+   ```bash
+   bun install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Start the development server:**
+   ```bash
+   bun dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 📜 Available Scripts
+
+| Command | Description |
+|---|---|
+| `bun dev` | Starts the local dev server on port 3000 |
+| `bun run sync:medium` | Crawls Medium RSS and syncs articles to `content/articles/` |
+| `bun run build` | Syncs articles and builds the project for production |
+| `bun run preview` | Previews the production build locally |
+| `bun run check` | Formats and lints the codebase with Biome |
+| `bun run typecheck` | Checks TypeScript types without emitting files |
+| `bun run deploy` | Builds and deploys the application to Cloudflare Workers |
+
+---
+
+## 👤 Author
+
+**Firman Justisio Lestari**
+- Website: [fiirman.my.id](https://fiirman.my.id)
+- GitHub: [@zeetec20](https://github.com/zeetec20)
+- LinkedIn: [firmanlestari](https://www.linkedin.com/in/firmanlestari)
+- Medium: [@firmanlestari](https://firmanlestari.medium.com)
+
+---
+
+## 📄 License
+
+This project is open-source. Feel free to explore the code or use it as inspiration for your own portfolio!

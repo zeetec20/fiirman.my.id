@@ -5,7 +5,6 @@ import {
   getLanguageDisplayName,
   LanguageIcon,
 } from "@/components/LanguageIcon";
-import { detectCodeLanguage } from "@/lib/detect-language";
 
 interface CodeBlockProps {
   code: string;
@@ -16,25 +15,16 @@ interface CodeBlockProps {
 
 export function CodeBlock({
   code,
-  language,
+  language = "text",
   filename,
   showLineNumbers = true,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
-  // Compute effective language using smart detector when language is unassigned or generic text
-  const effectiveLang = useMemo(() => {
-    const trimmed = (language || "").trim().toLowerCase();
-    if (trimmed && trimmed !== "text" && trimmed !== "plaintext") {
-      return trimmed;
-    }
-    const detected = detectCodeLanguage(code);
-    return detected !== "text" ? detected : trimmed || "text";
-  }, [code, language]);
-
-  // Normalize language for display and highlighting
+  // Normalize language directly from markdown fence
+  const effectiveLang = (language || "text").trim().toLowerCase();
   const displayName = getLanguageDisplayName(effectiveLang);
-  const normalizedLang = effectiveLang.toLowerCase().trim();
+  const normalizedLang = effectiveLang;
 
   // Highlight syntax using highlight.js
   const highlightedHtml = useMemo(() => {

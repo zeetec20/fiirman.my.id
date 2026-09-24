@@ -172,7 +172,7 @@ export const bioData: BioData = {
       classification: "DOMAIN III",
       skills: [
         {
-          name: "Neovim (NVim)",
+          name: "Nixvim (NVim)",
           level: "Editor",
           note: "Terminal Workspace & Lua",
         },
@@ -190,12 +190,12 @@ export const bioData: BioData = {
         {
           name: "Claude",
           level: "AI Agent",
-          note: "Claude Code & Anthropic AI",
+          note: "Claude Code, Coding Agent",
         },
         {
           name: "Antigravity",
           level: "AI Engine",
-          note: "Agentic Engineering Platform",
+          note: "Anti Gravity Cli, Coding Agent",
         },
       ],
     },

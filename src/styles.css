@@ -5,9 +5,57 @@
 @theme {
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-parchment: var(--parchment);
   --font-gothic: "UnifrakturMaguntia", serif;
   --font-serif: "Newsreader", "Times New Roman", Times, Georgia, serif;
   --font-mono: "Space Mono", "Courier New", Courier, monospace;
+}
+
+/* Self-Hosted Editorial Newspaper Fonts */
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/newsreader-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/newsreader-latin-wght-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/space-mono-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-mono-latin-700-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "UnifrakturMaguntia";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/unifrakturmaguntia-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
@@ -23,12 +71,14 @@
   --shadow-smooth-lg: 0 16px 44px -8px rgba(28, 25, 23, 0.10), 0 6px 16px -4px rgba(28, 25, 23, 0.05);
   --ink-primary: #1c1917;
   --ink-secondary: #57534e;
-  --ink-muted: #78716c;
+  --ink-muted: #665f59;
   --divider: rgba(40, 35, 30, 0.14);
   --divider-subtle: rgba(40, 35, 30, 0.08);
-  --accent: #e0a000;
-  --accent-soft: rgba(224, 160, 0, 0.14);
-  --accent-border: rgba(224, 160, 0, 0.38);
+  --accent: #8c5301;
+  --accent-soft: rgba(140, 83, 1, 0.12);
+  --accent-border: rgba(140, 83, 1, 0.32);
+  --parchment: #e1dcd5;
+  --accent-foreground: var(--parchment);
   --texture-opacity: 0.05;
   --texture-blend: multiply;
 }
@@ -43,12 +93,13 @@
   --shadow-smooth-lg: 0 16px 44px -8px rgba(0, 0, 0, 0.65), 0 6px 16px -4px rgba(0, 0, 0, 0.45);
   --ink-primary: #ece7de;
   --ink-secondary: #9c978d;
-  --ink-muted: #6b675e;
+  --ink-muted: #8c867a;
   --divider: rgba(236, 231, 222, 0.15);
   --divider-subtle: rgba(236, 231, 222, 0.08);
   --accent: #ffb930;
   --accent-soft: rgba(255, 185, 48, 0.14);
   --accent-border: rgba(255, 185, 48, 0.4);
+  --accent-foreground: #0a0908;
   --texture-opacity: 0.07;
   --texture-blend: screen;
 }
@@ -83,25 +134,25 @@ body {
 /* Selection Color */
 ::selection {
   background-color: var(--accent);
-  color: #1c1917;
+  color: var(--accent-foreground);
 }
 
 .dark ::selection {
-  color: #0a0908;
+  color: var(--accent-foreground);
 }
 
 /* Custom Woodcut Theme Switcher Flare Effects */
 .theme-flare-sun {
   transform-origin: top right;
-  filter: drop-shadow(-1px 1px 2px rgba(224, 160, 0, 0.35));
+  filter: drop-shadow(-1px 1px 2px rgba(255, 185, 48, 0.35));
   transition:
     filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.3s ease;
 }
 .group:hover .theme-flare-sun {
-  filter: drop-shadow(-2px 2px 6px rgba(224, 160, 0, 0.7))
-    drop-shadow(-4px 4px 14px rgba(245, 158, 11, 0.35));
+  filter: drop-shadow(-2px 2px 6px rgba(255, 185, 48, 0.7))
+    drop-shadow(-4px 4px 14px rgba(255, 185, 48, 0.35));
   transform: scale(1.03);
 }
 

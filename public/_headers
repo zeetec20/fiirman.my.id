@@ -24,6 +24,12 @@
 /favicon.ico
   Cache-Control: public, max-age=604800
 
+/theme/*
+  Cache-Control: public, max-age=2592000
+
+/llms.txt
+  Cache-Control: public, max-age=86400
+
 /manifest.json
   Cache-Control: public, max-age=604800
 

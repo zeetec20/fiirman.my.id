@@ -39,90 +39,99 @@ export function Header() {
       <MastheadDivider />
 
       {/* Classical Newspaper Navigation Bar strictly using font-mono */}
-      <nav className="flex items-center justify-center gap-3 sm:gap-6 py-1 pl-[1px] font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase">
-        <Link
-          to="/"
-          className={`transition-colors flex flex-col items-center ${
-            pathname === "/"
-              ? "text-[var(--ink-primary)] font-semibold"
-              : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
-          }`}
-        >
-          <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
-            HOME
-          </span>
-          <span className={pathname === "/" ? "text-[var(--accent)]" : ""}>
-            FRONTISPIECE
-          </span>
-        </Link>
-
-        <InkDrop className="w-2 h-2 text-[var(--accent)] opacity-75" />
-
-        <Link
-          to="/articles"
-          className={`transition-colors flex flex-col items-center ${
-            pathname.startsWith("/articles")
-              ? "text-[var(--ink-primary)] font-semibold"
-              : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
-          }`}
-        >
-          <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
-            ARTICLES
-          </span>
-          <span
-            className={
-              pathname.startsWith("/articles") ? "text-[var(--accent)]" : ""
-            }
+      <nav className="w-full flex items-center py-1 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase">
+        {/* Left Wing: Frontispiece & Folios */}
+        <div className="flex-1 flex items-center justify-end gap-3 sm:gap-6">
+          <Link
+            to="/"
+            className={`transition-colors flex flex-col items-center ${
+              pathname === "/"
+                ? "text-[var(--ink-primary)] font-semibold"
+                : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
+            }`}
           >
-            FOLIOS
-          </span>
-        </Link>
+            <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
+              HOME
+            </span>
+            <span className={pathname === "/" ? "text-[var(--accent)]" : ""}>
+              FRONTISPIECE
+            </span>
+          </Link>
 
-        <InkDrop className="w-2 h-2 text-[var(--accent)] opacity-75" />
+          <InkDrop className="w-2 h-2 text-[var(--accent)] opacity-75" />
 
-        <Link
-          to="/projects"
-          className={`transition-colors flex flex-col items-center ${
-            pathname.startsWith("/projects")
-              ? "text-[var(--ink-primary)] font-semibold"
-              : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
-          }`}
-        >
-          <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
-            PROJECTS
-          </span>
-          <span
-            className={
-              pathname.startsWith("/projects") ? "text-[var(--accent)]" : ""
-            }
+          <Link
+            to="/articles"
+            className={`transition-colors flex flex-col items-center ${
+              pathname.startsWith("/articles")
+                ? "text-[var(--ink-primary)] font-semibold"
+                : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
+            }`}
           >
-            SHOWCASE
-          </span>
-        </Link>
+            <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
+              ARTICLES
+            </span>
+            <span
+              className={
+                pathname.startsWith("/articles") ? "text-[var(--accent)]" : ""
+              }
+            >
+              FOLIOS
+            </span>
+          </Link>
+        </div>
 
-        <InkDrop className="w-2 h-2 text-[var(--accent)] opacity-75" />
+        {/* Central Middle Circle: Center-aligned with the MastheadDivider circle above */}
+        <div className="px-3 sm:px-6 flex items-center justify-center shrink-0">
+          <InkDrop className="w-2 h-2 text-[var(--accent)] opacity-75" />
+        </div>
 
-        <Link
-          to="/about"
-          className={`transition-colors flex flex-col items-center ${
-            pathname.startsWith("/about") || pathname.startsWith("/bio")
-              ? "text-[var(--ink-primary)] font-semibold"
-              : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
-          }`}
-        >
-          <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
-            ABOUT
-          </span>
-          <span
-            className={
+        {/* Right Wing: Showcase & Author */}
+        <div className="flex-1 flex items-center justify-start gap-3 sm:gap-6">
+          <Link
+            to="/projects"
+            className={`transition-colors flex flex-col items-center ${
+              pathname.startsWith("/projects")
+                ? "text-[var(--ink-primary)] font-semibold"
+                : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
+            }`}
+          >
+            <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
+              PROJECTS
+            </span>
+            <span
+              className={
+                pathname.startsWith("/projects") ? "text-[var(--accent)]" : ""
+              }
+            >
+              SHOWCASE
+            </span>
+          </Link>
+
+          <InkDrop className="w-2 h-2 text-[var(--accent)] opacity-75" />
+
+          <Link
+            to="/about"
+            className={`transition-colors flex flex-col items-center ${
               pathname.startsWith("/about") || pathname.startsWith("/bio")
-                ? "text-[var(--accent)]"
-                : ""
-            }
+                ? "text-[var(--ink-primary)] font-semibold"
+                : "text-[var(--ink-secondary)] hover:text-[var(--ink-primary)]"
+            }`}
           >
-            THE AUTHOR
-          </span>
-        </Link>
+            <span className="text-[9px] text-[var(--ink-muted)] tracking-wider font-mono">
+              ABOUT
+            </span>
+            <span
+              className={
+                pathname.startsWith("/about") || pathname.startsWith("/bio")
+                  ? "text-[var(--accent)]"
+                  : ""
+              }
+            >
+              AUTHOR
+            </span>
+          </Link>
+        </div>
       </nav>
     </header>
   );

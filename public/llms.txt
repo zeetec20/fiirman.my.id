@@ -1,0 +1,22 @@
+# Firman Lestari
+
+> Personal portfolio, technical manuscripts, and software engineering writings by Firman Lestari (zeetec20). De Litteris et Codicibus.
+
+## Navigation & Core Sections
+
+- [Home (Frontispiece)](https://fiirman.my.id/): Lead manuscript folio, editorial thoughts, and newest articles overview.
+- [Articles (Folios)](https://fiirman.my.id/articles): Archival catalog of engineering manuscripts, deep technical breakdowns, and system design notes.
+- [Projects (Showcase)](https://fiirman.my.id/projects): Curated engineering projects, distributed systems, open-source utilities, and developer tooling.
+- [About (Dossier)](https://fiirman.my.id/about): Professional background, engineering philosophy, system stack, and toolchain.
+
+## Manuscripts & Articles
+
+- [The uuid Package Is Optional Now](https://fiirman.my.id/articles/the-uuid-package-is-optional-now): Modern built-in crypto.randomUUID() replacing external uuid packages across Node.js, Bun, and browsers.
+- [Get Notified When Claude Code Needs Your Attention](https://fiirman.my.id/articles/get-notified-when-claude-code-needs-your-attention): Desktop and sound notifications automation for long-running AI coding agent sessions.
+- [Enforcing Branch Protection Without Upgrading Your GitHub Plan](https://fiirman.my.id/articles/enforcing-branch-protection-without-upgrading-your-github-plan): Git hooks and automated client-side protection for free personal repositories.
+- [How to Handle Duplicate Events Safely in BullMQ Using Idempotency](https://fiirman.my.id/articles/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency): Atomic Redis keys and state machines for idempotent message processing.
+- [Better Way to Handle Multiple Task on Flutter & Dart](https://fiirman.my.id/articles/better-way-to-handle-multiple-task-on-flutter-dart): Concurrency patterns and async orchestration in Flutter applications.
+- [CSS Function min, max, and clamp is Incredible](https://fiirman.my.id/articles/css-function-min-max-and-clamp-is-incredible): Modern fluid typography and responsive constraints without media query clutter.
+- [How to Merge or Modify Type on TypeScript](https://fiirman.my.id/articles/how-to-merge-or-modify-type-on-typescript): Utility types, intersections, unions, and mapped type transforms in TypeScript.
+- [How I Make My GitHub Profile Look Cool with Markdown](https://fiirman.my.id/articles/how-i-make-my-github-profile-look-cool-with-markdown): Dynamic GitHub profile README techniques using SVGs, workflows, and clean markdown.
+- [What's Git Stash](https://fiirman.my.id/articles/whats-git-stash): Practical guide to stashing, branching, and context switching cleanly in Git.

@@ -38,7 +38,7 @@ export function NotFoundPage() {
         <div className="pt-4">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xs font-mono text-xs uppercase tracking-widest bg-[var(--accent)] text-stone-950 font-bold hover:opacity-90 transition-opacity shadow-smooth-md hover:shadow-smooth-lg cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xs font-mono text-xs uppercase tracking-widest bg-[var(--accent)] text-[var(--accent-foreground)] font-bold hover:opacity-90 transition-opacity shadow-smooth-md hover:shadow-smooth-lg cursor-pointer"
           >
             <span aria-hidden="true">&larr;</span>
             <span>Return to Frontispiece</span>

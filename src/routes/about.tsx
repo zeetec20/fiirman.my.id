@@ -48,10 +48,10 @@ function AboutPage() {
           {/* Full Narrative Essay */}
           <div className="space-y-4 text-sm sm:text-base text-[var(--ink-secondary)] leading-relaxed pt-2">
             <p className="text-[var(--ink-primary)]">
-              {bioData.narrative.intro}
+              <p>{bioData.narrative.intro}</p>
+              <p>{bioData.narrative.background}</p>
+              <p>{bioData.narrative.philosophy}</p>
             </p>
-            <p>{bioData.narrative.background}</p>
-            <p>{bioData.narrative.philosophy}</p>
           </div>
 
           {/* Quick Technical Metadata */}

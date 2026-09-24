@@ -21,14 +21,20 @@ export function ArticleCard({
         className={`flex flex-col justify-between h-full group ${className}`}
       >
         <div>
-          <div className="relative w-full aspect-[16/10] rounded-xs overflow-hidden shadow-smooth-lg bg-black/40">
+          <Link
+            to="/articles/$slug"
+            params={{ slug: article.slug }}
+            className="relative block w-full aspect-[16/10] rounded-xs overflow-hidden shadow-smooth-lg bg-black/40 cursor-pointer focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            aria-label={`Open article: ${article.title}`}
+          >
             <DitherImage
               src={article.coverImage}
               alt={article.title}
               priority
+              sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
               className="object-cover filter contrast-[1.08] brightness-[0.92]"
             />
-          </div>
+          </Link>
 
           {/* Folio Metadata */}
           <div className="font-mono text-[9px] sm:text-[10px] text-[var(--ink-muted)] tracking-[0.2em] uppercase mt-4 mb-1">
@@ -73,14 +79,20 @@ export function ArticleCard({
       <article
         className={`group flex items-start sm:items-stretch gap-4 ${className}`}
       >
-        <div className="relative w-28 sm:w-36 md:w-40 lg:w-48 h-24 sm:h-auto sm:self-stretch shrink-0 overflow-hidden rounded-xs bg-black/40 shadow-smooth-md group-hover:shadow-smooth-lg transition-shadow duration-300">
+        <Link
+          to="/articles/$slug"
+          params={{ slug: article.slug }}
+          className="relative block w-28 sm:w-36 md:w-40 lg:w-48 h-24 sm:h-auto sm:self-stretch shrink-0 overflow-hidden rounded-xs bg-black/40 shadow-smooth-md group-hover:shadow-smooth-lg transition-shadow duration-300 cursor-pointer focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          aria-label={`Open article: ${article.title}`}
+        >
           <DitherImage
             src={article.coverImage}
             alt={article.title}
+            sizes="(min-width: 1024px) 192px, (min-width: 768px) 160px, 112px"
             className="object-cover filter contrast-[1.08] brightness-[0.92]"
             pixelSize={1}
           />
-        </div>
+        </Link>
         <div className="flex-1 flex flex-col justify-between py-0.5 overflow-hidden">
           <div>
             <div className="font-mono text-[9px] text-[var(--ink-muted)] tracking-widest uppercase">
@@ -114,14 +126,20 @@ export function ArticleCard({
       className={`group flex items-start sm:items-stretch gap-3.5 sm:gap-5 py-3 border-b border-[var(--divider-subtle)] last:border-b-0 ${className}`}
     >
       {/* Mini Thumbnail Image on the Left */}
-      <div className="relative w-24 sm:w-36 h-24 sm:h-auto sm:self-stretch shrink-0 overflow-hidden rounded-xs bg-black/40 shadow-smooth-md group-hover:shadow-smooth-lg transition-shadow duration-300">
+      <Link
+        to="/articles/$slug"
+        params={{ slug: article.slug }}
+        className="relative block w-24 sm:w-36 h-24 sm:h-auto sm:self-stretch shrink-0 overflow-hidden rounded-xs bg-black/40 shadow-smooth-md group-hover:shadow-smooth-lg transition-shadow duration-300 cursor-pointer focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        aria-label={`Open article: ${article.title}`}
+      >
         <DitherImage
           src={article.coverImage}
           alt={article.title}
+          sizes="(min-width: 640px) 144px, 96px"
           className="object-cover filter contrast-[1.08] brightness-[0.92]"
           pixelSize={1}
         />
-      </div>
+      </Link>
 
       {/* Text Details on the Right */}
       <div className="flex-1 flex flex-col justify-between py-0.5 space-y-1.5 overflow-hidden">

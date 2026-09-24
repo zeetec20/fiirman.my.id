@@ -264,12 +264,37 @@ function BlockToken({ token, index }: { token: Token; index: number }) {
   }
 }
 
+export function InlineMarkdown({
+  content,
+  className = "",
+}: {
+  content: string;
+  className?: string;
+}) {
+  const tokens = useMemo(() => {
+    const normalized = content.replace(/\u00A0/g, " ");
+    const parsed = marked.lexer(normalized);
+    const first = parsed[0];
+    if (first && "tokens" in first && Array.isArray(first.tokens)) {
+      return first.tokens;
+    }
+    return parsed;
+  }, [content]);
+
+  return (
+    <span className={className}>
+      <InlineTokens tokens={tokens} />
+    </span>
+  );
+}
+
 export function MarkdownRenderer({
   content,
   className = "",
 }: MarkdownRendererProps) {
   const tokens = useMemo(() => {
-    return marked.lexer(content);
+    const normalized = content.replace(/\u00A0/g, " ");
+    return marked.lexer(normalized);
   }, [content]);
 
   return (

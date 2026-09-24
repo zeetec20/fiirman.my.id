@@ -9,6 +9,28 @@ export const Route = createFileRoute("/")({
   loader: () => ({
     quote: randomQuote(),
   }),
+  head: () => {
+    const leadArticle = articlesData[0];
+    const basePath = leadArticle
+      ? leadArticle.coverImage.replace(/\.[^.]+$/, "")
+      : "";
+    return {
+      links: leadArticle
+        ? [
+            {
+              rel: "preload",
+              as: "image",
+              type: "image/webp",
+              href: `${basePath}-672w.webp`,
+              imageSrcSet: `${basePath}-320w.webp 320w, ${basePath}-480w.webp 480w, ${basePath}-672w.webp 672w, ${basePath}-768w.webp 768w`,
+              imageSizes:
+                "(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw",
+              fetchPriority: "high",
+            },
+          ]
+        : [],
+    };
+  },
   component: Home,
 });
 

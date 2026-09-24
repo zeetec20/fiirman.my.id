@@ -1,15 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArticleScrollbar } from "@/components/ArticleScrollbar";
 import { DocumentLayout } from "@/components/DocumentLayout";
-import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import {
+  InlineMarkdown,
+  MarkdownRenderer,
+} from "@/components/MarkdownRenderer";
 import { ScanStamp } from "@/components/ScanStamp";
 import { DitherImage } from "@/components/ui/dither-image";
 import { InkLine } from "@/components/ui/ink";
-import { articlesData } from "@/data/articles";
+import { getArticleBySlug } from "@/data/articles";
 
 export const Route = createFileRoute("/articles/$slug")({
-  loader: ({ params }) => {
-    const article = articlesData.find((a) => a.slug === params.slug);
+  loader: async ({ params }) => {
+    const article = await getArticleBySlug(params.slug);
     if (!article) {
       throw notFound();
     }
@@ -78,8 +81,8 @@ function ArticleDetailPage() {
               <time>{article.date}</time>
               <span>&bull;</span>
               <span>{article.readingTime}</span>
-              <span>&bull;</span>
-              <span className="text-[var(--accent)] font-semibold uppercase">
+              <span className="hidden sm:inline">&bull;</span>
+              <span className="hidden sm:inline text-[var(--accent)] font-semibold uppercase">
                 {article.tags[0] ? `#${article.tags[0]}` : "MANUSCRIPT"}
               </span>
             </div>
@@ -100,7 +103,7 @@ function ArticleDetailPage() {
         {/* Lead / Abstract */}
         {article.lead && (
           <div className="text-base sm:text-lg italic font-serif text-[var(--ink-primary)] pl-4 pr-3 py-2 leading-relaxed backdrop-blur-md bg-white/25 dark:bg-white/[0.04] rounded-xs border-l-2 border-[var(--accent)] border-y border-r border-black/[0.07] dark:border-white/[0.1]">
-            {article.lead}
+            <InlineMarkdown content={article.lead} />
           </div>
         )}
 
