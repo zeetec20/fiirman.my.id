@@ -61,6 +61,16 @@ export function DitherImage({
       ? "(min-width: 1024px) 500px, (min-width: 768px) 45vw, 100vw"
       : undefined);
 
+  const [currentSrc, setCurrentSrc] = useState(effectiveSrc);
+  const [currentSrcSet, setCurrentSrcSet] = useState<string | undefined>(
+    effectiveSrcSet,
+  );
+
+  useEffect(() => {
+    setCurrentSrc(effectiveSrc);
+    setCurrentSrcSet(effectiveSrcSet);
+  }, [effectiveSrc, effectiveSrcSet]);
+
   useEffect(() => {
     let isCancelled = false;
     const container = containerRef.current;
@@ -69,7 +79,13 @@ export function DitherImage({
 
     const img = new window.Image();
     img.crossOrigin = "anonymous";
-    img.src = effectiveSrc;
+    img.src = currentSrc;
+    img.onerror = () => {
+      if (currentSrc !== src) {
+        setCurrentSrc(src);
+        setCurrentSrcSet(undefined);
+      }
+    };
 
     const processDither = () => {
       if (isCancelled) return;
@@ -173,19 +189,25 @@ export function DitherImage({
       isCancelled = true;
       observer.disconnect();
     };
-  }, [effectiveSrc, pixelSize]);
+  }, [currentSrc, pixelSize, src]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">
       {/* Base standard image with modern responsive WebP format */}
       <img
-        src={effectiveSrc}
-        srcSet={effectiveSrcSet}
+        src={currentSrc}
+        srcSet={currentSrcSet}
         sizes={effectiveSizes}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
         decoding={priority ? "sync" : "async"}
+        onError={() => {
+          if (currentSrc !== src) {
+            setCurrentSrc(src);
+            setCurrentSrcSet(undefined);
+          }
+        }}
         className={`w-full h-full object-cover ${className}`}
       />
 

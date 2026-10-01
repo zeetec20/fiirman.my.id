@@ -37,7 +37,7 @@ interface User {
 
 // Modify 'id' to be optional/nullable for draft creation
 type DraftUser = Overwrite<User, { id?: null }>;
-```
+```dart
 
 ## Practical Usage in Data Layers
 

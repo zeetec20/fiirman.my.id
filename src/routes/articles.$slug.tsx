@@ -1,10 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArticleScrollbar } from "@/components/ArticleScrollbar";
 import { DocumentLayout } from "@/components/DocumentLayout";
-import {
-  InlineMarkdown,
-  MarkdownRenderer,
-} from "@/components/MarkdownRenderer";
+import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { ScanStamp } from "@/components/ScanStamp";
 import { DitherImage } from "@/components/ui/dither-image";
 import { InkLine } from "@/components/ui/ink";
@@ -99,13 +96,6 @@ function ArticleDetailPage() {
             ))}
           </div>
         </header>
-
-        {/* Lead / Abstract */}
-        {article.lead && (
-          <div className="text-base sm:text-lg italic font-serif text-[var(--ink-primary)] pl-4 pr-3 py-2 leading-relaxed backdrop-blur-md bg-white/25 dark:bg-white/[0.04] rounded-xs border-l-2 border-[var(--accent)] border-y border-r border-black/[0.07] dark:border-white/[0.1]">
-            <InlineMarkdown content={article.lead} />
-          </div>
-        )}
 
         {/* Manuscript Markdown Content */}
         <MarkdownRenderer content={article.content} />

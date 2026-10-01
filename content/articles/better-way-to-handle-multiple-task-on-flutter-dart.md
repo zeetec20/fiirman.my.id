@@ -36,7 +36,9 @@ final results = await Future.wait([
   fetchPosts(),
   fetchStats(),
 ]);
-```
+```dart
+
+![Comparing execution speed between single, sequential, and concurrent tasks](/article/better-way-to-handle-multiple-task-on-flutter-dart/comparing.png)
 
 ## Heavy Computation with Dart Isolates
 

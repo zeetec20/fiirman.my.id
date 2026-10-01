@@ -21,7 +21,11 @@ Responsive design traditionally meant writing layers of media query breakpoints.
 
 `min()` lets you define the smallest value among comma-separated expressions, effectively creating an upper ceiling constraint. For instance, `width: min(100%, 800px)` creates a container that expands naturally up to 800px without needing `max-width`.
 
+![CSS min() function demo](/article/css-function-min-max-and-clamp-is-incredible/min.gif)
+
 `max()` conversely sets a lower floor constraint, ensuring elements never shrink below a designated threshold on compact mobile screens.
+
+![CSS max() function demo](/article/css-function-min-max-and-clamp-is-incredible/max.gif)
 
 ```css:layout.css
 /* Fluid container with dynamic margins */
@@ -29,13 +33,15 @@ Responsive design traditionally meant writing layers of media query breakpoints.
   width: min(90vw, 1200px);
   padding: max(1rem, 4vw);
 }
-```
+```dart
 
 ## Fluid Typography with clamp()
 
 ### Smooth Viewport Interpolation
 
 `clamp(MIN, VAL, MAX)` combines both bounds into a single declaration. It accepts a minimum value, a preferred scalable value (like `calc(1rem + 2vw)`), and a maximum ceiling.
+
+![CSS clamp() function demo](/article/css-function-min-max-and-clamp-is-incredible/clamp.gif)
 
 This enables fluid typography that scales smoothly between mobile phones, laptops, and ultra-wide desktop displays without jumping abruptly at breakpoint steps.
 

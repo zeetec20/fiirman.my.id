@@ -41,7 +41,7 @@ Stack:
 
 Project structure:
 
-```
+```dockerfile
 src/
 ├── env.ts                          # zod-parsed env
 ├── server.ts                       # express + worker + scheduler (single process)
@@ -95,7 +95,7 @@ The user will still only receive one email.
 
 Flow:
 
-```
+```sql
 ┌─────────┐
    │ user    │  POST /register  (plan=free)
    │ signs   │ ─────────────────────────────►  users table

@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Maximize2, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { DocumentLayout } from "@/components/DocumentLayout";
+import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { SectionHeader } from "@/components/SectionHeader";
 import { DitherImage } from "@/components/ui/dither-image";
 import { InkLine } from "@/components/ui/ink";
-import { projectsData } from "@/data/projects";
+import { type Project, projectsData } from "@/data/projects";
 
 export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
-      { title: "Project Showcase // Firman" },
+      { title: "Project Showcase // Firman Lestari" },
       {
         name: "description",
         content:
@@ -34,6 +36,38 @@ function GithubIcon({ className = "w-3 h-3" }: { className?: string }) {
 }
 
 function ProjectsPage() {
+  const [maximizedProject, setMaximizedProject] = useState<Project | null>(
+    null,
+  );
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!maximizedProject) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMaximizedProject(null);
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setMaximizedProject(null);
+      }
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [maximizedProject]);
+
   return (
     <DocumentLayout pageNumber="p. 03/04" documentTitle="PROJECT REGISTRY">
       <div className="space-y-8 font-serif">
@@ -50,16 +84,28 @@ function ProjectsPage() {
               <article className="group grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start py-2">
                 {/* Left Column: Dithered Visual Artifact & Tech Specs */}
                 <div className="md:col-span-5 flex flex-col gap-3">
-                  {/* Visual Artifact */}
-                  <div className="relative w-full aspect-[16/10] rounded-xs overflow-hidden bg-black/40 shadow-smooth-lg border border-stone-300/40 dark:border-stone-800/60 transition-shadow duration-300">
+                  {/* Visual Artifact with Click-to-Maximize */}
+                  <button
+                    type="button"
+                    aria-label={`Maximize image for ${proj.title}`}
+                    onClick={() => setMaximizedProject(proj)}
+                    className="group/img text-left relative w-full aspect-[16/10] rounded-xs overflow-hidden bg-black/40 shadow-smooth-lg border border-stone-300/40 dark:border-stone-800/60 transition-all duration-300 cursor-zoom-in hover:border-[var(--accent)]/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  >
                     <DitherImage
                       src={proj.image}
                       alt={proj.imageAlt}
-                      className="object-cover filter contrast-[1.08] brightness-[0.92]"
+                      className="object-cover filter contrast-[1.08] brightness-[0.92] transition-transform duration-500 group-hover/img:scale-105"
                       pixelSize={1}
                       hoverReveal={true}
                     />
-                  </div>
+                    {/* Maximize Badge Overlay */}
+                    <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-xs backdrop-blur-md bg-white/25 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] text-[var(--ink-primary)] shadow-smooth-sm opacity-0 group-hover/img:opacity-100 transition-all duration-200 pointer-events-none">
+                      <Maximize2 className="w-3 h-3 text-[var(--accent)]" />
+                      <span className="font-mono text-[9px] font-semibold uppercase tracking-wider hidden sm:inline">
+                        Maximize
+                      </span>
+                    </div>
+                  </button>
 
                   {/* Tech Stack Pills */}
                   <div>
@@ -97,19 +143,12 @@ function ProjectsPage() {
                       {proj.title}
                     </h3>
 
-                    {/* Executive Summary */}
-                    <p className="font-serif text-sm sm:text-base text-[var(--ink-secondary)] leading-relaxed mt-2.5">
-                      {proj.summary}
-                    </p>
-
-                    {/* Architecture & Implementation Notes */}
-                    <div className="mt-3.5 pl-3 border-l-2 border-[var(--accent)] bg-black/2 dark:bg-white/2 py-2 pr-3 rounded-r-xs">
-                      <div className="font-mono text-[9px] uppercase tracking-wider text-[var(--accent)] font-semibold mb-1">
-                        ARCHITECTURAL DISPATCH
-                      </div>
-                      <p className="font-serif italic text-xs sm:text-sm text-[var(--ink-muted)] leading-relaxed">
-                        {proj.architecture}
-                      </p>
+                    {/* Markdown Description */}
+                    <div className="mt-2.5">
+                      <MarkdownRenderer
+                        content={proj.content || proj.summary}
+                        className="[&_p]:my-2 [&_p]:text-sm sm:[&_p]:text-base [&_p]:leading-relaxed [&_p]:text-[var(--ink-secondary)] [&_a]:text-[var(--accent)] [&_a]:underline [&_code]:text-xs [&_ul]:my-2 [&_ol]:my-2 [&_blockquote]:my-3 [&_blockquote]:p-3"
+                      />
                     </div>
                   </div>
 
@@ -153,6 +192,50 @@ function ProjectsPage() {
           ))}
         </div>
       </div>
+
+      {/* Image Maximize Modal Overlay */}
+      {maximizedProject && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Maximized view of ${maximizedProject.title}`}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 animate-fade-in"
+        >
+          {/* Subtle Transparent Backdrop */}
+          <div className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-xs transition-opacity duration-300 pointer-events-none" />
+
+          {/* Modal Dialog Content Container (Glass Card) */}
+          <div
+            ref={modalRef}
+            className="relative z-10 max-w-5xl lg:max-w-6xl w-full max-h-[92vh] flex flex-col rounded-xs overflow-hidden backdrop-blur-xl bg-white/40 dark:bg-stone-950/40 border border-black/[0.07] dark:border-white/[0.1] shadow-smooth-lg ring-1 ring-black/5 dark:ring-white/5 cursor-default transition-all"
+          >
+            {/* Top Bar: Clean Title & Close Button (No tags) */}
+            <div className="w-full flex items-center justify-between gap-3 px-4 py-2.5 border-b border-black/[0.07] dark:border-white/[0.1] backdrop-blur-md bg-white/20 dark:bg-white/[0.03] font-mono select-none">
+              <span className="text-[10px] sm:text-[11px] font-medium text-[var(--ink-secondary)] uppercase tracking-wider truncate">
+                {maximizedProject.code} // {maximizedProject.title}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setMaximizedProject(null)}
+                className="p-1 rounded-xs hover:bg-black/5 dark:hover:bg-white/10 text-[var(--ink-secondary)] hover:text-[var(--ink-primary)] transition-colors cursor-pointer shrink-0"
+                aria-label="Close image modal"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* High-Resolution Maximized Image (Cover fit, larger viewport) */}
+            <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[82vh] overflow-hidden bg-black/5 dark:bg-black/20">
+              <img
+                src={maximizedProject.image}
+                alt={maximizedProject.imageAlt}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </DocumentLayout>
   );
 }

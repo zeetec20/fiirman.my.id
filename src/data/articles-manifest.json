@@ -1,5 +1,24 @@
 [
   {
+    "slug": "i-love-lazygit-but-its-missing-one-thing",
+    "docId": "FOLIO-2026-M732",
+    "title": "I Love Lazygit, But it’s Missing One Thing",
+    "coverImage": "/article/i-love-lazygit-but-its-missing-one-thing/thumbnail.jpg",
+    "date": "October 1, 2026",
+    "readingTime": "2 min",
+    "tags": [
+      "software-engineering",
+      "experience",
+      "lazygit",
+      "git",
+      "terminal"
+    ],
+    "excerpt": "I don’t remember how long I’ve been using Lazygit, but it’s definitely been more than a year. One of the first things I set up whenever I install Lazygit is the diff section.",
+    "lead": "I don’t remember how long I’ve been using Lazygit, but it’s definitely been more than a year. One of the first things I set up whenever I install Lazygit is the diff section.",
+    "content": "",
+    "headings": []
+  },
+  {
     "slug": "the-uuid-package-is-optional-now",
     "docId": "FOLIO-2026-M290",
     "title": "The uuid Package Is Optional Now",
@@ -82,7 +101,12 @@
     "coverImage": "/article/whats-git-stash/thumbnail.jpg",
     "date": "June 11, 2023",
     "readingTime": "4 min",
-    "tags": ["Git", "Version Control", "Workflow", "Developer Productivity"],
+    "tags": [
+      "Git",
+      "Version Control",
+      "Workflow",
+      "Developer Productivity"
+    ],
     "excerpt": "Saving unfinished work temporarily without polluting git commit history: a tactical guide to managing, inspecting, and applying stashes.",
     "lead": "Software development demands frequent context switching. Urgent hotfixes, pull request reviews, and spontaneous meetings often arise before code is ready to commit. `git stash` shelves uncommitted changes cleanly.",
     "content": "",
@@ -95,7 +119,13 @@
     "coverImage": "/article/how-to-merge-or-modify-type-on-typescript/thumbnail.jpg",
     "date": "February 17, 2023",
     "readingTime": "4 min",
-    "tags": ["TypeScript", "Type Systems", "Utility Types", "Omit", "Generics"],
+    "tags": [
+      "TypeScript",
+      "Type Systems",
+      "Utility Types",
+      "Omit",
+      "Generics"
+    ],
     "excerpt": "Using utility types like Omit and intersection types to extend, overwrite, and safely compose complex TypeScript object types.",
     "lead": "Static typing in TypeScript dramatically eliminates runtime bugs by predicting input and output shapes. However, complex interfaces frequently require surgical modifications — stripping fields, altering nullability, or merging schemas.",
     "content": "",
@@ -108,7 +138,13 @@
     "coverImage": "/article/better-way-to-handle-multiple-task-on-flutter-dart/thumbnail.jpg",
     "date": "August 16, 2022",
     "readingTime": "5 min",
-    "tags": ["Flutter", "Dart", "Concurrency", "Isolates", "Mobile"],
+    "tags": [
+      "Flutter",
+      "Dart",
+      "Concurrency",
+      "Isolates",
+      "Mobile"
+    ],
     "excerpt": "Concurrency in Dart: executing parallel asynchronous tasks and heavy computations without blocking the Flutter UI thread.",
     "lead": "Concurrency is the ability to deal with multiple things at once. In Flutter, running heavy computational tasks on the main isolate introduces stutter and dropped frames. Mastering `Future.wait` and Dart Isolates unlocks fluid application performance.",
     "content": "",
@@ -121,7 +157,12 @@
     "coverImage": "/article/css-function-min-max-and-clamp-is-incredible/thumbnail.jpg",
     "date": "July 28, 2022",
     "readingTime": "4 min",
-    "tags": ["CSS", "Responsive Design", "Fluid Layouts", "Frontend"],
+    "tags": [
+      "CSS",
+      "Responsive Design",
+      "Fluid Layouts",
+      "Frontend"
+    ],
     "excerpt": "How mathematical functions in modern CSS simplify responsive typography and fluid container sizing without nested media queries.",
     "lead": "Responsive design traditionally meant writing layers of media query breakpoints. With modern CSS functions `min()`, `max()`, and `clamp()`, elements scale fluidly across viewports with mathematical elegance.",
     "content": "",
@@ -134,7 +175,12 @@
     "coverImage": "/article/how-i-make-my-github-profile-look-cool-with-markdown/thumbnail.jpg",
     "date": "October 28, 2021",
     "readingTime": "4 min",
-    "tags": ["GitHub", "Markdown", "Developer Portfolio", "Workflow"],
+    "tags": [
+      "GitHub",
+      "Markdown",
+      "Developer Portfolio",
+      "Workflow"
+    ],
     "excerpt": "Crafting an expressive and professional developer dossier using GitHub special repository profile features and clean markdown formatting.",
     "lead": "Your GitHub profile is often the first technical footprint other engineers and hiring leads examine. By creating a repository matching your username, you unlock a custom front-page portfolio rendered directly from Markdown.",
     "content": "",

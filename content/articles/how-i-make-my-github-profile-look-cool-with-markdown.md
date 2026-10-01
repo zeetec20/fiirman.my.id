@@ -21,6 +21,8 @@ Your GitHub profile is often the first technical footprint other engineers and h
 
 To initialize a profile README, create a new public repository matching your exact GitHub username (e.g. [github.com/zeetec20/zeetec20](https://github.com/zeetec20/zeetec20)).
 
+![Create a GitHub repository with matching username](/article/how-i-make-my-github-profile-look-cool-with-markdown/image2.jpg)
+
 GitHub recognizes this special pattern and provides a banner indicating that the README inside will be displayed at the top of your public profile page.
 
 ## Structure & Dynamic Widgets
@@ -41,3 +43,5 @@ An effective developer profile combines a clear editorial bio, current focus are
   <img src="https://skillicons.dev/icons?i=ts,react,nextjs,tailwind,bun,redis,postgres" />
 </p>
 ```
+
+![Finished custom GitHub Profile](/article/how-i-make-my-github-profile-look-cool-with-markdown/image4.jpg)

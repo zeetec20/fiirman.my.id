@@ -39,7 +39,7 @@ The README is very comprehensive and walks you through everything, including ins
 
 This plugins it’s support multiple operation system but here’s what the notification looks like on macOS:
 
-![](https://cdn-images-1.medium.com/max/716/1*yoOPgaKk7iEXR6B9X6cPxw.png)
+![](/article/get-notified-when-claude-code-needs-your-attention/img-1.png)
 
 The only downside is that this plugin is specifically built for Claude Code. It doesn’t currently support other AI coding tools such as Codex or OpenCode, so if you’re using those you’ll need to find an alternative notification solution.
 

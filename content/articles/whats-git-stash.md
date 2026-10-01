@@ -21,6 +21,8 @@ Software development demands frequent context switching. Urgent hotfixes, pull r
 
 In Git, files transition between states: Untracked, Unmodified, Modified, and Staged. When you need to switch branches immediately without committing half-finished work, standard `git checkout` will fail if conflicts exist.
 
+![Git File Lifecycle: Untracked, Unmodified, Modified, Staged](/article/whats-git-stash/image1.png)
+
 Running `git stash` records the modified index and working directory changes to a local stack, reverting your working tree to the clean HEAD commit.
 
 ```bash:terminal
@@ -34,11 +36,15 @@ git stash -u
 git stash save "WIP: redis idempotency middleware refactor" -u
 ```
 
+![Git Stash Options: Modified, Untracked, Ignored](/article/whats-git-stash/image2.png)
+
 ## Listing, Inspecting & Applying Stashes
 
 ### Stack Management & Inspection
 
 To inspect previously saved stashes without applying them, use `git stash list` and `git stash show`.
+
+![Viewing Git Stash list in terminal](/article/whats-git-stash/image3.png)
 
 When ready to resume work, `git stash pop` restores the changes and removes the entry from the stash stack, while `git stash apply` leaves the stash entry intact.
 
@@ -52,6 +58,8 @@ git stash show -p stash@{0}
 # Restore and remove from stack
 git stash pop stash@{0}
 ```
+
+![Inspecting Git Stash diff with git stash show](/article/whats-git-stash/image4.png)
 
 > **Pro-Tip: Stash Branching**
 > If you stashed changes and the current branch evolved significantly, run `git stash branch new-feature-branch` to create a new branch from the stash commit and apply the changes cleanly.

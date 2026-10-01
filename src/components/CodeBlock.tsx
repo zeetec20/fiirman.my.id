@@ -5,6 +5,7 @@ import {
   getLanguageDisplayName,
   LanguageIcon,
 } from "@/components/LanguageIcon";
+import { detectCodeLanguage } from "@/utils/code-detect";
 
 interface CodeBlockProps {
   code: string;
@@ -21,8 +22,10 @@ export function CodeBlock({
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
-  // Normalize language directly from markdown fence
-  const effectiveLang = (language || "text").trim().toLowerCase();
+  // Normalize language directly from markdown fence or auto-detect if "text"
+  const rawLang = (language || "text").trim().toLowerCase();
+  const effectiveLang =
+    rawLang === "text" || !rawLang ? detectCodeLanguage(code) : rawLang;
   const displayName = getLanguageDisplayName(effectiveLang);
   const normalizedLang = effectiveLang;
 

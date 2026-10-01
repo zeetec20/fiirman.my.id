@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import { marked, type Token, type Tokens } from "marked";
 import React, { useMemo } from "react";
 import { CodeBlock } from "@/components/CodeBlock";
+import { ImageFrame } from "@/components/ImageFrame";
 import { InkLine } from "@/components/ui/ink";
 
 interface MarkdownRendererProps {
@@ -84,14 +85,27 @@ function InlineTokens({ tokens }: { tokens?: Token[] }) {
 
           case "image": {
             const imgToken = token as Tokens.Image;
+            const rawFilename = imgToken.href.split("/").pop() || "image";
+            const ext = rawFilename.split(".").pop()?.toUpperCase() || "IMAGE";
+            const caption = imgToken.title || imgToken.text;
+
             return (
-              <span key={key} className="inline-block my-2">
-                <img
-                  src={imgToken.href}
-                  alt={imgToken.text}
-                  className="rounded-xs max-w-full h-auto"
-                />
-              </span>
+              <ImageFrame
+                key={key}
+                src={imgToken.href}
+                alt={imgToken.text}
+                filename={rawFilename}
+                badge={ext}
+                caption={caption}
+              >
+                <div className="p-2 sm:p-4 flex items-center justify-center">
+                  <img
+                    src={imgToken.href}
+                    alt={imgToken.text}
+                    className="rounded-xs max-w-full h-auto object-contain max-h-[75vh]"
+                  />
+                </div>
+              </ImageFrame>
             );
           }
 
@@ -170,6 +184,35 @@ function BlockToken({ token, index }: { token: Token; index: number }) {
 
     case "paragraph": {
       const pToken = token as Tokens.Paragraph;
+      // If the paragraph contains solely an image, render it directly as ImageFrame
+      if (
+        pToken.tokens &&
+        pToken.tokens.length === 1 &&
+        pToken.tokens[0].type === "image"
+      ) {
+        const imgToken = pToken.tokens[0] as Tokens.Image;
+        const rawFilename = imgToken.href.split("/").pop() || "image";
+        const ext = rawFilename.split(".").pop()?.toUpperCase() || "IMAGE";
+
+        return (
+          <ImageFrame
+            key={key}
+            src={imgToken.href}
+            alt={imgToken.text}
+            filename={rawFilename}
+            badge={ext}
+          >
+            <div className="p-2 sm:p-4 flex items-center justify-center">
+              <img
+                src={imgToken.href}
+                alt={imgToken.text}
+                className="rounded-xs max-w-full h-auto object-contain max-h-[75vh]"
+              />
+            </div>
+          </ImageFrame>
+        );
+      }
+
       return (
         <p
           key={key}
