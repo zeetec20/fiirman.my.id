@@ -53,7 +53,7 @@ export function ThemeToggle() {
       {/* Gentle Solar Flare Aura (Light Mode Hover - warm golden decay) */}
       <div
         aria-hidden="true"
-        className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 origin-top-right pointer-events-none transition-all duration-300 ease-out bg-[radial-gradient(circle_at_top_right,rgba(255,185,48,0.28)_0%,rgba(255,185,48,0.09)_45%,transparent_75%)] ${
+        className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 origin-top-right pointer-events-none transition-[opacity,transform] duration-300 ease-out bg-[radial-gradient(circle_at_top_right,rgba(255,185,48,0.28)_0%,rgba(255,185,48,0.09)_45%,transparent_75%)] ${
           theme === "light"
             ? "opacity-0 group-hover:opacity-100 scale-100 group-hover:scale-104"
             : "opacity-0 pointer-events-none"
@@ -63,7 +63,7 @@ export function ThemeToggle() {
       {/* Luminous Lunar Glow (Dark Mode Hover - soft white moon radiance) */}
       <div
         aria-hidden="true"
-        className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 origin-top-right pointer-events-none transition-all duration-300 ease-out bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0.08)_45%,transparent_75%)] ${
+        className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 origin-top-right pointer-events-none transition-[opacity,transform] duration-300 ease-out bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0.08)_45%,transparent_75%)] ${
           theme === "dark"
             ? "opacity-0 group-hover:opacity-100 scale-100 group-hover:scale-104"
             : "opacity-0 pointer-events-none"

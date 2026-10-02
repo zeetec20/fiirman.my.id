@@ -59,14 +59,15 @@ export function ArticleCard({
         </div>
 
         {/* Bottom Tag & Read Action */}
-        <div className="mt-5 pt-3 flex items-center justify-between font-mono text-[9px] text-[var(--ink-muted)] tracking-widest uppercase">
+        <div className="mt-5 pt-3 flex items-start justify-between font-mono text-[9px] text-[var(--ink-muted)] tracking-widest uppercase">
           <span>{article.tags.slice(0, 3).join(" // ").toUpperCase()}</span>
+          &nbsp;
           <Link
             to="/articles/$slug"
             params={{ slug: article.slug }}
             className="text-[var(--accent)] hover:opacity-85 tracking-[0.18em] font-semibold transition-opacity flex items-center gap-1"
           >
-            <span>READ FOLIO</span>
+            <span className="whitespace-nowrap">READ FOLIO</span>
             <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>

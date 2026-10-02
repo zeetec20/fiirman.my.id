@@ -31,7 +31,7 @@ export function Header() {
 
         {/* Dateline with Roman Numeral Date, Indonesian Location, and Handle */}
         <div className="font-mono text-[9px] sm:text-[10px] text-[var(--ink-muted)] tracking-[0.2em] uppercase mt-2.5">
-          DEPLOYED: {buildDateline} // BANYUWANGI, INDONESIA // ZEETEC20
+          {`DEPLOYED: ${buildDateline} // BANYUWANGI, INDONESIA // ZEETEC20`}
         </div>
       </div>
 

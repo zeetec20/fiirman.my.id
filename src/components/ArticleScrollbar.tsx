@@ -107,7 +107,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
         aria-hidden="true"
       >
         <div
-          className="h-full bg-[var(--accent)] transition-all duration-150 ease-out"
+          className="h-full bg-[var(--accent)] transition-[width] duration-150 ease-out"
           style={{ width: `${scrollPercent}%` }}
         />
       </div>
@@ -172,7 +172,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
                     >
                       {/* Section Number: Bolder & Accent when Active */}
                       <span
-                        className={`font-mono transition-all duration-200 ${
+                        className={`font-mono transition-[color,font-size,font-weight,scale] duration-200 ${
                           isActiveMajor
                             ? "text-[11px] font-bold text-[var(--accent)] scale-105"
                             : isMajorReached
@@ -186,7 +186,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
                       {/* Horizontal Compass Line */}
                       <div className="w-[22px] flex items-center justify-end">
                         <span
-                          className={`block rounded-l-full transition-all duration-200 ${
+                          className={`block rounded-l-full transition-[width,height,background-color,box-shadow] duration-200 ${
                             isActiveMajor
                               ? "w-8 h-[2.5px] bg-[var(--accent)] shadow-[0_0_8px_var(--accent)] mr-[10px]"
                               : isMajorReached
@@ -200,7 +200,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
                     {/* Hover Floating Tooltip with Section Title */}
                     <div
                       role="tooltip"
-                      className="absolute right-full mr-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 group-hover/tick:opacity-100 group-hover/tick:translate-x-0 translate-x-1.5 transition-all duration-150 ease-out z-50 whitespace-nowrap"
+                      className="absolute right-full mr-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 group-hover/tick:opacity-100 group-hover/tick:translate-x-0 translate-x-1.5 transition-[opacity,transform] duration-150 ease-out z-50 whitespace-nowrap"
                     >
                       <div className="flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[var(--bg-page)] dark:bg-stone-900 border border-[var(--accent-border)] shadow-xl text-left">
                         <span className="font-mono text-[9px] text-[var(--accent)] font-bold">
@@ -234,7 +234,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
                             className="w-[22px] flex items-center justify-end"
                           >
                             <span
-                              className={`block rounded-l-xs transition-all duration-200 mr-[10px] ${
+                              className={`block rounded-l-xs transition-[width,height,background-color,box-shadow] duration-200 mr-[10px] ${
                                 isSubReached
                                   ? `w-4 h-[1.5px] bg-[var(--accent)] dark:shadow-[0_0_6px_var(--accent)]`
                                   : `${widthClass} h-[1px] bg-stone-400/70 dark:bg-stone-700/60`

@@ -1,11 +1,9 @@
 import hljs from "highlight.js";
 import { Check, Copy } from "lucide-react";
 import { useMemo, useState } from "react";
-import {
-  getLanguageDisplayName,
-  LanguageIcon,
-} from "@/components/LanguageIcon";
+import { LanguageIcon } from "@/components/LanguageIcon";
 import { detectCodeLanguage } from "@/utils/code-detect";
+import { getLanguageDisplayName } from "@/utils/language-display-name";
 
 interface CodeBlockProps {
   code: string;
@@ -70,7 +68,7 @@ export function CodeBlock({
   };
 
   return (
-    <div className="my-6 backdrop-blur-md bg-white/25 dark:bg-white/[0.04] border border-black/[0.07] dark:border-white/[0.1] overflow-hidden rounded-xs transition-all">
+    <div className="my-6 backdrop-blur-md bg-white/25 dark:bg-white/[0.04] border border-black/[0.07] dark:border-white/[0.1] overflow-hidden rounded-xs">
       {/* Code Header Bar */}
       <div className="px-3.5 py-2 backdrop-blur-sm bg-white/20 dark:bg-white/[0.04] border-b border-black/[0.07] dark:border-white/[0.1] flex items-center justify-between gap-3 text-xs select-none">
         {/* Left: Language Icon + Language Name + Filename */}
@@ -107,7 +105,7 @@ export function CodeBlock({
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs backdrop-blur-sm bg-white/30 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] hover:bg-white/50 dark:hover:bg-white/[0.12] text-[var(--ink-secondary)] hover:text-[var(--ink-primary)] font-mono text-[10px] tracking-wider transition-all cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs backdrop-blur-sm bg-white/30 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] hover:bg-white/50 dark:hover:bg-white/[0.12] text-[var(--ink-secondary)] hover:text-[var(--ink-primary)] font-mono text-[10px] tracking-wider transition-colors cursor-pointer shrink-0"
           aria-label={
             copied ? "Code copied to clipboard" : "Copy code to clipboard"
           }

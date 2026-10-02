@@ -125,19 +125,17 @@ export async function getArticleBySlug(
   const summary = articlesData.find((a) => a.slug === slug);
   if (!summary) return undefined;
 
-  for (const [filePath, loader] of Object.entries(rawArticleLoaders)) {
-    const filenameSlug = filePath.split("/").pop()?.replace(/\.md$/, "");
-    if (filenameSlug === slug) {
-      const rawContent = await loader();
-      const { content } = parseFrontmatter(rawContent);
-      const headings = extractHeadings(content);
-      return {
-        ...summary,
-        content,
-        headings,
-      };
-    }
-  }
+  const articleLoader = Object.entries(rawArticleLoaders).find(
+    ([filePath]) => filePath.split("/").pop()?.replace(/\.md$/, "") === slug,
+  )?.[1];
+  if (!articleLoader) return summary;
 
-  return summary;
+  const rawContent = await articleLoader();
+  const { content } = parseFrontmatter(rawContent);
+  const headings = extractHeadings(content);
+  return {
+    ...summary,
+    content,
+    headings,
+  };
 }
