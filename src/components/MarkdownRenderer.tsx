@@ -37,8 +37,7 @@ function normalizeTokenSource(value: unknown, depth = 0): string {
       .filter((field) => typeof record[field] !== "function")
       .sort()
       .map(
-        (field) =>
-          `${field}:${normalizeTokenSource(record[field], depth + 1)}`,
+        (field) => `${field}:${normalizeTokenSource(record[field], depth + 1)}`,
       );
     return `{${fields.join(",")}}`;
   }
@@ -94,6 +93,8 @@ function MarkdownImage({ src, alt }: { src: string; alt: string }) {
       <img
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         className="rounded-xs max-w-full h-auto object-contain max-h-[75vh]"
       />
     </div>
@@ -111,88 +112,103 @@ function InlineTokens({
 
   return (
     <>
-      {keyedTokens(tokens, parentKey, fingerprintToken).map(({ token, key }) => {
+      {keyedTokens(tokens, parentKey, fingerprintToken).map(
+        ({ token, key }) => {
+          switch (token.type) {
+            case "text":
+              return (
+                <React.Fragment key={key}>
+                  {(token as Tokens.Text).tokens ? (
+                    <InlineTokens
+                      parentKey={key}
+                      tokens={(token as Tokens.Text).tokens}
+                    />
+                  ) : (
+                    (token as Tokens.Text).text
+                  )}
+                </React.Fragment>
+              );
 
-        switch (token.type) {
-          case "text":
-            return (
-              <React.Fragment key={key}>
-                {(token as Tokens.Text).tokens ? (
-                  <InlineTokens parentKey={key} tokens={(token as Tokens.Text).tokens} />
-                ) : (
-                  (token as Tokens.Text).text
-                )}
-              </React.Fragment>
-            );
+            case "strong":
+              return (
+                <strong
+                  key={key}
+                  className="font-bold text-[var(--ink-primary)]"
+                >
+                  <InlineTokens
+                    parentKey={key}
+                    tokens={(token as Tokens.Strong).tokens}
+                  />
+                </strong>
+              );
 
-          case "strong":
-            return (
-              <strong key={key} className="font-bold text-[var(--ink-primary)]">
-                <InlineTokens parentKey={key} tokens={(token as Tokens.Strong).tokens} />
-              </strong>
-            );
+            case "em":
+              return (
+                <em key={key} className="italic">
+                  <InlineTokens
+                    parentKey={key}
+                    tokens={(token as Tokens.Em).tokens}
+                  />
+                </em>
+              );
 
-          case "em":
-            return (
-              <em key={key} className="italic">
-                <InlineTokens parentKey={key} tokens={(token as Tokens.Em).tokens} />
-              </em>
-            );
+            case "codespan":
+              return (
+                <code
+                  key={key}
+                  className="px-1.5 py-0.5 rounded-xs backdrop-blur-sm bg-white/30 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] font-mono text-[0.85em] text-[#B45309] dark:text-[var(--accent)] font-medium"
+                >
+                  {(token as Tokens.Codespan).text}
+                </code>
+              );
 
-          case "codespan":
-            return (
-              <code
-                key={key}
-                className="px-1.5 py-0.5 rounded-xs backdrop-blur-sm bg-white/30 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] font-mono text-[0.85em] text-[#B45309] dark:text-[var(--accent)] font-medium"
-              >
-                {(token as Tokens.Codespan).text}
-              </code>
-            );
+            case "link": {
+              const linkToken = token as Tokens.Link;
+              const isExternal =
+                linkToken.href.startsWith("http://") ||
+                linkToken.href.startsWith("https://");
 
-          case "link": {
-            const linkToken = token as Tokens.Link;
-            const isExternal =
-              linkToken.href.startsWith("http://") ||
-              linkToken.href.startsWith("https://");
+              return (
+                <a
+                  key={key}
+                  href={linkToken.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  className="text-[var(--accent)] hover:text-[#b37a00] dark:hover:text-[#ffd27a] underline underline-offset-4 decoration-[var(--accent)]/50 hover:decoration-[var(--accent)] transition-colors font-medium inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <InlineTokens parentKey={key} tokens={linkToken.tokens} />
+                  {isExternal && (
+                    <ExternalLink className="w-3 h-3 inline-block shrink-0 opacity-75" />
+                  )}
+                </a>
+              );
+            }
 
-            return (
-              <a
-                key={key}
-                href={linkToken.href}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
-                className="text-[var(--accent)] hover:text-[#b37a00] dark:hover:text-[#ffd27a] underline underline-offset-4 decoration-[var(--accent)]/50 hover:decoration-[var(--accent)] transition-colors font-medium inline-flex items-center gap-1 cursor-pointer"
-              >
-                <InlineTokens parentKey={key} tokens={linkToken.tokens} />
-                {isExternal && (
-                  <ExternalLink className="w-3 h-3 inline-block shrink-0 opacity-75" />
-                )}
-              </a>
-            );
+            case "image": {
+              const imgToken = token as Tokens.Image;
+              return (
+                <ImageFrame
+                  key={key}
+                  {...imageFrameProps(imgToken)}
+                  caption={imgToken.title || imgToken.text}
+                >
+                  <MarkdownImage src={imgToken.href} alt={imgToken.text} />
+                </ImageFrame>
+              );
+            }
+
+            case "br":
+              return <br key={key} />;
+
+            default:
+              return (
+                <span key={key}>
+                  {"text" in token ? String(token.text) : ""}
+                </span>
+              );
           }
-
-          case "image": {
-            const imgToken = token as Tokens.Image;
-            return (
-              <ImageFrame
-                key={key}
-                {...imageFrameProps(imgToken)}
-                caption={imgToken.title || imgToken.text}
-              >
-                <MarkdownImage src={imgToken.href} alt={imgToken.text} />
-              </ImageFrame>
-            );
-          }
-
-          case "br":
-            return <br key={key} />;
-
-          default:
-            return (
-              <span key={key}>{"text" in token ? String(token.text) : ""}</span>
-            );
-        }
-      })}
+        },
+      )}
     </>
   );
 }
@@ -272,7 +288,11 @@ function ParagraphBlock({
   const soleToken = token.tokens?.[0];
 
   // A paragraph holding nothing but an image renders as a bare frame.
-  if (token.tokens && token.tokens.length === 1 && soleToken?.type === "image") {
+  if (
+    token.tokens &&
+    token.tokens.length === 1 &&
+    soleToken?.type === "image"
+  ) {
     const imgToken = soleToken as Tokens.Image;
     return (
       <ImageFrame {...imageFrameProps(imgToken)}>
@@ -355,13 +375,7 @@ function RuleBlock() {
   );
 }
 
-function FallbackBlock({
-  token,
-  nodeKey,
-}: {
-  token: Token;
-  nodeKey: string;
-}) {
+function FallbackBlock({ token, nodeKey }: { token: Token; nodeKey: string }) {
   const { tokens } = token as { tokens?: Token[] };
   if (!Array.isArray(tokens)) return null;
   return (
@@ -371,14 +385,7 @@ function FallbackBlock({
   );
 }
 
-function BlockToken({
-  token,
-  nodeKey,
-}: {
-  token: Token;
-  nodeKey: string;
-}) {
-
+function BlockToken({ token, nodeKey }: { token: Token; nodeKey: string }) {
   switch (token.type) {
     case "heading":
       return (
@@ -400,7 +407,11 @@ function BlockToken({
 
     case "list":
       return (
-        <ListBlock key={nodeKey} token={token as Tokens.List} nodeKey={nodeKey} />
+        <ListBlock
+          key={nodeKey}
+          token={token as Tokens.List}
+          nodeKey={nodeKey}
+        />
       );
 
     case "code":

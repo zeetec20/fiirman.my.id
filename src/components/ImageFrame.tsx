@@ -95,6 +95,8 @@ export function ImageFrame({
           <img
             src={src}
             alt={alt || filename || "Maximized image"}
+            loading="lazy"
+            decoding="async"
             className="max-h-[78vh] max-w-full w-auto h-auto object-contain rounded-xs"
           />
         </div>

@@ -91,7 +91,7 @@ export function ArticleCard({
             alt={article.title}
             sizes="(min-width: 1024px) 192px, (min-width: 768px) 160px, 112px"
             className="object-cover filter contrast-[1.08] brightness-[0.92]"
-            pixelSize={1}
+            pixelSize={2}
           />
         </Link>
         <div className="flex-1 flex flex-col justify-between py-0.5 overflow-hidden">
@@ -138,7 +138,7 @@ export function ArticleCard({
           alt={article.title}
           sizes="(min-width: 640px) 144px, 96px"
           className="object-cover filter contrast-[1.08] brightness-[0.92]"
-          pixelSize={1}
+          pixelSize={2}
         />
       </Link>
 

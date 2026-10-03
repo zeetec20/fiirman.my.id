@@ -1,4 +1,4 @@
-import hljs from "highlight.js";
+import { hljs } from "@/utils/highlight";
 
 const SUBSET_LANGUAGES = [
   "bash",

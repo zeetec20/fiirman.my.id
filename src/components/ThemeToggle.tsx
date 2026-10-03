@@ -78,7 +78,7 @@ export function ThemeToggle() {
           alt="Celestial Sun (switch to dark mode)"
           width={64}
           height={64}
-          loading="eager"
+          loading="lazy"
           decoding="async"
           className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-sun origin-top-right ${
             theme === "light"
@@ -93,7 +93,7 @@ export function ThemeToggle() {
           alt="Lunar Moon (switch to light mode)"
           width={64}
           height={64}
-          loading="eager"
+          loading="lazy"
           decoding="async"
           className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-moon origin-top-right ${
             theme === "dark"

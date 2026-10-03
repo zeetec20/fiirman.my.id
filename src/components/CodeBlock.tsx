@@ -1,4 +1,4 @@
-import hljs from "highlight.js";
+import { hljs } from "@/utils/highlight";
 import { Check, Copy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { LanguageIcon } from "@/components/LanguageIcon";

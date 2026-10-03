@@ -40,7 +40,7 @@ function getBuildTimestamp(): string {
   return `${d} · ${m} · ${y} · ${hh}:${mm}`;
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   define: {
     __BUILD_TIMESTAMP__: JSON.stringify(getBuildTimestamp()),
   },
@@ -55,12 +55,24 @@ export default defineConfig({
   },
   build: {
     sourcemap: false,
+    cssMinify: true,
+    assetsInlineLimit: 4096,
+    rollupOptions: {
+      output: {
+        manualChunks: (id: string) => {
+          if (id.includes("@paper-design/shaders-react")) return "shader";
+          if (id.includes("node_modules/highlight.js")) return "hljs";
+          if (id.includes("node_modules/marked")) return "md";
+          return undefined;
+        },
+      },
+    },
   },
   plugins: [
-    devtools(),
+    ...(mode === "production" ? [] : devtools()),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
   ],
-});
+}));

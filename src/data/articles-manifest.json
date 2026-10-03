@@ -3,7 +3,7 @@
     "slug": "i-love-lazygit-but-its-missing-one-thing",
     "docId": "FOLIO-2026-M732",
     "title": "I Love Lazygit, But it’s Missing One Thing",
-    "coverImage": "/article/i-love-lazygit-but-its-missing-one-thing/thumbnail.jpg",
+    "coverImage": "/article/i-love-lazygit-but-its-missing-one-thing/thumbnail.webp",
     "date": "October 1, 2026",
     "readingTime": "2 min",
     "tags": [
@@ -22,7 +22,7 @@
     "slug": "the-uuid-package-is-optional-now",
     "docId": "FOLIO-2026-M290",
     "title": "The uuid Package Is Optional Now",
-    "coverImage": "/article/the-uuid-package-is-optional-now/thumbnail.jpg",
+    "coverImage": "/article/the-uuid-package-is-optional-now/thumbnail.webp",
     "date": "August 5, 2026",
     "readingTime": "2 min",
     "tags": [
@@ -41,7 +41,7 @@
     "slug": "get-notified-when-claude-code-needs-your-attention",
     "docId": "FOLIO-2026-M916",
     "title": "Get Notified When Claude Code Needs Your Attention",
-    "coverImage": "/article/get-notified-when-claude-code-needs-your-attention/thumbnail.jpg",
+    "coverImage": "/article/get-notified-when-claude-code-needs-your-attention/thumbnail.webp",
     "date": "July 2, 2026",
     "readingTime": "2 min",
     "tags": [
@@ -60,7 +60,7 @@
     "slug": "enforcing-branch-protection-without-upgrading-your-github-plan",
     "docId": "FOLIO-2026-M778",
     "title": "Enforcing Branch Protection Without Upgrading Your GitHub Plan",
-    "coverImage": "/article/enforcing-branch-protection-without-upgrading-your-github-plan/thumbnail.jpg",
+    "coverImage": "/article/enforcing-branch-protection-without-upgrading-your-github-plan/thumbnail.webp",
     "date": "June 17, 2026",
     "readingTime": "3 min",
     "tags": [
@@ -79,7 +79,7 @@
     "slug": "how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency",
     "docId": "FOLIO-2026-M169",
     "title": "How to Handle Duplicate Events Safely in BullMQ Using Idempotency",
-    "coverImage": "/article/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency/thumbnail.jpg",
+    "coverImage": "/article/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency/thumbnail.webp",
     "date": "May 21, 2026",
     "readingTime": "4 min",
     "tags": [
@@ -98,7 +98,7 @@
     "slug": "whats-git-stash",
     "docId": "FOLIO-2023-002",
     "title": "What's git stash?",
-    "coverImage": "/article/whats-git-stash/thumbnail.jpg",
+    "coverImage": "/article/whats-git-stash/thumbnail.webp",
     "date": "June 11, 2023",
     "readingTime": "4 min",
     "tags": [
@@ -116,7 +116,7 @@
     "slug": "how-to-merge-or-modify-type-on-typescript",
     "docId": "FOLIO-2023-001",
     "title": "How to Merge or Modify Types in TypeScript",
-    "coverImage": "/article/how-to-merge-or-modify-type-on-typescript/thumbnail.jpg",
+    "coverImage": "/article/how-to-merge-or-modify-type-on-typescript/thumbnail.webp",
     "date": "February 17, 2023",
     "readingTime": "4 min",
     "tags": [
@@ -135,7 +135,7 @@
     "slug": "better-way-to-handle-multiple-task-on-flutter-dart",
     "docId": "FOLIO-2022-001",
     "title": "Better Way to Handle Multiple Tasks on Flutter / Dart",
-    "coverImage": "/article/better-way-to-handle-multiple-task-on-flutter-dart/thumbnail.jpg",
+    "coverImage": "/article/better-way-to-handle-multiple-task-on-flutter-dart/thumbnail.webp",
     "date": "August 16, 2022",
     "readingTime": "5 min",
     "tags": [
@@ -154,7 +154,7 @@
     "slug": "css-function-min-max-and-clamp-is-incredible",
     "docId": "FOLIO-2022-002",
     "title": "CSS Functions min(), max(), and clamp() Are Incredible",
-    "coverImage": "/article/css-function-min-max-and-clamp-is-incredible/thumbnail.jpg",
+    "coverImage": "/article/css-function-min-max-and-clamp-is-incredible/thumbnail.webp",
     "date": "July 28, 2022",
     "readingTime": "4 min",
     "tags": [
@@ -172,7 +172,7 @@
     "slug": "how-i-make-my-github-profile-look-cool-with-markdown",
     "docId": "FOLIO-2021-001",
     "title": "How I Make My GitHub Profile Look Cool With Markdown",
-    "coverImage": "/article/how-i-make-my-github-profile-look-cool-with-markdown/thumbnail.jpg",
+    "coverImage": "/article/how-i-make-my-github-profile-look-cool-with-markdown/thumbnail.webp",
     "date": "October 28, 2021",
     "readingTime": "4 min",
     "tags": [

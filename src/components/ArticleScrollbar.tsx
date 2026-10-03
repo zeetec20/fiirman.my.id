@@ -125,17 +125,21 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
             </span>
             <div className="w-[22px] flex items-center justify-center">
               <img
-                src="/theme/compass-light.png"
+                src="/theme/compass-light-64w.webp"
                 alt="Compass Navigator"
-                width={128}
-                height={128}
+                width={20}
+                height={20}
+                loading="lazy"
+                decoding="async"
                 className="w-[20px] h-[20px] object-contain dark:hidden pointer-events-none"
               />
               <img
-                src="/theme/compass-dark.png"
+                src="/theme/compass-dark-64w.webp"
                 alt="Compass Navigator"
-                width={128}
-                height={128}
+                width={20}
+                height={20}
+                loading="lazy"
+                decoding="async"
                 className="w-[20px] h-[20px] object-contain hidden dark:block pointer-events-none"
               />
             </div>

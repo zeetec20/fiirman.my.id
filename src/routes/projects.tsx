@@ -37,7 +37,7 @@ function GithubIcon({ className = "w-3 h-3" }: { className?: string }) {
 }
 
 function ProjectsPage() {
-const [maximizedProject, setMaximizedProject] = useState<Project | null>(
+  const [maximizedProject, setMaximizedProject] = useState<Project | null>(
     null,
   );
 
@@ -68,7 +68,7 @@ const [maximizedProject, setMaximizedProject] = useState<Project | null>(
                       src={proj.image}
                       alt={proj.imageAlt}
                       className="object-cover filter contrast-[1.08] brightness-[0.92] transition-transform duration-500 group-hover/img:scale-105"
-                      pixelSize={1}
+                      pixelSize={2}
                       hoverReveal={true}
                     />
                     {/* Maximize Badge Overlay */}
@@ -184,6 +184,8 @@ const [maximizedProject, setMaximizedProject] = useState<Project | null>(
             <img
               src={maximizedProject.image}
               alt={maximizedProject.imageAlt}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           )}

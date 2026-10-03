@@ -45,6 +45,7 @@ export function DitherImage({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDithered, setIsDithered] = useState(false);
+  const [ditherReady, setDitherReady] = useState(false);
 
   const basePath = src.replace(/\.[^.]+$/, "");
   const isArticleImage = src.startsWith("/article/");
@@ -72,6 +73,56 @@ export function DitherImage({
   }, [effectiveSrc, effectiveSrcSet]);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    if (priority) {
+      setDitherReady(true);
+      return;
+    }
+    if (typeof IntersectionObserver === "undefined") {
+      const schedule =
+        typeof window !== "undefined" &&
+        typeof (
+          window as Window & {
+            requestIdleCallback?: (cb: () => void) => number;
+          }
+        ).requestIdleCallback === "function"
+          ? (
+              window as Window & {
+                requestIdleCallback: (cb: () => void) => number;
+              }
+            ).requestIdleCallback
+          : (cb: () => void) => window.setTimeout(cb, 800);
+      schedule(() => setDitherReady(true));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          const ric = (
+            window as Window & {
+              requestIdleCallback?: (
+                cb: () => void,
+                opts?: { timeout: number },
+              ) => number;
+            }
+          ).requestIdleCallback;
+          if (typeof ric === "function") {
+            ric.call(window, () => setDitherReady(true), { timeout: 2000 });
+          } else {
+            window.setTimeout(() => setDitherReady(true), 300);
+          }
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [priority]);
+
+  useEffect(() => {
+    if (!ditherReady) return;
     let isCancelled = false;
     const container = containerRef.current;
     const canvas = canvasRef.current;
@@ -179,6 +230,10 @@ export function DitherImage({
     }
 
     const observer = new ResizeObserver(() => {
+      if (isDithered) {
+        observer.disconnect();
+        return;
+      }
       if (img.complete && img.naturalWidth > 0) {
         processDither();
       }
@@ -189,7 +244,7 @@ export function DitherImage({
       isCancelled = true;
       observer.disconnect();
     };
-  }, [currentSrc, pixelSize, src]);
+  }, [currentSrc, pixelSize, src, ditherReady, isDithered]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">

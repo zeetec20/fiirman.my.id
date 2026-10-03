@@ -16,6 +16,8 @@ export function AuthorPortrait({ className = "" }: AuthorPortraitProps) {
         priority
         hoverReveal={true}
         pixelSize={2}
+        srcSet={`${bioData.avatar240} 240w, ${bioData.avatar} 480w`}
+        sizes="208px"
         className="object-cover filter contrast-[1.08] brightness-[0.92]"
       />
     </div>

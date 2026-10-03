@@ -674,7 +674,10 @@ async function generateArticlesManifest() {
           : `FOLIO-${slug.toUpperCase()}`,
       title:
         typeof data.title === "string" ? data.title : "Untitled Manuscript",
-      coverImage: typeof data.coverImage === "string" ? data.coverImage : "",
+      coverImage:
+        typeof data.coverImage === "string"
+          ? data.coverImage.replace(/\.(jpe?g|png)$/i, ".webp")
+          : "",
       date: typeof data.date === "string" ? data.date : "Recent",
       readingTime:
         typeof data.readingTime === "string" ? data.readingTime : "3 min",

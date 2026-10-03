@@ -1,5 +1,15 @@
-import { GrainGradient } from "@paper-design/shaders-react";
-import { useSyncExternalStore } from "react";
+import {
+  Suspense,
+  lazy,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { GrainGradientBackground } from "@/components/ui/shader-canvas";
+
+const LazyGrainGradient = lazy(async () => ({
+  default: GrainGradientBackground,
+}));
 
 function subscribeTheme(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -26,6 +36,43 @@ function getServerThemeSnapshot() {
   return "dark";
 }
 
+function StaticGradientFallback({ isDark }: { isDark: boolean }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="transition-colors duration-200"
+      style={{
+        height: "100vh",
+        width: "100vw",
+        background: isDark
+          ? "radial-gradient(120% 120% at 0% 0%, hsl(40, 100%, 59%) 0%, hsl(30, 95%, 48%) 45%, hsl(48, 95%, 55%) 70%, hsl(0, 0%, 0%) 100%)"
+          : "radial-gradient(120% 120% at 0% 0%, hsl(36, 60%, 75%) 0%, hsl(28, 56%, 72%) 45%, hsl(42, 52%, 76%) 70%, hsl(38, 24%, 90%) 100%)",
+      }}
+    />
+  );
+}
+
+function scheduleIdle(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  const ric = (
+    window as Window & {
+      requestIdleCallback?: (
+        cb: () => void,
+        opts?: { timeout: number },
+      ) => number;
+      cancelIdleCallback?: (id: number) => void;
+    }
+  ).requestIdleCallback;
+  if (typeof ric === "function") {
+    const id = ric.call(window, callback, { timeout: 2500 });
+    return () => {
+      window.cancelIdleCallback?.(id);
+    };
+  }
+  const id = window.setTimeout(callback, 1200);
+  return () => window.clearTimeout(id);
+}
+
 export function GradientBackground() {
   const theme = useSyncExternalStore(
     subscribeTheme,
@@ -33,29 +80,24 @@ export function GradientBackground() {
     getServerThemeSnapshot,
   );
   const isDark = theme === "dark";
+  const [upgradeShader, setUpgradeShader] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    return scheduleIdle(() => setUpgradeShader(true));
+  }, []);
 
   return (
     <>
       <div className="fixed inset-0 w-screen h-screen -z-20 overflow-hidden pointer-events-none select-none">
-        <GrainGradient
-          key={theme}
-          style={{ height: "100vh", width: "100vw" }}
-          colorBack={isDark ? "hsl(0, 0%, 0%)" : "hsl(38, 24%, 90%)"}
-          softness={0.76}
-          intensity={0.45}
-          noise={isDark ? 0.08 : 0.12}
-          shape="corners"
-          offsetX={0}
-          offsetY={0}
-          scale={1}
-          rotation={0}
-          speed={1}
-          colors={
-            isDark
-              ? ["hsl(40, 100%, 59%)", "hsl(30, 95%, 48%)", "hsl(48, 95%, 55%)"]
-              : ["hsl(36, 60%, 75%)", "hsl(28, 56%, 72%)", "hsl(42, 52%, 76%)"]
-          }
-        />
+        {upgradeShader ? (
+          <Suspense fallback={<StaticGradientFallback isDark={isDark} />}>
+            <LazyGrainGradient />
+          </Suspense>
+        ) : (
+          <StaticGradientFallback isDark={isDark} />
+        )}
       </div>
       {/* Vignette Scrim for Crystal-Clear Text Readability */}
       <div
