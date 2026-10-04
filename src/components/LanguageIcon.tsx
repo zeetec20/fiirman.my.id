@@ -132,7 +132,12 @@ function JavaScriptIcon({ className }: IconProps) {
 
 function PythonIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
       {/* Dual serpent motif */}
       <path
         d="M11.9 2c-3.1 0-4.9 1.3-4.9 3.8v2.2h5v.8H5.8c-2.5 0-4.3 1.6-4.3 4.2 0 2.7 1.7 4.2 4.3 4.2h1.6v-2.3c0-2.4 1.8-4.2 4.2-4.2h5v-.8c0-2.4-1.8-4.1-4.2-4.1h-.5zm-1.8 1.5a.8.8 0 110 1.6.8.8 0 010-1.6z"
@@ -290,11 +295,46 @@ function DockerIcon({ className }: IconProps) {
       className={`${className} text-[#1D63ED] dark:text-[#60A5FA]`}
       aria-hidden="true"
     >
-      <rect x="2" y="10" width="3" height="3" stroke="currentColor" strokeWidth="1.2" />
-      <rect x="6" y="10" width="3" height="3" stroke="currentColor" strokeWidth="1.2" />
-      <rect x="10" y="10" width="3" height="3" stroke="currentColor" strokeWidth="1.2" />
-      <rect x="6" y="6" width="3" height="3" stroke="currentColor" strokeWidth="1.2" />
-      <rect x="10" y="6" width="3" height="3" stroke="currentColor" strokeWidth="1.2" />
+      <rect
+        x="2"
+        y="10"
+        width="3"
+        height="3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="6"
+        y="10"
+        width="3"
+        height="3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="10"
+        y="10"
+        width="3"
+        height="3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="6"
+        y="6"
+        width="3"
+        height="3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="10"
+        y="6"
+        width="3"
+        height="3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
       <path
         d="M2 13.5c0 3.5 3 6.5 8 6.5 5.5 0 9-3 10-6.5-.5 0-2 .5-3 0 0-1 .5-2 1.5-2.5-1.5 0-3-.5-4-1.5"
         stroke="currentColor"

@@ -23,14 +23,7 @@ export const Route = createRootRoute({
     links: [
       {
         rel: "preload",
-        href: "/fonts/newsreader-latin-wght-normal.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "preload",
-        href: "/fonts/unifrakturmaguntia-latin-400-normal.woff2",
+        href: "/fonts/newsreader-latin-400-normal.woff2",
         as: "font",
         type: "font/woff2",
         crossOrigin: "anonymous",

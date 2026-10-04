@@ -31,7 +31,7 @@ export function ArticleCard({
               src={article.coverImage}
               alt={article.title}
               priority
-              sizes="(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw"
+              sizes="(min-width: 1024px) 440px, (min-width: 768px) 45vw, calc(100vw - 48px)"
               className="object-cover filter contrast-[1.08] brightness-[0.92]"
             />
           </Link>

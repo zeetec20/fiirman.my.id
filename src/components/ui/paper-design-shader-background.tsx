@@ -1,15 +1,16 @@
 import {
-  Suspense,
   lazy,
+  Suspense,
   useEffect,
   useState,
   useSyncExternalStore,
 } from "react";
-import { GrainGradientBackground } from "@/components/ui/shader-canvas";
 
-const LazyGrainGradient = lazy(async () => ({
-  default: GrainGradientBackground,
-}));
+const LazyGrainGradient = lazy(() =>
+  import("@/components/ui/shader-canvas").then((m) => ({
+    default: m.GrainGradientBackground,
+  })),
+);
 
 function subscribeTheme(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -64,12 +65,12 @@ function scheduleIdle(callback: () => void): () => void {
     }
   ).requestIdleCallback;
   if (typeof ric === "function") {
-    const id = ric.call(window, callback, { timeout: 2500 });
+    const id = ric.call(window, callback, { timeout: 6000 });
     return () => {
       window.cancelIdleCallback?.(id);
     };
   }
-  const id = window.setTimeout(callback, 1200);
+  const id = window.setTimeout(callback, 5000);
   return () => window.clearTimeout(id);
 }
 

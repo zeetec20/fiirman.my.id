@@ -1,8 +1,8 @@
-import { hljs } from "@/utils/highlight";
 import { Check, Copy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { LanguageIcon } from "@/components/LanguageIcon";
 import { detectCodeLanguage } from "@/utils/code-detect";
+import { hljs } from "@/utils/highlight";
 import { getLanguageDisplayName } from "@/utils/language-display-name";
 
 interface CodeBlockProps {

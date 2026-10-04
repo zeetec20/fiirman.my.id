@@ -9,28 +9,6 @@ export const Route = createFileRoute("/")({
   loader: () => ({
     quote: randomQuote(),
   }),
-  head: () => {
-    const leadArticle = articlesData[0];
-    const basePath = leadArticle
-      ? leadArticle.coverImage.replace(/\.[^.]+$/, "")
-      : "";
-    return {
-      links: leadArticle
-        ? [
-            {
-              rel: "preload",
-              as: "image",
-              type: "image/webp",
-              href: `${basePath}-672w.webp`,
-              imageSrcSet: `${basePath}-320w.webp 320w, ${basePath}-480w.webp 480w, ${basePath}-672w.webp 672w, ${basePath}-768w.webp 768w`,
-              imageSizes:
-                "(min-width: 1024px) 480px, (min-width: 768px) 45vw, 100vw",
-              fetchPriority: "high",
-            },
-          ]
-        : [],
-    };
-  },
   component: Home,
 });
 
@@ -77,8 +55,8 @@ function Home() {
             className="md:col-span-7 flex flex-col justify-between h-full"
             aria-label="Newest Articles"
           >
-            {/* Section Heading: Clean typography without icons/flourishes */}
-            <h2 className="font-serif text-xs text-[var(--ink-muted)] tracking-[0.25em] uppercase font-medium mb-3 text-center md:text-left">
+            {/* Section Heading: Clean typography matching Writings Archive folio style */}
+            <h2 className="font-mono text-[10px] text-[var(--ink-muted)] tracking-widest uppercase mb-3 text-center md:text-left select-none">
               NEWEST ARTICLES
             </h2>
 

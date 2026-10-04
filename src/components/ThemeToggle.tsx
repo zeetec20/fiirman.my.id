@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -27,6 +27,11 @@ function getServerSnapshot(): "light" | "dark" {
 
 export function ThemeToggle() {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleTheme = () => {
     const nextTheme = theme === "light" ? "dark" : "light";
@@ -73,34 +78,40 @@ export function ThemeToggle() {
       {/* 90-Degree Corner Icon Presentation */}
       <div className="relative w-full h-full overflow-visible origin-top-right">
         {/* Golden Linocut Sun (Visible in Light Mode) */}
-        <img
-          src="/theme/sun-yellow-corner-128w.webp"
-          alt="Celestial Sun (switch to dark mode)"
-          width={64}
-          height={64}
-          loading="lazy"
-          decoding="async"
-          className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-sun origin-top-right ${
-            theme === "light"
-              ? "opacity-100 scale-100"
-              : "opacity-0 scale-90 pointer-events-none"
-          }`}
-        />
+        {(theme === "light" || mounted) && (
+          <img
+            src="/theme/sun-yellow-corner-64w.webp"
+            srcSet="/theme/sun-yellow-corner-64w.webp 1x, /theme/sun-yellow-corner-128w.webp 2x"
+            alt="Celestial Sun (switch to dark mode)"
+            width={64}
+            height={64}
+            loading="lazy"
+            decoding="async"
+            className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-sun origin-top-right ${
+              theme === "light"
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-90 pointer-events-none"
+            }`}
+          />
+        )}
 
         {/* Luminous White Moon (Visible in Dark Mode) */}
-        <img
-          src="/theme/moon-white-corner-128w.webp"
-          alt="Lunar Moon (switch to light mode)"
-          width={64}
-          height={64}
-          loading="lazy"
-          decoding="async"
-          className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-moon origin-top-right ${
-            theme === "dark"
-              ? "opacity-100 scale-100"
-              : "opacity-0 scale-90 pointer-events-none"
-          }`}
-        />
+        {(theme === "dark" || mounted) && (
+          <img
+            src="/theme/moon-white-corner-64w.webp"
+            srcSet="/theme/moon-white-corner-64w.webp 1x, /theme/moon-white-corner-128w.webp 2x"
+            alt="Lunar Moon (switch to light mode)"
+            width={64}
+            height={64}
+            loading="lazy"
+            decoding="async"
+            className={`absolute top-0 right-0 w-full h-full object-contain pointer-events-none theme-flare-moon origin-top-right ${
+              theme === "dark"
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-90 pointer-events-none"
+            }`}
+          />
+        )}
       </div>
     </button>
   );

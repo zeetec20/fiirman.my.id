@@ -57,16 +57,6 @@ export default defineConfig(({ mode }) => ({
     sourcemap: false,
     cssMinify: true,
     assetsInlineLimit: 4096,
-    rollupOptions: {
-      output: {
-        manualChunks: (id: string) => {
-          if (id.includes("@paper-design/shaders-react")) return "shader";
-          if (id.includes("node_modules/highlight.js")) return "hljs";
-          if (id.includes("node_modules/marked")) return "md";
-          return undefined;
-        },
-      },
-    },
   },
   plugins: [
     ...(mode === "production" ? [] : devtools()),

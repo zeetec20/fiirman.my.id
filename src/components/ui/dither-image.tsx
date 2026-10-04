@@ -44,6 +44,7 @@ export function DitherImage({
 }: DitherImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [isDithered, setIsDithered] = useState(false);
   const [ditherReady, setDitherReady] = useState(false);
 
@@ -76,8 +77,24 @@ export function DitherImage({
     const container = containerRef.current;
     if (!container) return;
     if (priority) {
-      setDitherReady(true);
-      return;
+      if (typeof window === "undefined") return;
+      const ric = (
+        window as Window & {
+          requestIdleCallback?: (
+            cb: () => void,
+            opts?: { timeout: number },
+          ) => number;
+          cancelIdleCallback?: (id: number) => void;
+        }
+      ).requestIdleCallback;
+      if (typeof ric === "function") {
+        const id = ric.call(window, () => setDitherReady(true), {
+          timeout: 1500,
+        });
+        return () => window.cancelIdleCallback?.(id);
+      }
+      const tid = window.setTimeout(() => setDitherReady(true), 250);
+      return () => window.clearTimeout(tid);
     }
     if (typeof IntersectionObserver === "undefined") {
       const schedule =
@@ -126,17 +143,8 @@ export function DitherImage({
     let isCancelled = false;
     const container = containerRef.current;
     const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-
-    const img = new window.Image();
-    img.crossOrigin = "anonymous";
-    img.src = currentSrc;
-    img.onerror = () => {
-      if (currentSrc !== src) {
-        setCurrentSrc(src);
-        setCurrentSrcSet(undefined);
-      }
-    };
+    const imgEl = imgRef.current;
+    if (!container || !canvas || !imgEl) return;
 
     const processDither = () => {
       if (isCancelled) return;
@@ -146,96 +154,121 @@ export function DitherImage({
 
       if (width === 0 || height === 0) return;
 
-      // Downscaled resolution according to pixelSize for authentic retro chunky grain
       const sampleW = Math.max(1, Math.floor(width / pixelSize));
       const sampleH = Math.max(1, Math.floor(height / pixelSize));
 
-      const offscreen = document.createElement("canvas");
-      offscreen.width = sampleW;
-      offscreen.height = sampleH;
-      const offCtx = offscreen.getContext("2d", { willReadFrequently: true });
-      if (!offCtx) return;
+      const sourceSrc = imgEl.currentSrc || currentSrc;
+      if (!sourceSrc) return;
 
-      // Draw and crop image with object-fit: cover equivalent
-      const imgAspect = img.naturalWidth / img.naturalHeight;
-      const targetAspect = sampleW / sampleH;
-      let sx = 0,
-        sy = 0,
-        sw = img.naturalWidth,
-        sh = img.naturalHeight;
+      // Offscreen unconstrained image instance to obtain true physical buffer dimensions
+      // directly from browser memory cache without CSS density scaling or sizes distortion
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.src = sourceSrc;
 
-      if (imgAspect > targetAspect) {
-        sw = img.naturalHeight * targetAspect;
-        sx = (img.naturalWidth - sw) / 2;
-      } else {
-        sh = img.naturalWidth / targetAspect;
-        sy = (img.naturalHeight - sh) / 2;
-      }
+      const renderDither = () => {
+        if (isCancelled) return;
+        const offscreen = document.createElement("canvas");
+        offscreen.width = sampleW;
+        offscreen.height = sampleH;
+        const offCtx = offscreen.getContext("2d", { willReadFrequently: true });
+        if (!offCtx) return;
 
-      offCtx.drawImage(img, sx, sy, sw, sh, 0, 0, sampleW, sampleH);
+        const naturalW = img.naturalWidth || sampleW;
+        const naturalH = img.naturalHeight || sampleH;
+        const imgAspect = naturalW / naturalH;
+        const targetAspect = sampleW / sampleH;
+        let sx = 0,
+          sy = 0,
+          sw = naturalW,
+          sh = naturalH;
 
-      try {
-        const imgData = offCtx.getImageData(0, 0, sampleW, sampleH);
-        const data = imgData.data;
+        if (imgAspect > targetAspect) {
+          sw = naturalH * targetAspect;
+          sx = (naturalW - sw) / 2;
+        } else {
+          sh = naturalW / targetAspect;
+          sy = (naturalH - sh) / 2;
+        }
 
-        for (let y = 0; y < sampleH; y++) {
-          for (let x = 0; x < sampleW; x++) {
-            const idx = (y * sampleW + x) * 4;
-            const r = data[idx];
-            const g = data[idx + 1];
-            const b = data[idx + 2];
+        offCtx.drawImage(img, sx, sy, sw, sh, 0, 0, sampleW, sampleH);
 
-            // Perceptual grayscale luminance
-            const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        try {
+          const imgData = offCtx.getImageData(0, 0, sampleW, sampleH);
+          const data = imgData.data;
 
-            // 8x8 Bayer threshold (-0.5 to +0.5)
-            const bayerVal = BAYER_8X8[y % 8][x % 8] / 64 - 0.5;
-            const thresholded = lum + bayerVal * 0.38;
+          for (let y = 0; y < sampleH; y++) {
+            for (let x = 0; x < sampleW; x++) {
+              const idx = (y * sampleW + x) * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
 
-            let chosenColor: number[];
-            if (thresholded < 0.28) {
-              chosenColor = COLOR_DARK;
-            } else if (thresholded < 0.65) {
-              chosenColor = COLOR_AMBER;
-            } else {
-              chosenColor = COLOR_CREAM;
+              const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+              const bayerVal = BAYER_8X8[y % 8][x % 8] / 64 - 0.5;
+              const thresholded = lum + bayerVal * 0.38;
+
+              let chosenColor: number[];
+              if (thresholded < 0.28) {
+                chosenColor = COLOR_DARK;
+              } else if (thresholded < 0.65) {
+                chosenColor = COLOR_AMBER;
+              } else {
+                chosenColor = COLOR_CREAM;
+              }
+
+              data[idx] = chosenColor[0];
+              data[idx + 1] = chosenColor[1];
+              data[idx + 2] = chosenColor[2];
+              data[idx + 3] = 255;
             }
-
-            data[idx] = chosenColor[0];
-            data[idx + 1] = chosenColor[1];
-            data[idx + 2] = chosenColor[2];
-            data[idx + 3] = 255;
           }
-        }
 
-        offCtx.putImageData(imgData, 0, 0);
+          offCtx.putImageData(imgData, 0, 0);
 
-        canvas.width = sampleW;
-        canvas.height = sampleH;
-        const mainCtx = canvas.getContext("2d");
-        if (mainCtx) {
-          mainCtx.drawImage(offscreen, 0, 0);
-          setIsDithered(true);
+          canvas.width = sampleW;
+          canvas.height = sampleH;
+          const mainCtx = canvas.getContext("2d");
+          if (mainCtx) {
+            mainCtx.drawImage(offscreen, 0, 0);
+            setIsDithered(true);
+          }
+        } catch (err) {
+          console.warn("Dither canvas processing fallback:", err);
         }
-      } catch (err) {
-        // In case of CORS or canvas restrictions, fallback seamlessly to base image
-        console.warn("Dither canvas processing fallback:", err);
+      };
+
+      if (img.complete && img.naturalWidth > 0) {
+        renderDither();
+      } else {
+        img.onload = renderDither;
       }
     };
 
-    if (img.complete && img.naturalWidth > 0) {
-      processDither();
+    const scheduleDither = () => {
+      if (typeof window !== "undefined") {
+        const ric = (
+          window as Window & {
+            requestIdleCallback?: (cb: () => void) => number;
+          }
+        ).requestIdleCallback;
+        if (typeof ric === "function") {
+          ric.call(window, processDither);
+          return;
+        }
+      }
+      setTimeout(processDither, 16);
+    };
+
+    if (imgEl.complete && imgEl.naturalWidth > 0) {
+      scheduleDither();
     } else {
-      img.onload = processDither;
+      imgEl.addEventListener("load", scheduleDither, { once: true });
     }
 
     const observer = new ResizeObserver(() => {
-      if (isDithered) {
-        observer.disconnect();
-        return;
-      }
-      if (img.complete && img.naturalWidth > 0) {
-        processDither();
+      if (imgEl.complete && imgEl.naturalWidth > 0) {
+        scheduleDither();
       }
     });
     observer.observe(container);
@@ -244,12 +277,13 @@ export function DitherImage({
       isCancelled = true;
       observer.disconnect();
     };
-  }, [currentSrc, pixelSize, src, ditherReady, isDithered]);
+  }, [pixelSize, ditherReady, currentSrc]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">
       {/* Base standard image with modern responsive WebP format */}
       <img
+        ref={imgRef}
         src={currentSrc}
         srcSet={currentSrcSet}
         sizes={effectiveSizes}
@@ -257,6 +291,7 @@ export function DitherImage({
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
         decoding={priority ? "sync" : "async"}
+        crossOrigin="anonymous"
         onError={() => {
           if (currentSrc !== src) {
             setCurrentSrc(src);

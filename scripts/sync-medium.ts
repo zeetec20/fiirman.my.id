@@ -220,7 +220,9 @@ async function processImageVariants(
   const webpPath = path.join(outputDir, webpFile);
   if ((!existsSync(webpPath) || isForce) && !isAnimated) {
     try {
-      await sharp(buffer).webp({ quality: 85 }).toFile(webpPath);
+      await sharp(buffer)
+        .webp({ quality: 80, effort: 6, smartSubsample: true })
+        .toFile(webpPath);
     } catch (err) {
       console.warn(`  [sync-medium] Could not generate ${webpFile}:`, err);
     }
@@ -234,7 +236,7 @@ async function processImageVariants(
       try {
         await sharp(buffer)
           .resize({ width, withoutEnlargement: true })
-          .webp({ quality: 85 })
+          .webp({ quality: 78, effort: 6, smartSubsample: true })
           .toFile(variantPath);
       } catch (err) {
         console.warn(`  [sync-medium] Could not generate ${variantFile}:`, err);
