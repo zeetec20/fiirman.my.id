@@ -5,6 +5,12 @@
 
 ---
 
+## 🖼️ Preview
+
+![fiirman.my.id UI preview](public/images/readme-preview.webp)
+
+---
+
 ## 📖 About The Project
 
 **fiirman.my.id** is a personal website and portfolio designed with an editorial, document-style aesthetic. It showcases software engineering projects, work history, technical competencies, and long-form engineering articles.
