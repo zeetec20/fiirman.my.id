@@ -1,0 +1,8 @@
+# Gitflow agent config — auto-detected from this repo's branches and history.
+# No ticket codes in this repo: git log carries none (e.g. "docs: add UI preview").
+# So: never ask for a ticket code, never wait on one — branch and commit directly.
+ticket_required: false
+branch_format: "{type}/{topic}"
+commit_format: "{type}: {summary}"
+commit_detail: "bulleted-list-with-emoji"
+base_branches: [master]
