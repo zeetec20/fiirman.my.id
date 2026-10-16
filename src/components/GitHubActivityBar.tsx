@@ -267,7 +267,7 @@ export function GitHubActivityBar() {
       {/* Contribution Calendar Heatmap */}
       <div className="p-4 sm:p-5 rounded-xs backdrop-blur-md bg-white/25 dark:bg-white/[0.04] border border-black/[0.07] dark:border-white/[0.1] space-y-3.5">
         <div className="flex flex-wrap items-center justify-between gap-y-2 font-mono text-[9px] text-[var(--ink-muted)] uppercase tracking-widest">
-          <span>CONTRIBUTION DENSITY // MMXXVI (53 WEEKS · JAN—DEC)</span>
+          <span>CONTRIBUTION DENSITY // MMXXVI (53 WEEKS · JAN-DEC)</span>
           <div className="flex items-center gap-3">
             {/* Standard Heatmap Scale */}
             <div className="flex items-center gap-1.5">
@@ -367,7 +367,7 @@ export function GitHubActivityBar() {
                           <div
                             key={dIdx}
                             ref={todayRef}
-                            title={`Today (${day.formattedDate}) — ${day.count} contributions (Active Cadence)`}
+                            title={`Today (${day.formattedDate}) - ${day.count} contributions (Active Cadence)`}
                             className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[1px] bg-[var(--accent)] ring-2 ring-[var(--accent)] ring-offset-1 ring-offset-[#F5F1E9] dark:ring-offset-[#0A0908] z-10 scale-125 shadow-[0_0_8px_var(--accent)] animate-pulse relative transition-transform"
                           >
                             <span className="absolute -top-0.5 -right-0.5 w-1 h-1 rounded-full bg-[var(--accent)] shadow-xs animate-ping" />

@@ -45,7 +45,7 @@ function stripHtml(html: string): string {
 }
 
 export function htmlToMarkdown(html: string, articleTitle: string): string {
-  let md = html.replace(/\u00A0/g, " ");
+  let md = html.replace(/\u00A0/g, " ").replace(/\u2014/g, " - ");
 
   // 1. Remove tracking pixel
   md = md.replace(/<img[^>]+stat\?event=[^>]+>/gi, "");
@@ -666,7 +666,9 @@ async function generateArticlesManifest() {
       "";
     const lead = (
       firstParagraph || (typeof data.excerpt === "string" ? data.excerpt : "")
-    ).replace(/\u00A0/g, " ");
+    )
+      .replace(/\u00A0/g, " ")
+      .replace(/\u2014/g, " - ");
 
     manifest.push({
       slug,

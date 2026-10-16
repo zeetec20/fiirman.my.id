@@ -14,7 +14,7 @@ tags:
 excerpt: "Using utility types like Omit and intersection types to extend, overwrite, and safely compose complex TypeScript object types."
 ---
 
-Static typing in TypeScript dramatically eliminates runtime bugs by predicting input and output shapes. However, complex interfaces frequently require surgical modifications — stripping fields, altering nullability, or merging schemas.
+Static typing in TypeScript dramatically eliminates runtime bugs by predicting input and output shapes. However, complex interfaces frequently require surgical modifications: stripping fields, altering nullability, or merging schemas.
 
 ## The Overwrite Generic Pattern
 

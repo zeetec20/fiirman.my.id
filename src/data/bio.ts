@@ -69,7 +69,7 @@ export const bioData: BioData = {
   },
   experience: [
     {
-      period: "2022 — PRESENT",
+      period: "2022 - PRESENT",
       role: "Software Engineer",
       company: "Independent & Distributed Engineering",
       location: "Banyuwangi, Indonesia",
@@ -93,7 +93,7 @@ export const bioData: BioData = {
       ],
     },
     {
-      period: "2020 — 2022",
+      period: "2020 - 2022",
       role: "Frontend & Mobile Developer",
       company: "Software Development Craft",
       location: "Indonesia",

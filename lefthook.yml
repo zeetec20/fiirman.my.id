@@ -1,0 +1,7 @@
+pre-commit:
+  jobs:
+    - name: biome
+      run: bunx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+    - name: no-em-dash
+      run: bun run scripts/check-em-dash.ts {staged_files}

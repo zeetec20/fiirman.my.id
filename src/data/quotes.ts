@@ -1,5 +1,5 @@
 /**
- * Epigraph pool — 50 classic quotes spanning computing, romance, purpose,
+ * Epigraph pool: 50 classic quotes spanning computing, romance, purpose,
  * and resistance. 10 from Indonesian literature, 40 international.
  *
  * One is randomly selected per page load in the home route loader so the
@@ -186,7 +186,7 @@ export const QUOTES: Quote[] = [
     topic: "romance",
   },
   {
-    text: "I almost wish we were butterflies and lived but three summer days — three such days with you I could fill with more delight than fifty common years could ever contain.",
+    text: "I almost wish we were butterflies and lived but three summer days, three such days with you I could fill with more delight than fifty common years could ever contain.",
     author: "John Keats",
     source: "Letter to Fanny Brawne",
     topic: "romance",
@@ -262,7 +262,7 @@ export const QUOTES: Quote[] = [
     topic: "resistance",
   },
   {
-    text: "There is no passion to be found playing small — settling for a life that is less than the one you are capable of living.",
+    text: "There is no passion to be found playing small, settling for a life that is less than the one you are capable of living.",
     author: "Nelson Mandela",
     topic: "resistance",
   },
@@ -301,7 +301,7 @@ export const QUOTES: Quote[] = [
   },
 ];
 
-/** Pick a random quote. Pure function — call inside a loader for SSR safety. */
+/** Pick a random quote. Pure function: call inside a loader for SSR safety. */
 export function randomQuote(): Quote {
   return QUOTES[Math.floor(Math.random() * QUOTES.length)] as Quote;
 }

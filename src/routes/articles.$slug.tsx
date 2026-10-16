@@ -57,7 +57,7 @@ function ArticleDetailPage() {
           </Link>
         </div>
 
-        {/* Lead Hero Banner Image — Persistent Archival Dither (No Hover Reveal) */}
+        {/* Lead Hero Banner Image: Persistent Archival Dither (No Hover Reveal) */}
         {article.coverImage && (
           <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-xs overflow-hidden shadow-smooth-lg bg-black/40">
             <DitherImage

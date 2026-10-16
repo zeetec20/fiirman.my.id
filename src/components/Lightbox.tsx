@@ -9,7 +9,7 @@ interface LightboxProps {
   /** Title-bar content shown to the left of the close button. */
   header: ReactNode;
   children: ReactNode;
-  /** `::backdrop` utilities — set per call site so each lightbox keeps its own dim level. */
+  /** `::backdrop` utilities: set per call site so each lightbox keeps its own dim level. */
   backdropClassName?: string;
 }
 

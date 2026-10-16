@@ -2,8 +2,8 @@
 # Vite copies /public/_headers verbatim into dist/client/, and Wrangler
 # Static Assets honors the standard Netlify-style _headers syntax.
 #
-# Hashed Vite chunks live under /assets/ — immutable forever.
-# Self-hosted fonts have content-hashed filenames — also immutable.
+# Hashed Vite chunks live under /assets/: immutable forever.
+# Self-hosted fonts have content-hashed filenames: also immutable.
 # Per-article images and the placeholder folder mutate occasionally; 30d.
 
 /assets/*

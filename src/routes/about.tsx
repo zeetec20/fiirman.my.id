@@ -78,7 +78,7 @@ function AboutPage() {
           <InkLine />
         </div>
 
-        {/* Section 2: From the Phonograph — Spotify Player */}
+        {/* Section 2: From the Phonograph: Spotify Player */}
         <section
           className="space-y-4 max-w-xl mx-auto text-center"
           aria-label="Audio player"
