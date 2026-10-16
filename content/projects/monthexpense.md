@@ -1,29 +1,27 @@
 ---
 id: monthexpense
-code: PRJ-002-MNTH
-title: "MonthExpense — Mobile-First Intelligent Expense Logger"
+code: PRJ-001-MNTH
+title: "MonthExpense: Local-First Expense Logger & Receipt Scanner"
 badge: PRODUCTION
 year: "2026"
 category: Systems
 featured: true
-image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80"
-imageAlt: "MonthExpense mobile receipt scanner and expense ledger"
+image: "/images/monthexpense-mockup.webp"
+imageAlt: "MonthExpense expense ledger and receipt scanner interface"
 techStack:
   - React 19
   - Hono
   - Cloudflare Workers
-  - TypeScript
-  - Tailwind CSS
-  - Vite
-demo: "https://monthexpense.pages.dev"
+  - Workers AI
+  - PaddleOCR (WASM)
+  - Google Sheets API
+demo: "https://monthexpense.fiirman.my.id/"
 repo: "https://github.com/zeetec20/monthexpense"
 docs: ""
-order: 2
+order: 1
 ---
 
-A high-performance, mobile-first expense logger engineered for frictionless transaction recording. Users can scan paper receipts via client-side OCR or record voice memos, which are parsed and validated into structured financial data.
+MonthExpense is an open-source, local-first expense logger. Receipts are scanned in-browser with PaddleOCR (WebAssembly), voice notes are transcribed, and both are structured into transactions by Workers AI (Llama 3.1 8B), then synced straight to the user's own Google Spreadsheet, with no proprietary database and zero tracking.
 
-Built with complete local-first privacy: data is stored on-device and synchronized directly to the user's personal Google Sheets with zero third-party database exposure.
-
-> **ARCHITECTURAL DISPATCH**  
-> Full-stack Hono architecture deployed on Cloudflare Workers and Pages with client-side OCR worker, voice capture fallback, and automated Google Sheets synchronization.
+> **ARCHITECTURAL DISPATCH**
+> React 19 client and Hono API compile into a single Cloudflare Workers bundle with Workers Static Assets and a Workers AI binding.

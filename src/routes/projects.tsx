@@ -5,7 +5,6 @@ import { DocumentLayout } from "@/components/DocumentLayout";
 import { Lightbox } from "@/components/Lightbox";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { SectionHeader } from "@/components/SectionHeader";
-import { DitherImage } from "@/components/ui/dither-image";
 import { InkLine } from "@/components/ui/ink";
 import { type Project, projectsData } from "@/data/projects";
 
@@ -55,30 +54,37 @@ function ProjectsPage() {
           {projectsData.map((proj, idx) => (
             <div key={proj.id}>
               <article className="group grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start py-2">
-                {/* Left Column: Dithered Visual Artifact & Tech Specs */}
+                {/* Left Column: Project Visual Artifact & Tech Specs */}
                 <div className="md:col-span-5 flex flex-col gap-3">
                   {/* Visual Artifact with Click-to-Maximize */}
-                  <button
-                    type="button"
-                    aria-label={`Maximize image for ${proj.title}`}
-                    onClick={() => setMaximizedProject(proj)}
-                    className="group/img text-left relative w-full aspect-[16/10] rounded-xs overflow-hidden bg-black/40 shadow-smooth-lg border border-stone-300/40 dark:border-stone-800/60 transition-colors duration-300 cursor-zoom-in hover:border-[var(--accent)]/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                  >
-                    <DitherImage
-                      src={proj.image}
-                      alt={proj.imageAlt}
-                      className="object-cover filter contrast-[1.08] brightness-[0.92] transition-transform duration-500 group-hover/img:scale-105"
-                      pixelSize={2}
-                      hoverReveal={true}
+                  {proj.image ? (
+                    <button
+                      type="button"
+                      aria-label={`Maximize image for ${proj.title}`}
+                      onClick={() => setMaximizedProject(proj)}
+                      className="group/img text-left relative w-full aspect-[16/10] rounded-xs overflow-hidden bg-black/40 shadow-smooth-lg border border-stone-300/40 dark:border-stone-800/60 transition-colors duration-300 cursor-zoom-in hover:border-[var(--accent)]/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    >
+                      <img
+                        src={proj.image}
+                        alt={proj.imageAlt}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                      />
+                      {/* Maximize Badge Overlay */}
+                      <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-xs backdrop-blur-md bg-white/25 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] text-[var(--ink-primary)] shadow-smooth-sm opacity-0 group-hover/img:opacity-100 transition-opacity duration-200 pointer-events-none">
+                        <Maximize2 className="w-3 h-3 text-[var(--accent)]" />
+                        <span className="font-mono text-[9px] font-semibold uppercase tracking-wider hidden sm:inline">
+                          Maximize
+                        </span>
+                      </div>
+                    </button>
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      className="relative w-full aspect-[16/10] rounded-xs overflow-hidden bg-black/40 shadow-smooth-lg border border-stone-300/40 dark:border-stone-800/60"
                     />
-                    {/* Maximize Badge Overlay */}
-                    <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-xs backdrop-blur-md bg-white/25 dark:bg-white/[0.06] border border-black/[0.07] dark:border-white/[0.1] text-[var(--ink-primary)] shadow-smooth-sm opacity-0 group-hover/img:opacity-100 transition-opacity duration-200 pointer-events-none">
-                      <Maximize2 className="w-3 h-3 text-[var(--accent)]" />
-                      <span className="font-mono text-[9px] font-semibold uppercase tracking-wider hidden sm:inline">
-                        Maximize
-                      </span>
-                    </div>
-                  </button>
+                  )}
 
                   {/* Tech Stack Pills */}
                   <div>
