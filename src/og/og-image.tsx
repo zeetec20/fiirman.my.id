@@ -113,7 +113,7 @@ function ServiceRow({ service, first }: { service: Service; first: boolean }) {
         <div
           style={{
             display: "flex",
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: 600,
             color: palette.textStrong,
             lineHeight: 1.2,
@@ -125,7 +125,7 @@ function ServiceRow({ service, first }: { service: Service; first: boolean }) {
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: 12,
+            fontSize: 14,
             color: palette.serviceBody,
             lineHeight: 1.4,
             marginTop: 3,
@@ -213,8 +213,8 @@ export function OgImage({ assets }: { assets: OgAssets }) {
         <div
           style={{
             display: "flex",
-            fontSize: 12.5,
-            letterSpacing: 1.35,
+            fontSize: 14.5,
+            letterSpacing: 1.25,
             color: palette.role,
             marginTop: 2,
           }}
@@ -245,7 +245,7 @@ export function OgImage({ assets }: { assets: OgAssets }) {
             flexDirection: "column",
             marginTop: 16,
             width: 500,
-            fontSize: 20,
+            fontSize: 22,
             lineHeight: 1.5,
             color: palette.body,
           }}
@@ -288,8 +288,8 @@ export function OgImage({ assets }: { assets: OgAssets }) {
             style={{
               display: "flex",
               fontFamily: "Space Mono",
-              fontSize: 9.5,
-              letterSpacing: 2.4,
+              fontSize: 12,
+              letterSpacing: 2,
               color: palette.label,
             }}
           >

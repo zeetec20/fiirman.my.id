@@ -18,8 +18,8 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
       style={{
         display: "flex",
         alignItems: "center",
-        marginRight: 8,
-        padding: "7px 12px",
+        marginRight: 10,
+        padding: "8px 14px",
         borderRadius: 999,
         backgroundColor: muted
           ? rgba(palette.paper, 0.06)
@@ -28,8 +28,8 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
           ? `1px solid ${rgba(palette.paper, 0.18)}`
           : `1px solid ${rgba(palette.amber, 0.34)}`,
         fontFamily: "Space Mono",
-        fontSize: 10,
-        letterSpacing: 1.1,
+        fontSize: 13,
+        letterSpacing: 1.2,
         color: muted ? rgba(palette.cream, 0.62) : palette.amberLight,
       }}
     >
@@ -167,10 +167,10 @@ export function ArticleOgImage({
           <div
             style={{
               display: "flex",
-              marginTop: 3,
+              marginTop: 4,
               fontFamily: "Space Mono",
-              fontSize: 8.5,
-              letterSpacing: 2.4,
+              fontSize: 12,
+              letterSpacing: 2,
               color: rgba(palette.cream, 0.9),
             }}
           >
@@ -189,8 +189,8 @@ export function ArticleOgImage({
             style={{
               display: "flex",
               fontFamily: "Space Mono",
-              fontSize: 9.5,
-              letterSpacing: 1.8,
+              fontSize: 14,
+              letterSpacing: 1.4,
               color: palette.cream,
               textShadow: `0 2px 12px ${rgba(palette.ink, 0.9)}`,
             }}
@@ -200,10 +200,10 @@ export function ArticleOgImage({
           <div
             style={{
               display: "flex",
-              marginTop: 5,
+              marginTop: 6,
               fontFamily: "Space Mono",
-              fontSize: 9,
-              letterSpacing: 1.6,
+              fontSize: 12,
+              letterSpacing: 1.2,
               color: rgba(palette.cream, 0.68),
               textShadow: `0 2px 12px ${rgba(palette.ink, 0.9)}`,
             }}
@@ -239,8 +239,8 @@ export function ArticleOgImage({
             style={{
               display: "flex",
               fontFamily: "Space Mono",
-              fontSize: 8.5,
-              letterSpacing: 2.2,
+              fontSize: 12,
+              letterSpacing: 1.8,
               color: rgba(palette.amberLight, 0.82),
             }}
           >
