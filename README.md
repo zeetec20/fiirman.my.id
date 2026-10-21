@@ -1,7 +1,18 @@
 # fiirman.my.id 🌐
 
-> Personal portfolio, engineering dossier, and technical blog of **Firman Justisio Lestari**.  
-> Live at [fiirman.my.id](https://fiirman.my.id)
+<p align="center">
+  <strong>Personal portfolio, engineering dossier, and technical blog of Firman Justisio Lestari.</strong><br>
+  Live at <a href="https://fiirman.my.id">fiirman.my.id</a>
+</p>
+
+<p align="center">
+  <a href="https://fiirman.my.id"><img src="https://img.shields.io/badge/Live-fiirman.my.id-FFB930?logo=cloudflare&logoColor=0A0908" alt="Live at fiirman.my.id" /></a>
+  <a href="https://tanstack.com/start"><img src="https://img.shields.io/badge/Framework-TanStack_Start-FF4154?logo=tanstack&logoColor=white" alt="TanStack Start" /></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/Frontend-React_19-61DAFB?logo=react&logoColor=black" alt="React 19" /></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Styling-Tailwind_CSS_v4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" /></a>
+  <a href="https://bun.sh/"><img src="https://img.shields.io/badge/Runtime-Bun-fbf0df?logo=bun&logoColor=black" alt="Bun" /></a>
+  <a href="https://workers.cloudflare.com/"><img src="https://img.shields.io/badge/Deployed_on-Cloudflare_Workers-F38020?logo=cloudflare" alt="Cloudflare Workers" /></a>
+</p>
 
 ---
 
