@@ -41,22 +41,22 @@ function createServices(assets: OgAssets): Service[] {
   return [
     {
       title: "Software",
-      lines: ["Modern web apps, clean code,", "and scalable architecture."],
+      lines: ["Web apps and APIs"],
       icon: assets.codeIcon,
     },
     {
       title: "Automation",
-      lines: ["Streamline repetitive tasks", "with smart automation."],
+      lines: ["Smart automation"],
       icon: assets.settingsIcon,
     },
     {
       title: "Integrations",
-      lines: ["Connect your tools, services,", "and data seamlessly."],
+      lines: ["Connect your tools"],
       icon: assets.cloudIcon,
     },
     {
       title: "Backend Systems",
-      lines: ["Reliable APIs and robust", "infrastructure."],
+      lines: ["Reliable backends"],
       icon: assets.databaseIcon,
     },
   ];
@@ -113,7 +113,7 @@ function ServiceRow({ service, first }: { service: Service; first: boolean }) {
         <div
           style={{
             display: "flex",
-            fontSize: 18,
+            fontSize: 22,
             fontWeight: 600,
             color: palette.textStrong,
             lineHeight: 1.2,
@@ -125,7 +125,7 @@ function ServiceRow({ service, first }: { service: Service; first: boolean }) {
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: 14,
+            fontSize: 22,
             color: palette.serviceBody,
             lineHeight: 1.4,
             marginTop: 3,
@@ -213,8 +213,8 @@ export function OgImage({ assets }: { assets: OgAssets }) {
         <div
           style={{
             display: "flex",
-            fontSize: 14.5,
-            letterSpacing: 1.25,
+            fontSize: 22,
+            letterSpacing: 1.2,
             color: palette.role,
             marginTop: 2,
           }}
@@ -288,8 +288,8 @@ export function OgImage({ assets }: { assets: OgAssets }) {
             style={{
               display: "flex",
               fontFamily: "Space Mono",
-              fontSize: 12,
-              letterSpacing: 2,
+              fontSize: 22,
+              letterSpacing: 1.6,
               color: palette.label,
             }}
           >

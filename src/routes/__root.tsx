@@ -28,7 +28,7 @@ export const Route = createRootRoute({
           "Personal space for Firman Lestari's thoughts, notes, projects",
       },
       { property: "og:url", content: "https://fiirman.my.id" },
-      { property: "og:image", content: "https://fiirman.my.id/og.png" },
+      { property: "og:image", content: "https://fiirman.my.id/og.png?v=2" },
       { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -46,7 +46,7 @@ export const Route = createRootRoute({
         content:
           "Personal space for Firman Lestari's thoughts, notes, projects",
       },
-      { name: "twitter:image", content: "https://fiirman.my.id/og.png" },
+      { name: "twitter:image", content: "https://fiirman.my.id/og.png?v=2" },
     ],
     links: [
       {

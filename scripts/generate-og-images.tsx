@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { CustomFont, ImageResponse } from "@cf-wasm/og/node";
 import type { ReactNode } from "react";
+import sharp from "sharp";
 import type { Article } from "../src/data/articles";
 import articlesManifest from "../src/data/articles-manifest.json";
 import { ArticleOgImage } from "../src/og/article-og-image";
@@ -45,7 +46,24 @@ async function render(element: ReactNode, outputPath: string) {
     format: "png",
   });
 
-  writeFileSync(outputPath, Buffer.from(await image.arrayBuffer()));
+  const png = Buffer.from(await image.arrayBuffer());
+  const compressed = await sharp(png)
+    .png({
+      palette: true,
+      quality: 95,
+      compressionLevel: 9,
+      effort: 10,
+      dither: 1,
+    })
+    .toBuffer();
+
+  if (compressed.length > 300 * 1024) {
+    console.warn(
+      `OG image over 300 KB: ${outputPath} (${Math.round(compressed.length / 1024)} KB)`,
+    );
+  }
+
+  writeFileSync(outputPath, compressed);
 }
 
 const articles = articlesManifest as Article[];

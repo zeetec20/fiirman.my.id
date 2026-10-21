@@ -19,7 +19,7 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
         display: "flex",
         alignItems: "center",
         marginRight: 10,
-        padding: "8px 14px",
+        padding: "10px 18px",
         borderRadius: 999,
         backgroundColor: muted
           ? rgba(palette.paper, 0.06)
@@ -28,7 +28,7 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
           ? `1px solid ${rgba(palette.paper, 0.18)}`
           : `1px solid ${rgba(palette.amber, 0.34)}`,
         fontFamily: "Space Mono",
-        fontSize: 13,
+        fontSize: 22,
         letterSpacing: 1.2,
         color: muted ? rgba(palette.cream, 0.62) : palette.amberLight,
       }}
@@ -169,8 +169,8 @@ export function ArticleOgImage({
               display: "flex",
               marginTop: 4,
               fontFamily: "Space Mono",
-              fontSize: 12,
-              letterSpacing: 2,
+              fontSize: 22,
+              letterSpacing: 1.6,
               color: rgba(palette.cream, 0.9),
             }}
           >
@@ -189,8 +189,8 @@ export function ArticleOgImage({
             style={{
               display: "flex",
               fontFamily: "Space Mono",
-              fontSize: 14,
-              letterSpacing: 1.4,
+              fontSize: 22,
+              letterSpacing: 1.2,
               color: palette.cream,
               textShadow: `0 2px 12px ${rgba(palette.ink, 0.9)}`,
             }}
@@ -202,7 +202,7 @@ export function ArticleOgImage({
               display: "flex",
               marginTop: 6,
               fontFamily: "Space Mono",
-              fontSize: 12,
+              fontSize: 22,
               letterSpacing: 1.2,
               color: rgba(palette.cream, 0.68),
               textShadow: `0 2px 12px ${rgba(palette.ink, 0.9)}`,
@@ -239,8 +239,8 @@ export function ArticleOgImage({
             style={{
               display: "flex",
               fontFamily: "Space Mono",
-              fontSize: 12,
-              letterSpacing: 1.8,
+              fontSize: 22,
+              letterSpacing: 1.6,
               color: rgba(palette.amberLight, 0.82),
             }}
           >

@@ -20,7 +20,7 @@ export const Route = createFileRoute("/articles/$slug")({
       return { meta: [{ title: "Article Not Found" }] };
     }
     const { article } = loaderData;
-    const ogImage = `https://fiirman.my.id/og/articles/${article.slug}.png`;
+    const ogImage = `https://fiirman.my.id/og/articles/${article.slug}.png?v=2`;
     return {
       meta: [
         { title: `${article.title} // Firman Lestari` },
