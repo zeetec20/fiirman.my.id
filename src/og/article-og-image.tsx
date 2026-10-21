@@ -5,11 +5,10 @@ const palette = {
   ink: "#0a0908",
   black: "#000000",
   cream: "#f7f1e6",
-  paper: "#ede7dc",
   amber: "#ffb930",
-  amberLight: "#ffd27a",
   amberDeep: "#e39a2b",
   amberDark: "#7a4b17",
+  amberInk: "#5a3a12",
 };
 
 function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
@@ -22,15 +21,13 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
         padding: "10px 18px",
         borderRadius: 999,
         backgroundColor: muted
-          ? rgba(palette.paper, 0.06)
-          : rgba(palette.amber, 0.12),
-        border: muted
-          ? `1px solid ${rgba(palette.paper, 0.18)}`
-          : `1px solid ${rgba(palette.amber, 0.34)}`,
+          ? rgba(palette.cream, 0.4)
+          : rgba(palette.cream, 0.55),
+        border: `1px solid ${rgba(palette.ink, 0.12)}`,
         fontFamily: "Space Mono",
         fontSize: 22,
         letterSpacing: 1.2,
-        color: muted ? rgba(palette.cream, 0.62) : palette.amberLight,
+        color: muted ? rgba(palette.ink, 0.6) : palette.amberDark,
       }}
     >
       {label.replace(/-/g, " ").toUpperCase()}
@@ -41,10 +38,12 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
 export function ArticleOgImage({
   article,
   cover,
+  coverBlur,
   grain,
 }: {
   article: Article;
   cover?: string;
+  coverBlur?: string;
   grain: string;
 }) {
   const tags = article.tags.slice(0, 3);
@@ -222,12 +221,39 @@ export function ArticleOgImage({
           display: "flex",
           flexDirection: "column",
           padding: "34px 40px 36px",
-          borderRadius: 16,
-          backgroundColor: rgba(palette.ink, 0.62),
-          border: `1px solid ${rgba(palette.paper, 0.16)}`,
-          boxShadow: `0 24px 60px ${rgba(palette.black, 0.38)}`,
+          borderRadius: 2,
+          backgroundColor: rgba(palette.cream, 0.72),
+          boxShadow: `0 18px 40px ${rgba(palette.black, 0.28)}`,
+          overflow: "hidden",
         }}
       >
+        {coverBlur && (
+          <img
+            src={coverBlur}
+            alt=""
+            width={1200}
+            height={630}
+            style={{
+              position: "absolute",
+              left: -40,
+              bottom: -36,
+              width: 1200,
+              height: 630,
+            }}
+          />
+        )}
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: rgba(palette.cream, 0.16),
+            boxShadow: `inset 0 0 0 1px ${rgba(palette.cream, 0.35)}`,
+          }}
+        />
         <div
           style={{
             display: "flex",
@@ -241,7 +267,7 @@ export function ArticleOgImage({
               fontFamily: "Space Mono",
               fontSize: 22,
               letterSpacing: 1.6,
-              color: rgba(palette.amberLight, 0.82),
+              color: palette.amberInk,
             }}
           >
             {(article.category ?? "ARTICLE").toUpperCase()}
@@ -257,7 +283,7 @@ export function ArticleOgImage({
             fontWeight: 800,
             letterSpacing: -1.8,
             lineHeight: 1.06,
-            color: palette.cream,
+            color: palette.ink,
           }}
         >
           {article.title}

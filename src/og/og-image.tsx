@@ -268,7 +268,7 @@ export function OgImage({ assets }: { assets: OgAssets }) {
           display: "flex",
           flexDirection: "column",
           width: 368,
-          height: 408,
+          height: 420,
           padding: 26,
           borderRadius: 18,
           backgroundColor: rgba(palette.glass, 0.84),
@@ -281,7 +281,7 @@ export function OgImage({ assets }: { assets: OgAssets }) {
             display: "flex",
             alignItems: "center",
             height: 28,
-            marginBottom: 4,
+            marginBottom: 16,
           }}
         >
           <div

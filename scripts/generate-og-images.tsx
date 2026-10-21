@@ -70,14 +70,28 @@ const articles = articlesManifest as Article[];
 const articleOutputDir = join(publicDir, "og", "articles");
 mkdirSync(articleOutputDir, { recursive: true });
 
+// Satori has no backdrop-filter, so the card's frosted glass is a pre-blurred cover.
+async function blurredCoverDataUri(path: string) {
+  const png = await sharp(readFileSync(path)).blur(18).png().toBuffer();
+
+  return `data:image/png;base64,${png.toString("base64")}`;
+}
+
 await render(<OgImage assets={assets} />, join(publicDir, "og.png"));
 
 for (const article of articles) {
   const coverPath = join(publicDir, "og-covers", `${article.slug}.png`);
-  const cover = existsSync(coverPath) ? dataUri(coverPath) : undefined;
+  const hasCover = existsSync(coverPath);
+  const cover = hasCover ? dataUri(coverPath) : undefined;
+  const coverBlur = hasCover ? await blurredCoverDataUri(coverPath) : undefined;
 
   await render(
-    <ArticleOgImage article={article} cover={cover} grain={assets.grain} />,
+    <ArticleOgImage
+      article={article}
+      cover={cover}
+      coverBlur={coverBlur}
+      grain={assets.grain}
+    />,
     join(articleOutputDir, `${article.slug}.png`),
   );
 }
