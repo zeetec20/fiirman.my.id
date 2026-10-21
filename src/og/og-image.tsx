@@ -1,24 +1,19 @@
-import { CustomFont } from "@cf-wasm/og/workerd";
 import { bioData } from "@/data/bio";
-import cloudIcon from "@/og/assets/cloud.png?inline";
-import codeIcon from "@/og/assets/code.png?inline";
-import databaseIcon from "@/og/assets/database.png?inline";
-import grain from "@/og/assets/grain.png?inline";
-import settingsIcon from "@/og/assets/settings.png?inline";
 import { rgba } from "@/og/color";
-import inter400 from "@/og/fonts/inter-400.bin";
-import inter600 from "@/og/fonts/inter-600.bin";
-import inter800 from "@/og/fonts/inter-800.bin";
-import spaceMono400 from "@/og/fonts/space-mono-400.bin";
-import unifraktur400 from "@/og/fonts/unifraktur-400.bin";
 
-export const ogFonts = [
-  new CustomFont("Inter", inter400, { weight: 400 }),
-  new CustomFont("Inter", inter600, { weight: 600 }),
-  new CustomFont("Inter", inter800, { weight: 800 }),
-  new CustomFont("UnifrakturMaguntia", unifraktur400, { weight: 400 }),
-  new CustomFont("Space Mono", spaceMono400, { weight: 400 }),
-];
+export type OgAssets = {
+  cloudIcon: string;
+  codeIcon: string;
+  databaseIcon: string;
+  grain: string;
+  settingsIcon: string;
+};
+
+type Service = {
+  title: string;
+  lines: string[];
+  icon: string;
+};
 
 const palette = {
   background: "#f8f2e4",
@@ -42,28 +37,30 @@ const palette = {
   shadow: "#976c2c",
 };
 
-const services = [
-  {
-    title: "Software",
-    lines: ["Modern web apps, clean code,", "and scalable architecture."],
-    icon: codeIcon,
-  },
-  {
-    title: "Automation",
-    lines: ["Streamline repetitive tasks", "with smart automation."],
-    icon: settingsIcon,
-  },
-  {
-    title: "Integrations",
-    lines: ["Connect your tools, services,", "and data seamlessly."],
-    icon: cloudIcon,
-  },
-  {
-    title: "Backend Systems",
-    lines: ["Reliable APIs and robust", "infrastructure."],
-    icon: databaseIcon,
-  },
-];
+function createServices(assets: OgAssets): Service[] {
+  return [
+    {
+      title: "Software",
+      lines: ["Modern web apps, clean code,", "and scalable architecture."],
+      icon: assets.codeIcon,
+    },
+    {
+      title: "Automation",
+      lines: ["Streamline repetitive tasks", "with smart automation."],
+      icon: assets.settingsIcon,
+    },
+    {
+      title: "Integrations",
+      lines: ["Connect your tools, services,", "and data seamlessly."],
+      icon: assets.cloudIcon,
+    },
+    {
+      title: "Backend Systems",
+      lines: ["Reliable APIs and robust", "infrastructure."],
+      icon: assets.databaseIcon,
+    },
+  ];
+}
 
 function Glow({ background }: { background: string }) {
   return (
@@ -81,13 +78,7 @@ function Glow({ background }: { background: string }) {
   );
 }
 
-function ServiceRow({
-  service,
-  first,
-}: {
-  service: (typeof services)[number];
-  first: boolean;
-}) {
+function ServiceRow({ service, first }: { service: Service; first: boolean }) {
   return (
     <div
       style={{
@@ -151,7 +142,9 @@ function ServiceRow({
   );
 }
 
-export function OgImage() {
+export function OgImage({ assets }: { assets: OgAssets }) {
+  const services = createServices(assets);
+
   return (
     <div
       style={{
@@ -189,7 +182,7 @@ export function OgImage() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundImage: `url(${grain})`,
+          backgroundImage: `url(${assets.grain})`,
           backgroundRepeat: "repeat",
           backgroundSize: "180px 180px",
           opacity: 0.09,

@@ -1,5 +1,4 @@
 import type { Article } from "@/data/articles";
-import grain from "@/og/assets/grain.png?inline";
 import { rgba } from "@/og/color";
 
 const palette = {
@@ -42,9 +41,11 @@ function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
 export function ArticleOgImage({
   article,
   cover,
+  grain,
 }: {
   article: Article;
   cover?: string;
+  grain: string;
 }) {
   const tags = article.tags.slice(0, 3);
   const extraTags = article.tags.length - tags.length;

@@ -21,6 +21,10 @@
 /.vinxi
 /.output
 
+# generated OG images
+/public/og.png
+/public/og/articles/
+
 # misc
 .DS_Store
 *.pem
