@@ -20,12 +20,28 @@ export const Route = createFileRoute("/articles/$slug")({
       return { meta: [{ title: "Article Not Found" }] };
     }
     const { article } = loaderData;
+    const ogImage = `https://fiirman.my.id/og/articles/${article.slug}`;
     return {
       meta: [
         { title: `${article.title} // Firman Lestari` },
         { name: "description", content: article.excerpt },
+        { property: "og:type", content: "article" },
         { property: "og:title", content: article.title },
         { property: "og:description", content: article.excerpt },
+        {
+          property: "og:url",
+          content: `https://fiirman.my.id/articles/${article.slug}`,
+        },
+        { property: "og:image", content: ogImage },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: article.title },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: article.title },
+        { name: "twitter:description", content: article.excerpt },
+        { name: "twitter:image", content: ogImage },
+        { name: "twitter:image:alt", content: article.title },
       ],
     };
   },

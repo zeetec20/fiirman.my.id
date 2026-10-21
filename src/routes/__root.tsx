@@ -13,12 +13,40 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Firman Lestari" },
+      { title: "Firman Lestari - Software Engineer" },
       {
         name: "description",
         content:
           "Personal space for Firman Lestari's thoughts, notes, projects",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Firman Lestari" },
+      { property: "og:title", content: "Firman Lestari - Software Engineer" },
+      {
+        property: "og:description",
+        content:
+          "Personal space for Firman Lestari's thoughts, notes, projects",
+      },
+      { property: "og:url", content: "https://fiirman.my.id" },
+      { property: "og:image", content: "https://fiirman.my.id/og.png" },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "Firman Lestari - Software Engineer",
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "Firman Lestari - Software Engineer",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Personal space for Firman Lestari's thoughts, notes, projects",
+      },
+      { name: "twitter:image", content: "https://fiirman.my.id/og.png" },
     ],
     links: [
       {

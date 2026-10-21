@@ -1,0 +1,280 @@
+import type { Article } from "@/data/articles";
+import grain from "@/og/assets/grain.png?inline";
+import { rgba } from "@/og/color";
+
+const palette = {
+  ink: "#0a0908",
+  black: "#000000",
+  cream: "#f7f1e6",
+  paper: "#ede7dc",
+  amber: "#ffb930",
+  amberLight: "#ffd27a",
+  amberDeep: "#e39a2b",
+  amberDark: "#7a4b17",
+};
+
+function Tag({ label, muted = false }: { label: string; muted?: boolean }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        marginRight: 8,
+        padding: "7px 12px",
+        borderRadius: 999,
+        backgroundColor: muted
+          ? rgba(palette.paper, 0.06)
+          : rgba(palette.amber, 0.12),
+        border: muted
+          ? `1px solid ${rgba(palette.paper, 0.18)}`
+          : `1px solid ${rgba(palette.amber, 0.34)}`,
+        fontFamily: "Space Mono",
+        fontSize: 10,
+        letterSpacing: 1.1,
+        color: muted ? rgba(palette.cream, 0.62) : palette.amberLight,
+      }}
+    >
+      {label.replace(/-/g, " ").toUpperCase()}
+    </div>
+  );
+}
+
+export function ArticleOgImage({
+  article,
+  cover,
+}: {
+  article: Article;
+  cover?: string;
+}) {
+  const tags = article.tags.slice(0, 3);
+  const extraTags = article.tags.length - tags.length;
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        backgroundColor: palette.ink,
+        color: palette.cream,
+        fontFamily: "Inter",
+        overflow: "hidden",
+      }}
+    >
+      {cover ? (
+        <img
+          src={cover}
+          alt=""
+          width={1200}
+          height={630}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: 1200,
+            height: 630,
+            objectFit: "cover",
+          }}
+        />
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `radial-gradient(circle at 80% 10%, ${palette.amberDeep} 0%, ${palette.amberDark} 38%, ${palette.ink} 78%)`,
+          }}
+        />
+      )}
+
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `linear-gradient(180deg, ${rgba(palette.ink, 0.62)} 0%, ${rgba(palette.ink, 0.08)} 30%, ${rgba(palette.ink, 0.42)} 58%, ${rgba(palette.ink, 0.9)} 100%)`,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `radial-gradient(circle at 88% 8%, ${rgba(palette.amber, 0.26)} 0%, ${rgba(palette.amber, 0)} 46%)`,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 150,
+          backgroundImage: `linear-gradient(180deg, ${rgba(palette.ink, 0.92)} 0%, ${rgba(palette.ink, 0.55)} 48%, ${rgba(palette.ink, 0)} 100%)`,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `url(${grain})`,
+          backgroundRepeat: "repeat",
+          backgroundSize: "180px 180px",
+          opacity: 0.11,
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          top: 44,
+          left: 60,
+          right: 60,
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "UnifrakturMaguntia",
+              fontSize: 30,
+              lineHeight: 1.1,
+              color: palette.cream,
+              textShadow: `0 2px 14px ${rgba(palette.ink, 0.9)}`,
+            }}
+          >
+            Firman Lestari
+          </div>
+          <div
+            style={{
+              display: "flex",
+              marginTop: 3,
+              fontFamily: "Space Mono",
+              fontSize: 8.5,
+              letterSpacing: 2.4,
+              color: rgba(palette.cream, 0.9),
+            }}
+          >
+            SOFTWARE ENGINEER
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Space Mono",
+              fontSize: 9.5,
+              letterSpacing: 1.8,
+              color: palette.cream,
+              textShadow: `0 2px 12px ${rgba(palette.ink, 0.9)}`,
+            }}
+          >
+            {article.date.toUpperCase()}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              marginTop: 5,
+              fontFamily: "Space Mono",
+              fontSize: 9,
+              letterSpacing: 1.6,
+              color: rgba(palette.cream, 0.68),
+              textShadow: `0 2px 12px ${rgba(palette.ink, 0.9)}`,
+            }}
+          >
+            {`${article.readingTime} READ`.toUpperCase()}
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          left: 40,
+          right: 40,
+          bottom: 36,
+          display: "flex",
+          flexDirection: "column",
+          padding: "34px 40px 36px",
+          borderRadius: 16,
+          backgroundColor: rgba(palette.ink, 0.62),
+          border: `1px solid ${rgba(palette.paper, 0.16)}`,
+          boxShadow: `0 24px 60px ${rgba(palette.black, 0.38)}`,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Space Mono",
+              fontSize: 8.5,
+              letterSpacing: 2.2,
+              color: rgba(palette.amberLight, 0.82),
+            }}
+          >
+            {(article.category ?? "ARTICLE").toUpperCase()}
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "block",
+            lineClamp: 3,
+            maxWidth: 1020,
+            fontSize: 54,
+            fontWeight: 800,
+            letterSpacing: -1.8,
+            lineHeight: 1.06,
+            color: palette.cream,
+          }}
+        >
+          {article.title}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 24,
+          }}
+        >
+          {tags.map((tag) => (
+            <Tag key={tag} label={tag} />
+          ))}
+          {extraTags > 0 && <Tag label={`+${extraTags}`} muted />}
+        </div>
+      </div>
+    </div>
+  );
+}
