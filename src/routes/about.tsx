@@ -4,7 +4,7 @@ import { DocumentLayout } from "@/components/DocumentLayout";
 import { GitHubActivityBar } from "@/components/GitHubActivityBar";
 import { InkLine } from "@/components/ui/ink";
 import { bioData } from "@/data/bio";
-
+import { getGitHubActivityServerFn } from "@/server/github-activity";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
@@ -16,10 +16,12 @@ export const Route = createFileRoute("/about")({
       },
     ],
   }),
-  component: AboutPage,
+  loader: async () => getGitHubActivityServerFn(),
+  component: () => <AboutPage />,
 });
 
-function AboutPage() {
+const AboutPage = () => {
+  const activity = Route.useLoaderData();
   return (
     <DocumentLayout pageNumber="p. 04/04" documentTitle="ABOUT THE AUTHOR">
       <div className="space-y-8 font-serif">
@@ -159,8 +161,8 @@ function AboutPage() {
         </div>
 
         {/* Section 4: GitHub Activity Bar */}
-        <GitHubActivityBar />
+        <GitHubActivityBar activity={activity} />
       </div>
     </DocumentLayout>
   );
-}
+};

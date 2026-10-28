@@ -8,10 +8,11 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "sync:medium": "bun run scripts/sync-medium.ts",
+    "sync:github": "bun run scripts/sync-github.ts",
     "generate:og-covers": "bun run scripts/generate-og-covers.ts",
     "generate:og-images": "bun run scripts/generate-og-images.tsx",
-    "prebuild": "bun run sync:medium",
-    "build": "bun run sync:medium && bun run generate:og-covers && bun run generate:og-images && vite build",
+    "prebuild": "bun run sync:medium && bun run sync:github",
+    "build": "bun run sync:medium && bun run sync:github && bun run generate:og-covers && bun run generate:og-images && vite build",
     "preview": "vite preview",
     "prepare": "lefthook install",
     "lint": "biome lint",

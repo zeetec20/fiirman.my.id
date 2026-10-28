@@ -5,7 +5,8 @@ import {
   GitPullRequest,
 } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
-
+import fallbackGithubActivity from "@/data/github-activity.json";
+import type { GitHubActivitySnapshot } from "@/server/github-activity";
 export interface DayActivity {
   date: string;
   formattedDate: string;
@@ -22,9 +23,15 @@ export interface WeekActivity {
   days: DayActivity[];
   monthLabel?: string;
 }
+export interface GitHubActivityBarProps {
+  activity?: GitHubActivitySnapshot;
+}
 
-// Generate deterministic full calendar year activity data (53 weeks covering Jan 1 - Dec 31)
-function generateFullYearGrid(targetYear = 2026) {
+// Generate full calendar year activity data from authentic GitHub data (53 weeks covering Jan 1 - Dec 31)
+const generateGitHubActivityYearGrid = (
+  targetYear = fallbackGithubActivity.year,
+  activityData: GitHubActivitySnapshot = fallbackGithubActivity as GitHubActivitySnapshot,
+) => {
   const jan1 = new Date(targetYear, 0, 1);
   const dec31 = new Date(targetYear, 11, 31);
 
@@ -67,6 +74,11 @@ function generateFullYearGrid(targetYear = 2026) {
   let totalCommits = 0;
   let weekIdx = 0;
 
+  const activityDays = (activityData.days ?? {}) as Record<
+    string,
+    { count: number; level: number }
+  >;
+
   while (curr <= endDate) {
     const days: DayActivity[] = [];
     let weekMonthLabel: string | undefined;
@@ -95,44 +107,11 @@ function generateFullYearGrid(targetYear = 2026) {
         monthSeen.add(month);
       }
 
-      let level = 0;
-      let count = 0;
+      const dayRecord = activityDays[dateStr];
+      const count = isInYear && !isFuture ? (dayRecord?.count ?? 0) : 0;
+      const level = isInYear && !isFuture ? (dayRecord?.level ?? 0) : 0;
 
       if (isInYear && !isFuture) {
-        // Deterministic pseudo-random seed based on day-of-year
-        const dayOfYear = Math.floor(
-          (currTime - new Date(targetYear, 0, 1).getTime()) / 86400000,
-        );
-        const hash = (dayOfYear * 17 + d * 31 + 47) % 100;
-
-        if (isToday) {
-          level = 4;
-          count = 7;
-        } else if (d === 0 || d === 6) {
-          // Weekend: reduced frequency
-          if (hash > 70) {
-            level = (hash % 2) + 1;
-            count = level * 2;
-          }
-        } else {
-          // Weekdays: active engineering cadence
-          if (hash > 84) {
-            level = 4;
-            count = 8 + (hash % 5);
-          } else if (hash > 58) {
-            level = 3;
-            count = 4 + (hash % 3);
-          } else if (hash > 30) {
-            level = 2;
-            count = 2 + (hash % 2);
-          } else if (hash > 12) {
-            level = 1;
-            count = 1;
-          } else {
-            level = 0;
-            count = 0;
-          }
-        }
         totalCommits += count;
       }
 
@@ -165,15 +144,22 @@ function generateFullYearGrid(targetYear = 2026) {
   }
 
   return { weeks, totalCommits };
-}
+};
 
-export function GitHubActivityBar() {
+export const GitHubActivityBar = ({
+  activity,
+}: GitHubActivityBarProps = {}) => {
+  const resolvedActivity =
+    activity ?? (fallbackGithubActivity as GitHubActivitySnapshot);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const todayRef = useRef<HTMLDivElement>(null);
 
   // Memoize year activity data
-  const { weeks } = useMemo(() => generateFullYearGrid(2026), []);
-
+  const { weeks } = useMemo(
+    () =>
+      generateGitHubActivityYearGrid(resolvedActivity.year, resolvedActivity),
+    [resolvedActivity],
+  );
   // Smoothly center today's square within the horizontal scroll container on mount
   useEffect(() => {
     if (todayRef.current && scrollContainerRef.current) {
@@ -236,10 +222,10 @@ export function GitHubActivityBar() {
         <div className="space-y-1 p-3 rounded-xs backdrop-blur-md bg-white/25 dark:bg-white/[0.04] border border-black/[0.07] dark:border-white/[0.1]">
           <div className="text-[var(--ink-muted)] text-[9px] flex items-center gap-1">
             <GitCommit className="w-3 h-3 text-[var(--accent)]" />
-            <span>ANNUAL COMMITS</span>
+            <span>ANNUAL CONTRIBUTIONS</span>
           </div>
           <div className="font-serif text-lg font-bold text-[var(--ink-primary)]">
-            1,428
+            {resolvedActivity.totalContributions.toLocaleString()}
           </div>
         </div>
 
@@ -249,7 +235,7 @@ export function GitHubActivityBar() {
             <span>ACTIVE REPOSITORIES</span>
           </div>
           <div className="font-serif text-lg font-bold text-[var(--ink-primary)]">
-            16
+            {resolvedActivity.publicRepos}
           </div>
         </div>
 
@@ -259,7 +245,9 @@ export function GitHubActivityBar() {
             <span>CURRENT CADENCE</span>
           </div>
           <div className="font-serif text-lg font-bold text-[var(--accent)]">
-            38-DAY STREAK
+            {resolvedActivity.currentStreak > 0
+              ? `${resolvedActivity.currentStreak}-DAY STREAK`
+              : `${resolvedActivity.longestStreak}-DAY RECORD`}
           </div>
         </div>
       </div>
@@ -367,8 +355,10 @@ export function GitHubActivityBar() {
                           <div
                             key={dIdx}
                             ref={todayRef}
-                            title={`Today (${day.formattedDate}) - ${day.count} contributions (Active Cadence)`}
-                            className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[1px] bg-[var(--accent)] ring-2 ring-[var(--accent)] ring-offset-1 ring-offset-[#F5F1E9] dark:ring-offset-[#0A0908] z-10 scale-125 shadow-[0_0_8px_var(--accent)] animate-pulse relative transition-transform"
+                            title={`Today (${day.formattedDate}) - ${day.count} contribution${day.count === 1 ? "" : "s"}`}
+                            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[1px] ${getLevelClass(
+                              day.level,
+                            )} ring-2 ring-[var(--accent)] ring-offset-1 ring-offset-[#F5F1E9] dark:ring-offset-[#0A0908] z-10 scale-125 shadow-[0_0_8px_var(--accent)] animate-pulse relative transition-transform`}
                           >
                             <span className="absolute -top-0.5 -right-0.5 w-1 h-1 rounded-full bg-[var(--accent)] shadow-xs animate-ping" />
                           </div>
@@ -404,4 +394,4 @@ export function GitHubActivityBar() {
       </div>
     </section>
   );
-}
+};

@@ -7,5 +7,11 @@
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS"
-  }
+  },
+  "kv_namespaces": [
+    {
+      "binding": "GITHUB_ACTIVITY_KV",
+      "id": "674cfb4d83fd417191d4b979294f8ea5"
+    }
+  ]
 }
