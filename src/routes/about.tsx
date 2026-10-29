@@ -5,6 +5,8 @@ import { GitHubActivityBar } from "@/components/GitHubActivityBar";
 import { InkLine } from "@/components/ui/ink";
 import { bioData } from "@/data/bio";
 import { getGitHubActivityServerFn } from "@/server/github-activity";
+import { buildAuthorPersonSeoSchema } from "@/utils/seo";
+
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
@@ -12,7 +14,38 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Personal space for Firman Lestari's thoughts, notes, projects",
+          "Dossier and technical profile of Firman Justisio Lestari. Software engineer specializing in full-stack development, modern TypeScript, distributed systems, and runtimes.",
+      },
+      { property: "og:type", content: "profile" },
+      { property: "og:site_name", content: "Firman Lestari" },
+      { property: "og:title", content: "About the Author // Firman Lestari" },
+      {
+        property: "og:description",
+        content:
+          "Dossier and technical profile of Firman Justisio Lestari. Software engineer specializing in full-stack development, modern TypeScript, distributed systems, and runtimes.",
+      },
+      { property: "og:url", content: "https://fiirman.my.id/about" },
+      { property: "og:image", content: "https://fiirman.my.id/og.png?v=2" },
+      { property: "profile:first_name", content: "Firman" },
+      { property: "profile:last_name", content: "Lestari" },
+      { property: "profile:username", content: "zeetec20" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "About the Author // Firman Lestari",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Dossier and technical profile of Firman Justisio Lestari. Software engineer specializing in full-stack development, modern TypeScript, distributed systems, and runtimes.",
+      },
+      { name: "twitter:image", content: "https://fiirman.my.id/og.png?v=2" },
+    ],
+    links: [{ rel: "canonical", href: "https://fiirman.my.id/about" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(buildAuthorPersonSeoSchema()),
       },
     ],
   }),

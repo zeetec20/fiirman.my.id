@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://fiirman.my.id/</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/projects</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/about</loc>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/i-love-lazygit-but-its-missing-one-thing</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/i-love-lazygit-but-its-missing-one-thing.png</image:loc>
+      <image:title>I Love Lazygit, But it’s Missing One Thing</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/the-uuid-package-is-optional-now</loc>
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/the-uuid-package-is-optional-now.png</image:loc>
+      <image:title>The uuid Package Is Optional Now</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/get-notified-when-claude-code-needs-your-attention</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/get-notified-when-claude-code-needs-your-attention.png</image:loc>
+      <image:title>Get Notified When Claude Code Needs Your Attention</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/enforcing-branch-protection-without-upgrading-your-github-plan</loc>
+    <lastmod>2026-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/enforcing-branch-protection-without-upgrading-your-github-plan.png</image:loc>
+      <image:title>Enforcing Branch Protection Without Upgrading Your GitHub Plan</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/how-to-handle-duplicate-events-safely-in-bullmq-using-idempotency.png</image:loc>
+      <image:title>How to Handle Duplicate Events Safely in BullMQ Using Idempotency</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/whats-git-stash</loc>
+    <lastmod>2023-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/whats-git-stash.png</image:loc>
+      <image:title>What&apos;s git stash?</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/how-to-merge-or-modify-type-on-typescript</loc>
+    <lastmod>2023-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/how-to-merge-or-modify-type-on-typescript.png</image:loc>
+      <image:title>How to Merge or Modify Types in TypeScript</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/better-way-to-handle-multiple-task-on-flutter-dart</loc>
+    <lastmod>2022-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/better-way-to-handle-multiple-task-on-flutter-dart.png</image:loc>
+      <image:title>Better Way to Handle Multiple Tasks on Flutter / Dart</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/css-function-min-max-and-clamp-is-incredible</loc>
+    <lastmod>2022-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/css-function-min-max-and-clamp-is-incredible.png</image:loc>
+      <image:title>CSS Functions min(), max(), and clamp() Are Incredible</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://fiirman.my.id/articles/how-i-make-my-github-profile-look-cool-with-markdown</loc>
+    <lastmod>2021-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://fiirman.my.id/og/articles/how-i-make-my-github-profile-look-cool-with-markdown.png</image:loc>
+      <image:title>How I Make My GitHub Profile Look Cool With Markdown</image:title>
+    </image:image>
+  </url>
+</urlset>

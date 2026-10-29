@@ -8,11 +8,76 @@ import { NotFoundPage } from "@/components/NotFoundPage";
 import { PaperDesignShaderBackground } from "@/components/ui/paper-design-shader-background";
 import appCss from "@/styles.css?url";
 
+const RootErrorComponent = ({
+  error,
+  reset,
+}: {
+  error: unknown;
+  reset: () => void;
+}) => {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6 font-serif">
+      <div className="max-w-md w-full p-6 rounded-xs border border-red-500/30 bg-red-500/5 backdrop-blur-md space-y-4">
+        <div className="font-mono text-xs text-red-500 uppercase tracking-widest font-semibold">
+          System Exception Encountered
+        </div>
+        <p className="text-sm text-[var(--ink-secondary)]">
+          {error instanceof Error
+            ? error.message
+            : "An unexpected error occurred."}
+        </p>
+        <button
+          type="button"
+          onClick={reset}
+          className="px-3 py-1 text-xs font-mono font-semibold bg-[var(--accent)] text-[var(--accent-foreground)] rounded-xs hover:opacity-90 transition-opacity cursor-pointer"
+        >
+          Retry Operation
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const RootComponent = () => {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (isDark) document.documentElement.classList.add('dark');
+                  else document.documentElement.classList.remove('dark');
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body>
+        <PaperDesignShaderBackground />
+        <Outlet />
+        <Scripts />
+      </body>
+    </html>
+  );
+};
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {
+        name: "robots",
+        content:
+          "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      },
+      { name: "author", content: "Firman Justisio Lestari" },
       { title: "Firman Lestari - Software Engineer" },
       {
         name: "description",
@@ -58,68 +123,12 @@ export const Route = createRootRoute({
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/apple-icon.png" },
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
     ],
   }),
   component: RootComponent,
   errorComponent: RootErrorComponent,
   notFoundComponent: NotFoundPage,
 });
-
-function RootErrorComponent({
-  error,
-  reset,
-}: {
-  error: unknown;
-  reset: () => void;
-}) {
-  return (
-    <div className="min-h-screen flex items-center justify-center p-6 font-serif">
-      <div className="max-w-md w-full p-6 rounded-xs border border-red-500/30 bg-red-500/5 backdrop-blur-md space-y-4">
-        <div className="font-mono text-xs text-red-500 uppercase tracking-widest font-semibold">
-          System Exception Encountered
-        </div>
-        <p className="text-sm text-[var(--ink-secondary)]">
-          {error instanceof Error
-            ? error.message
-            : "An unexpected error occurred."}
-        </p>
-        <button
-          type="button"
-          onClick={reset}
-          className="px-3 py-1 text-xs font-mono font-semibold bg-[var(--accent)] text-[var(--accent-foreground)] rounded-xs hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Retry Operation
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function RootComponent() {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <HeadContent />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-                  if (isDark) document.documentElement.classList.add('dark');
-                  else document.documentElement.classList.remove('dark');
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
-      <body>
-        <PaperDesignShaderBackground />
-        <Outlet />
-        <Scripts />
-      </body>
-    </html>
-  );
-}

@@ -5,19 +5,48 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { DocumentLayout } from "@/components/DocumentLayout";
 import { SectionHeader } from "@/components/SectionHeader";
 import { articlesData } from "@/data/articles";
+import { buildArticlesArchiveSeoSchema } from "@/utils/seo";
 
 export const Route = createFileRoute("/articles/")({
   head: () => ({
     meta: [
-      { title: "Thoughts and Notes // Firman Lestari" },
+      { title: "Writings Archive // Firman Lestari" },
       {
         name: "description",
         content:
-          "Personal space for Firman Lestari's thoughts, notes, projects",
+          "Archive of technical manuscripts, system architecture notes, and software engineering deep dives by Firman Lestari.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Firman Lestari" },
+      { property: "og:title", content: "Writings Archive // Firman Lestari" },
+      {
+        property: "og:description",
+        content:
+          "Archive of technical manuscripts, system architecture notes, and software engineering deep dives by Firman Lestari.",
+      },
+      { property: "og:url", content: "https://fiirman.my.id/articles" },
+      { property: "og:image", content: "https://fiirman.my.id/og.png?v=2" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "Writings Archive // Firman Lestari",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Archive of technical manuscripts, system architecture notes, and software engineering deep dives by Firman Lestari.",
+      },
+      { name: "twitter:image", content: "https://fiirman.my.id/og.png?v=2" },
+    ],
+    links: [{ rel: "canonical", href: "https://fiirman.my.id/articles" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(buildArticlesArchiveSeoSchema(articlesData)),
       },
     ],
   }),
-  component: ArticlesPage,
+  component: () => <ArticlesPage />,
 });
 
 interface TagFilterDropdownProps {
@@ -28,32 +57,32 @@ interface TagFilterDropdownProps {
   totalArticles: number;
 }
 
-function TagFilterDropdown({
+const TagFilterDropdown = ({
   selectedTag,
   onSelectTag,
   availableTags,
   tagCounts,
   totalArticles,
-}: TagFilterDropdownProps) {
+}: TagFilterDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
-    }
-    function handleKeyDown(event: KeyboardEvent) {
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -193,9 +222,9 @@ function TagFilterDropdown({
       )}
     </div>
   );
-}
+};
 
-function ArticlesPage() {
+const ArticlesPage = () => {
   const [selectedTag, setSelectedTag] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -298,4 +327,4 @@ function ArticlesPage() {
       </div>
     </DocumentLayout>
   );
-}
+};

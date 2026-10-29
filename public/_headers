@@ -38,3 +38,12 @@
 
 /robots.txt
   Cache-Control: public, max-age=604800
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400, stale-while-revalidate=3600
+
+/icon.png
+  Cache-Control: public, max-age=604800
+
+/apple-icon.png
+  Cache-Control: public, max-age=604800

@@ -6,6 +6,7 @@ import { ScanStamp } from "@/components/ScanStamp";
 import { DitherImage } from "@/components/ui/dither-image";
 import { InkLine } from "@/components/ui/ink";
 import { getArticleBySlug } from "@/data/articles";
+import { buildArticleFolioSeoSchema, formatSeoIsoDate } from "@/utils/seo";
 
 export const Route = createFileRoute("/articles/$slug")({
   loader: async ({ params }) => {
@@ -21,6 +22,12 @@ export const Route = createFileRoute("/articles/$slug")({
     }
     const { article } = loaderData;
     const ogImage = `https://fiirman.my.id/og/articles/${article.slug}.png?v=2`;
+    const articleUrl = `https://fiirman.my.id/articles/${article.slug}`;
+    const tagMeta = article.tags.map((tag) => ({
+      property: "article:tag",
+      content: tag,
+    }));
+
     return {
       meta: [
         { title: `${article.title} // Firman Lestari` },
@@ -28,27 +35,40 @@ export const Route = createFileRoute("/articles/$slug")({
         { property: "og:type", content: "article" },
         { property: "og:title", content: article.title },
         { property: "og:description", content: article.excerpt },
-        {
-          property: "og:url",
-          content: `https://fiirman.my.id/articles/${article.slug}`,
-        },
+        { property: "og:url", content: articleUrl },
         { property: "og:image", content: ogImage },
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         { property: "og:image:alt", content: article.title },
+        {
+          property: "article:published_time",
+          content: formatSeoIsoDate(article.date),
+        },
+        {
+          property: "article:author",
+          content: "Firman Justisio Lestari",
+        },
+        ...tagMeta,
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: article.title },
         { name: "twitter:description", content: article.excerpt },
         { name: "twitter:image", content: ogImage },
         { name: "twitter:image:alt", content: article.title },
       ],
+      links: [{ rel: "canonical", href: articleUrl }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(buildArticleFolioSeoSchema(article)),
+        },
+      ],
     };
   },
-  component: ArticleDetailPage,
+  component: () => <ArticleDetailPage />,
 });
 
-function ArticleDetailPage() {
+const ArticleDetailPage = () => {
   const { article } = Route.useLoaderData();
 
   const scrollbarSections = [
@@ -134,4 +154,4 @@ function ArticleDetailPage() {
       </article>
     </DocumentLayout>
   );
-}
+};
