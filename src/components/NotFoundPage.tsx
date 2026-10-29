@@ -3,7 +3,7 @@ import { DocumentLayout } from "@/components/DocumentLayout";
 import { ScanStamp } from "@/components/ScanStamp";
 import { InkLine } from "@/components/ui/ink";
 
-export function NotFoundPage() {
+export const NotFoundPage = () => {
   return (
     <DocumentLayout pageNumber="p. 00/00" documentTitle="FOLIO NON INVENTUM">
       <div className="py-12 sm:py-20 text-center max-w-xl mx-auto space-y-6">
@@ -14,7 +14,7 @@ export function NotFoundPage() {
 
         {/* Large 404 Headline */}
         <div className="space-y-2">
-          <h1 className="font-gothic text-6xl sm:text-7xl md:text-8xl text-[var(--ink-primary)] tracking-normal leading-none drop-shadow-xs select-none">
+          <h1 className="font-gothic text-6xl sm:text-7xl md:text-8xl text-[var(--ink-primary)] tracking-normal leading-none drop-shadow-xs">
             404
           </h1>
           <p className="font-serif italic text-lg sm:text-xl text-[var(--ink-secondary)] tracking-wider">
@@ -47,4 +47,4 @@ export function NotFoundPage() {
       </div>
     </DocumentLayout>
   );
-}
+};

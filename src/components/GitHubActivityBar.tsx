@@ -296,7 +296,7 @@ export const GitHubActivityBar = ({
         {/* Heatmap with Month labels on top and Weekday labels on left */}
         <div className="flex items-start gap-2 pt-1">
           {/* Weekday indicators (Mon, Wed, Fri) aligned with row heights */}
-          <div className="flex flex-col gap-1 text-[8px] sm:text-[9px] font-mono text-[var(--ink-muted)] select-none shrink-0 text-right pr-1">
+          <div className="flex flex-col gap-1 text-[8px] sm:text-[9px] font-mono text-[var(--ink-muted)] shrink-0 text-right pr-1">
             <div className="h-4 mb-1" aria-hidden="true" />
             <div className="h-2.5 sm:h-3 flex items-center justify-end leading-none" />
             <div className="h-2.5 sm:h-3 flex items-center justify-end leading-none">
@@ -320,7 +320,7 @@ export const GitHubActivityBar = ({
           >
             <div className="inline-flex flex-col min-w-max">
               {/* Month Markers Row */}
-              <div className="h-4 flex items-end gap-1 mb-1 font-mono text-[8px] sm:text-[9px] text-[var(--ink-muted)] select-none">
+              <div className="h-4 flex items-end gap-1 mb-1 font-mono text-[8px] sm:text-[9px] text-[var(--ink-muted)]">
                 {weeks.map((w, wIdx) => (
                   <div
                     key={wIdx}

@@ -24,14 +24,14 @@ interface LightboxProps {
  * The two things `<dialog>` genuinely does NOT do are handled explicitly below:
  * page scroll locking, and closing on a backdrop click.
  */
-export function Lightbox({
+export const Lightbox = ({
   open,
   onClose,
   label,
   header,
   children,
   backdropClassName = "backdrop:bg-black/40 dark:backdrop:bg-black/60 backdrop:backdrop-blur-xs",
-}: LightboxProps) {
+}: LightboxProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   // Read the latest callback without re-running the modal lifecycle effect.
@@ -89,7 +89,7 @@ export function Lightbox({
       className={`fixed inset-0 z-50 open:flex items-center justify-center p-3 sm:p-5 md:p-6 m-0 w-full h-full max-w-none max-h-none bg-transparent border-0 text-inherit animate-fade-in ${backdropClassName}`}
     >
       <div className="relative z-10 max-w-5xl lg:max-w-6xl w-full max-h-[92vh] flex flex-col rounded-xs overflow-hidden backdrop-blur-xl bg-white/40 dark:bg-stone-950/40 border border-black/[0.07] dark:border-white/[0.1] shadow-smooth-lg ring-1 ring-black/5 dark:ring-white/5 cursor-default">
-        <div className="w-full flex items-center justify-between gap-3 px-4 py-2.5 border-b border-black/[0.07] dark:border-white/[0.1] backdrop-blur-md bg-white/20 dark:bg-white/[0.03] font-mono select-none">
+        <div className="w-full flex items-center justify-between gap-3 px-4 py-2.5 border-b border-black/[0.07] dark:border-white/[0.1] backdrop-blur-md bg-white/20 dark:bg-white/[0.03] font-mono">
           <div className="flex items-center gap-2 min-w-0">{header}</div>
 
           <button
@@ -106,4 +106,4 @@ export function Lightbox({
       </div>
     </dialog>
   );
-}
+};

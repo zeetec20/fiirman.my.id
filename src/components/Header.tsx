@@ -4,7 +4,7 @@ import { InkDrop, MastheadDivider } from "@/components/ui/ink";
 
 declare const __BUILD_TIMESTAMP__: string | undefined;
 
-export function Header() {
+export const Header = () => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const buildDateline =
     typeof __BUILD_TIMESTAMP__ !== "undefined"
@@ -12,7 +12,7 @@ export function Header() {
       : "XXIII · IX · MMXXVI";
 
   return (
-    <header className="relative w-full pt-4 pb-4 select-none">
+    <header className="relative w-full pt-4 pb-4">
       {/* Top Right Corner Theme Switcher */}
       <div className="absolute top-0 right-0 z-20">
         <ThemeToggle />
@@ -131,4 +131,4 @@ export function Header() {
       </nav>
     </header>
   );
-}
+};

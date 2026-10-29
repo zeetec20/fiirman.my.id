@@ -9,10 +9,10 @@ export const Route = createFileRoute("/")({
   loader: () => ({
     quote: randomQuote(),
   }),
-  component: Home,
+  component: () => <Home />,
 });
 
-function Home() {
+const Home = () => {
   const { quote } = Route.useLoaderData();
   const leadArticle = articlesData[0];
   const newestArticles = articlesData.slice(1, 4);
@@ -56,7 +56,7 @@ function Home() {
             aria-label="Newest Articles"
           >
             {/* Section Heading: Clean typography matching Writings Archive folio style */}
-            <h2 className="font-mono text-[10px] text-[var(--ink-muted)] tracking-widest uppercase mb-3 text-center md:text-left select-none">
+            <h2 className="font-mono text-[10px] text-[var(--ink-muted)] tracking-widest uppercase mb-3 text-center md:text-left">
               NEWEST ARTICLES
             </h2>
 
@@ -76,4 +76,4 @@ function Home() {
       </div>
     </DocumentLayout>
   );
-}
+};

@@ -4,10 +4,14 @@ interface ScanStampProps {
   className?: string;
 }
 
-export function ScanStamp({ label, sublabel, className = "" }: ScanStampProps) {
+export const ScanStamp = ({
+  label,
+  sublabel,
+  className = "",
+}: ScanStampProps) => {
   return (
     <div
-      className={`rubber-stamp select-none text-center ${className}`}
+      className={`rubber-stamp text-center ${className}`}
       aria-label={`${label} ${sublabel || ""}`}
     >
       <span className="text-[10px] sm:text-[11px] tracking-widest font-mono">
@@ -20,4 +24,4 @@ export function ScanStamp({ label, sublabel, className = "" }: ScanStampProps) {
       )}
     </div>
   );
-}
+};

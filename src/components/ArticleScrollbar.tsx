@@ -9,7 +9,7 @@ interface ArticleScrollbarProps {
   sections: ArticleSection[];
 }
 
-export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
+export const ArticleScrollbar = ({ sections }: ArticleScrollbarProps) => {
   const [scrollPercent, setScrollPercent] = useState<number>(0);
   const [activeSectionIndex, setActiveSectionIndex] = useState<number>(0);
   const [activeSubTickFraction, setActiveSubTickFraction] = useState<number>(0);
@@ -115,11 +115,11 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
       {/* Desktop Compass-Scale Indicator: Full-Height Stretched Display Without Panel BG */}
       <nav
         aria-label="Compass Reading Indicator & Section Navigation"
-        className="hidden md:flex fixed right-3 lg:right-6 top-0 bottom-0 h-screen z-40 flex-col items-end select-none py-10 sm:py-12 md:py-14 lg:py-16 pointer-events-none"
+        className="hidden md:flex fixed right-3 lg:right-6 top-0 bottom-0 h-screen z-40 flex-col items-end py-10 sm:py-12 md:py-14 lg:py-16 pointer-events-none"
       >
         <div className="relative h-full w-full flex flex-col justify-between items-end pointer-events-auto">
           {/* Compass Header: Woodcut Pocket Compass & Real-Time Percentage */}
-          <div className="flex items-center gap-2 mb-4 select-none shrink-0">
+          <div className="flex items-center gap-2 mb-4 shrink-0">
             <span className="font-mono text-[10px] font-bold text-[var(--accent)] tracking-widest">
               {scrollPercent}%
             </span>
@@ -255,7 +255,7 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
           </div>
 
           {/* Compass Footer: Smooth Return to Top */}
-          <div className="flex items-center justify-end mt-4 select-none shrink-0">
+          <div className="flex items-center justify-end mt-4 shrink-0">
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -283,4 +283,4 @@ export function ArticleScrollbar({ sections }: ArticleScrollbarProps) {
       </nav>
     </>
   );
-}
+};

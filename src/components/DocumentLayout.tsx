@@ -8,11 +8,11 @@ interface DocumentLayoutProps {
   documentTitle?: string;
 }
 
-export function DocumentLayout({
+export const DocumentLayout = ({
   children,
   pageNumber,
   documentTitle,
-}: DocumentLayoutProps) {
+}: DocumentLayoutProps) => {
   return (
     <div className="min-h-screen py-4 sm:py-8 md:py-10 px-3 sm:px-6 flex justify-center items-start">
       {/* Compact Editorial Layout without heavy boxiness */}
@@ -22,7 +22,7 @@ export function DocumentLayout({
 
         {/* Optional Folio Meta if provided */}
         {(pageNumber || documentTitle) && (
-          <div className="flex items-center justify-between text-[10px] font-mono text-[var(--ink-muted)] pb-1.5 mb-6 uppercase tracking-widest select-none">
+          <div className="flex items-center justify-between text-[10px] font-mono text-[var(--ink-muted)] pb-1.5 mb-6 uppercase tracking-widest">
             <span>{documentTitle}</span>
             <span>{pageNumber}</span>
           </div>
@@ -36,4 +36,4 @@ export function DocumentLayout({
       </div>
     </div>
   );
-}
+};

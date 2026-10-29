@@ -12,12 +12,12 @@ interface CodeBlockProps {
   showLineNumbers?: boolean;
 }
 
-export function CodeBlock({
+export const CodeBlock = ({
   code,
   language = "text",
   filename,
   showLineNumbers = true,
-}: CodeBlockProps) {
+}: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
 
   // Normalize language directly from markdown fence or auto-detect if "text"
@@ -70,7 +70,7 @@ export function CodeBlock({
   return (
     <div className="my-6 backdrop-blur-md bg-white/25 dark:bg-white/[0.04] border border-black/[0.07] dark:border-white/[0.1] overflow-hidden rounded-xs">
       {/* Code Header Bar */}
-      <div className="px-3.5 py-2 backdrop-blur-sm bg-white/20 dark:bg-white/[0.04] border-b border-black/[0.07] dark:border-white/[0.1] flex items-center justify-between gap-3 text-xs select-none">
+      <div className="px-3.5 py-2 backdrop-blur-sm bg-white/20 dark:bg-white/[0.04] border-b border-black/[0.07] dark:border-white/[0.1] flex items-center justify-between gap-3 text-xs">
         {/* Left: Language Icon + Language Name + Filename */}
         <div className="flex items-center gap-2 min-w-0">
           <div className="flex items-center gap-1.5 shrink-0">
@@ -86,7 +86,7 @@ export function CodeBlock({
           {filename && (
             <>
               <span
-                className="text-black/25 dark:text-white/25 font-mono select-none"
+                className="text-black/25 dark:text-white/25 font-mono"
                 aria-hidden="true"
               >
                 /
@@ -130,7 +130,7 @@ export function CodeBlock({
       <div className="flex text-xs sm:text-[13px] font-mono leading-relaxed p-4 overflow-x-auto">
         {showLineNumbers && (
           <div
-            className="select-none pr-3.5 mr-3.5 text-right text-stone-400/70 dark:text-stone-600/70 border-r border-black/[0.07] dark:border-white/[0.08] flex flex-col shrink-0 font-mono text-[11px] select-none"
+            className="select-none pr-3.5 mr-3.5 text-right text-stone-400/70 dark:text-stone-600/70 border-r border-black/[0.07] dark:border-white/[0.08] flex flex-col shrink-0 font-mono text-[11px]"
             aria-hidden="true"
           >
             {lines.map((_, i) => (
@@ -150,4 +150,4 @@ export function CodeBlock({
       </div>
     </div>
   );
-}
+};

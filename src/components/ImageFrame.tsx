@@ -12,7 +12,7 @@ interface ImageFrameProps {
   className?: string;
 }
 
-export function ImageFrame({
+export const ImageFrame = ({
   src,
   alt,
   filename,
@@ -20,7 +20,7 @@ export function ImageFrame({
   caption,
   children,
   className = "",
-}: ImageFrameProps) {
+}: ImageFrameProps) => {
   const [isMaximized, setIsMaximized] = useState(false);
 
   const displayTitle =
@@ -31,7 +31,7 @@ export function ImageFrame({
       className={`my-6 backdrop-blur-md bg-white/25 dark:bg-white/[0.04] border border-black/[0.07] dark:border-white/[0.1] overflow-hidden rounded-xs shadow-smooth-md ${className}`}
     >
       {/* Code Header Bar (Uses alt text / caption first, then filename) */}
-      <div className="px-3.5 py-2 backdrop-blur-sm bg-white/20 dark:bg-white/[0.04] border-b border-black/[0.07] dark:border-white/[0.1] flex items-center justify-between gap-3 text-xs select-none">
+      <div className="px-3.5 py-2 backdrop-blur-sm bg-white/20 dark:bg-white/[0.04] border-b border-black/[0.07] dark:border-white/[0.1] flex items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 min-w-0">
           <ImageIcon className="w-3.5 h-3.5 shrink-0 text-[var(--accent)]" />
           <span
@@ -103,4 +103,4 @@ export function ImageFrame({
       </Lightbox>
     </figure>
   );
-}
+};
