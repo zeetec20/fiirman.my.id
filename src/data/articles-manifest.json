@@ -1,5 +1,24 @@
 [
   {
+    "slug": "uuidv7-vs-uuidv4-for-database-indexing",
+    "docId": "FOLIO-2026-M815",
+    "title": "UUIDv7 vs UUIDv4 for database indexing",
+    "coverImage": "/article/uuidv7-vs-uuidv4-for-database-indexing/thumbnail.webp",
+    "date": "November 19, 2026",
+    "readingTime": "2 min",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "identity",
+      "uuid",
+      "efficiency"
+    ],
+    "excerpt": "Applications often use UUIDs as primary keys so they can generate unique IDs without relying on a central database sequence. UUIDv4 has been the usual default for years because it is random, widely su",
+    "lead": "Applications often use UUIDs as primary keys so they can generate unique IDs without relying on a central database sequence. UUIDv4 has been the usual default for years because it is random, widely supported across languages and databases, and virtually collision-free. That randomness, however, hurts database index performance, which is the main problem UUIDv7 solves.",
+    "content": "",
+    "headings": []
+  },
+  {
     "slug": "i-love-lazygit-but-its-missing-one-thing",
     "docId": "FOLIO-2026-M732",
     "title": "I Love Lazygit, But it’s Missing One Thing",
