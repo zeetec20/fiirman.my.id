@@ -21,3 +21,8 @@ Replace with, in order of preference:
 - Plain hyphen `-` when nothing else reads well; for ranges use `-` or the word "to".
 
 Exceptions: verbatim quotations that already contain the character (e.g. `src/data/quotes.ts`), vendored `.agents/skills/**`, and generated files (e.g. `src/data/articles-manifest.json`).
+
+## Repository Memory & Directives
+
+- Long-term memory, architecture patterns, and conventions are maintained in `.agents/MEMORY.md`. Consult this file for project-specific showcase, OG image generation, Lefthook + Biome setup, and GitHub activity data flow.
+- Gitflow workflow configuration is maintained in `.agents/gitflow.yml` (ticketless repository on master branch).
