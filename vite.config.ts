@@ -5,7 +5,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-function getBuildTimestamp(): string {
+const getBuildTimestamp = (): string => {
   const now = new Date();
   const lookup: [number, string][] = [
     [1000, "M"],
@@ -38,7 +38,7 @@ function getBuildTimestamp(): string {
   const hh = String(now.getHours()).padStart(2, "0");
   const mm = String(now.getMinutes()).padStart(2, "0");
   return `${d} · ${m} · ${y} · ${hh}:${mm}`;
-}
+};
 
 export default defineConfig(({ mode }) => ({
   define: {
@@ -53,10 +53,16 @@ export default defineConfig(({ mode }) => ({
       "@tanstack/react-start",
     ],
   },
+  optimizeDeps: {
+    exclude: ["cloudflare:workers"],
+  },
   build: {
     sourcemap: false,
     cssMinify: true,
     assetsInlineLimit: 4096,
+    rollupOptions: {
+      external: ["cloudflare:workers"],
+    },
   },
   plugins: [
     ...(mode === "production" ? [] : devtools()),

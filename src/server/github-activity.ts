@@ -47,43 +47,41 @@ const TARGET_YEAR = 2026;
 const CACHE_KEY = `github:activity:${TARGET_USERNAME}:${TARGET_YEAR}`;
 const CACHE_TTL_SECONDS = 86400;
 
-export const resolveGitHubActivityKV =
-  async (): Promise<KVNamespace | null> => {
-    try {
-      // Platform-specific virtual module that only exists inside Cloudflare Workers runtime
-      const workersModule = await import(
-        /* @vite-ignore */ "cloudflare:workers"
-      ).catch(() => null);
-      const workerEnv = workersModule?.env as
-        | Record<string, unknown>
-        | undefined;
-      const workerBinding =
-        workerEnv?.GITHUB_ACTIVITY_KV ?? workerEnv?.github_activity_kv;
-      if (workerBinding) {
-        return workerBinding as KVNamespace;
-      }
-    } catch {
-      // cloudflare:workers unavailable outside Cloudflare runtime
+const resolveGitHubActivityKV = async (): Promise<KVNamespace | null> => {
+  try {
+    // Platform-specific virtual module that only exists inside Cloudflare Workers runtime
+    const cloudflareWorkersModuleName = "cloudflare:workers";
+    const workersModule = await import(
+      /* @vite-ignore */ cloudflareWorkersModuleName
+    ).catch(() => null);
+    const workerEnv = workersModule?.env as Record<string, unknown> | undefined;
+    const workerBinding =
+      workerEnv?.GITHUB_ACTIVITY_KV ?? workerEnv?.github_activity_kv;
+    if (workerBinding) {
+      return workerBinding as KVNamespace;
     }
+  } catch {
+    // cloudflare:workers unavailable outside Cloudflare runtime
+  }
 
-    const globalScope = globalThis as Record<string, unknown>;
-    const globalBinding =
-      globalScope.GITHUB_ACTIVITY_KV ?? globalScope.github_activity_kv;
-    if (globalBinding) {
-      return globalBinding as KVNamespace;
-    }
+  const globalScope = globalThis as Record<string, unknown>;
+  const globalBinding =
+    globalScope.GITHUB_ACTIVITY_KV ?? globalScope.github_activity_kv;
+  if (globalBinding) {
+    return globalBinding as KVNamespace;
+  }
 
-    const processScope = (
-      typeof process !== "undefined" ? process.env : {}
-    ) as Record<string, unknown>;
-    const processBinding =
-      processScope.GITHUB_ACTIVITY_KV ?? processScope.github_activity_kv;
-    if (processBinding) {
-      return processBinding as KVNamespace;
-    }
+  const processScope = (
+    typeof process !== "undefined" ? process.env : {}
+  ) as Record<string, unknown>;
+  const processBinding =
+    processScope.GITHUB_ACTIVITY_KV ?? processScope.github_activity_kv;
+  if (processBinding) {
+    return processBinding as KVNamespace;
+  }
 
-    return null;
-  };
+  return null;
+};
 
 const mapContributionLevelToNumeric = (level: string): number => {
   switch (level) {
@@ -100,7 +98,7 @@ const mapContributionLevelToNumeric = (level: string): number => {
   }
 };
 
-export const calculateGitHubActivityStreaks = (
+const calculateGitHubActivityStreaks = (
   days: Array<{ date: string; count: number }>,
 ): { longestStreak: number; currentStreak: number } => {
   let longestStreak = 0;
@@ -143,7 +141,7 @@ export const calculateGitHubActivityStreaks = (
   return { longestStreak, currentStreak };
 };
 
-export const parseGitHubPublicContributionsHtml = (
+const parseGitHubPublicContributionsHtml = (
   html: string,
 ): {
   totalContributions: number;
@@ -282,7 +280,7 @@ const fetchGitHubContributionGraphQL = async (
   return (await response.json()) as GitHubGraphQLResponse;
 };
 
-export const fetchLiveGitHubActivitySnapshot =
+const fetchLiveGitHubActivitySnapshot =
   async (): Promise<GitHubActivitySnapshot> => {
     const token =
       (typeof process !== "undefined" &&
@@ -373,7 +371,7 @@ export const fetchLiveGitHubActivitySnapshot =
     };
   };
 
-export const resolveCachedGitHubActivitySnapshot =
+const resolveCachedGitHubActivitySnapshot =
   async (): Promise<GitHubActivitySnapshot> => {
     try {
       const kv = await resolveGitHubActivityKV();
