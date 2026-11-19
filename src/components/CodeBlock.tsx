@@ -1,7 +1,10 @@
 import { Check, Copy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { LanguageIcon } from "@/components/LanguageIcon";
-import { detectCodeLanguage } from "@/utils/code-detect";
+import {
+  detectCodeLanguage,
+  detectLanguageFromFilename,
+} from "@/utils/code-detect";
 import { hljs } from "@/utils/highlight";
 import { getLanguageDisplayName } from "@/utils/language-display-name";
 
@@ -20,10 +23,21 @@ export const CodeBlock = ({
 }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
 
-  // Normalize language directly from markdown fence or auto-detect if "text"
+  const filenameExtLang = detectLanguageFromFilename(filename);
   const rawLang = (language || "text").trim().toLowerCase();
-  const effectiveLang =
-    rawLang === "text" || !rawLang ? detectCodeLanguage(code) : rawLang;
+
+  const effectiveLang = (() => {
+    // 1. Explicit filename extension (.txt, .ts, .py, etc.) is the most authoritative
+    if (filenameExtLang) return filenameExtLang;
+
+    // 2. Explicitly tagged language other than "text"
+    if (rawLang && rawLang !== "text" && rawLang !== "plaintext")
+      return rawLang;
+
+    // 3. Fallback to code heuristic detection
+    return detectCodeLanguage(code);
+  })();
+
   const displayName = getLanguageDisplayName(effectiveLang);
   const normalizedLang = effectiveLang;
 

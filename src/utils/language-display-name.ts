@@ -6,9 +6,13 @@
  * boundary, so editing one forces a full reload and loses component state
  * (react-doctor/only-export-components).
  */
-export function getLanguageDisplayName(lang: string): string {
+export const getLanguageDisplayName = (lang: string): string => {
   const normalized = (lang || "").toLowerCase().trim();
   switch (normalized) {
+    case "text":
+    case "plaintext":
+    case "txt":
+      return "Plain Text";
     case "go":
     case "golang":
       return "Go";
@@ -70,4 +74,4 @@ export function getLanguageDisplayName(lang: string): string {
         ? lang.toUpperCase()
         : lang.charAt(0).toUpperCase() + lang.slice(1);
   }
-}
+};

@@ -1,4 +1,4 @@
-import { Code2, Terminal } from "lucide-react";
+import { Code2, FileText, Terminal } from "lucide-react";
 import type { ComponentType } from "react";
 
 interface LanguageIconProps {
@@ -346,7 +346,17 @@ function DockerIcon({ className }: IconProps) {
 }
 
 /** Every alias that gets a bespoke mark. Anything absent falls back to `Code2`. */
+const PlainTextIcon = ({ className }: IconProps) => (
+  <FileText
+    className={`${className} text-stone-500 dark:text-stone-400`}
+    aria-hidden="true"
+  />
+);
+
 const LANGUAGE_ICONS: Record<string, ComponentType<IconProps>> = {
+  text: PlainTextIcon,
+  plaintext: PlainTextIcon,
+  txt: PlainTextIcon,
   go: GoIcon,
   golang: GoIcon,
   rust: RustIcon,

@@ -15,9 +15,76 @@ const SUBSET_LANGUAGES = [
   "dockerfile",
 ];
 
-export function detectCodeLanguage(code: string): string {
+export const detectLanguageFromFilename = (
+  filename?: string,
+): string | null => {
+  if (!filename) return null;
+  const dotIndex = filename.lastIndexOf(".");
+  if (dotIndex === -1 || dotIndex === filename.length - 1) return null;
+  const ext = filename
+    .slice(dotIndex + 1)
+    .toLowerCase()
+    .trim();
+
+  switch (ext) {
+    case "txt":
+    case "text":
+      return "text";
+    case "ts":
+      return "typescript";
+    case "tsx":
+      return "tsx";
+    case "js":
+    case "mjs":
+    case "cjs":
+      return "javascript";
+    case "jsx":
+      return "jsx";
+    case "py":
+      return "python";
+    case "go":
+      return "go";
+    case "rs":
+      return "rust";
+    case "json":
+      return "json";
+    case "yaml":
+    case "yml":
+      return "yaml";
+    case "sql":
+      return "sql";
+    case "sh":
+    case "bash":
+    case "zsh":
+      return "bash";
+    case "md":
+    case "markdown":
+      return "markdown";
+    case "html":
+      return "html";
+    case "css":
+      return "css";
+    case "dart":
+      return "dart";
+    case "dockerfile":
+      return "dockerfile";
+    default:
+      return null;
+  }
+};
+
+export const detectCodeLanguage = (code: string): string => {
   const trimmed = (code || "").trim();
   if (!trimmed) return "text";
+
+  // 0. ASCII tables or plain text box art (e.g. +---+ or | ... |)
+  if (
+    /^\s*\+[-+]+\+\s*$/m.test(trimmed) ||
+    (/^\s*\|.*\|\s*$/m.test(trimmed) && /^\s*[-+|]{3,}\s*$/m.test(trimmed)) ||
+    /^\s*[┌├└].*[┐┤┘]/m.test(trimmed)
+  ) {
+    return "text";
+  }
 
   // 1. JavaScript / TypeScript
   if (
@@ -100,4 +167,4 @@ export function detectCodeLanguage(code: string): string {
   } catch {}
 
   return "text";
-}
+};
