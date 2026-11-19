@@ -1,6 +1,6 @@
 ---
 slug: uuidv7-vs-uuidv4-for-database-indexing
-docId: FOLIO-2026-M815
+docId: FOLIO-2026-M631
 title: "UUIDv7 vs UUIDv4 for database indexing"
 coverImage: /article/uuidv7-vs-uuidv4-for-database-indexing/thumbnail.jpg
 date: November 19, 2026
@@ -44,15 +44,15 @@ Several languages, databases, and ORMs now support UUIDv7 natively, while others
 
 ## Programming languages
 
-[https://medium.com/media/9936200bdfdd866f1b0547b683bab246/href](https://medium.com/media/9936200bdfdd866f1b0547b683bab246/href)
+[https://gist.github.com/zeetec20/7879e41ea1a06c14df023f18f89a0116](https://gist.github.com/zeetec20/7879e41ea1a06c14df023f18f89a0116)
 
 ## Database support
 
-[https://medium.com/media/4d3ab4c579fdb334f6b3db071a2b81b5/href](https://medium.com/media/4d3ab4c579fdb334f6b3db071a2b81b5/href)
+[https://gist.github.com/zeetec20/fad68186fe6c4c2d32a5305bd211e590](https://gist.github.com/zeetec20/fad68186fe6c4c2d32a5305bd211e590)
 
 ## ORM and query builder support
 
-[https://medium.com/media/012c80fe7f2d3bc4671b4396380a569d/href](https://medium.com/media/012c80fe7f2d3bc4671b4396380a569d/href)
+[https://gist.github.com/zeetec20/6fa48f923b510fd265d96c03d7079950](https://gist.github.com/zeetec20/6fa48f923b510fd265d96c03d7079950)
 
 Most of these ORMs rely on application-side generators or database functions to produce UUIDv7 values rather than generating them natively.
 

@@ -23,11 +23,201 @@ const FEED_URL = "https://medium.com/feed/@firmanlestari";
 const ARTICLES_DIR = path.join(ROOT, "content", "articles");
 const PUBLIC_DIR = path.join(ROOT, "public", "article");
 const RESPONSIVE_WIDTHS = [320, 480, 672, 768] as const;
+const EMBEDS_MAP_PATH = path.join(ARTICLES_DIR, "medium-embeds.json");
+const GISTS_CACHE_PATH = path.join(ROOT, "src", "data", "gists-cache.json");
 
 const isForce = process.argv.includes("--force");
 const targetSlugIdx = process.argv.indexOf("--slug");
 const targetSlug =
   targetSlugIdx !== -1 ? process.argv[targetSlugIdx + 1] : undefined;
+
+const loadMediumEmbedsMap = async (): Promise<Record<string, string>> => {
+  if (!existsSync(EMBEDS_MAP_PATH)) return {};
+  try {
+    const raw = await readFile(EMBEDS_MAP_PATH, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+};
+
+const saveMediumEmbedsMap = async (
+  map: Record<string, string>,
+): Promise<void> => {
+  try {
+    await writeFile(
+      EMBEDS_MAP_PATH,
+      `${JSON.stringify(map, null, 2)}\n`,
+      "utf-8",
+    );
+  } catch (err) {
+    console.warn("  [sync-medium] Failed saving medium-embeds.json:", err);
+  }
+};
+
+interface GistCacheFile {
+  filename: string;
+  language: string;
+  content: string;
+}
+
+interface GistCacheEntry {
+  id: string;
+  description: string;
+  owner: string;
+  htmlUrl: string;
+  files: GistCacheFile[];
+}
+
+const loadGistsCache = async (): Promise<Record<string, GistCacheEntry>> => {
+  if (!existsSync(GISTS_CACHE_PATH)) return {};
+  try {
+    const raw = await readFile(GISTS_CACHE_PATH, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+};
+
+const saveGistsCache = async (
+  cache: Record<string, GistCacheEntry>,
+): Promise<void> => {
+  try {
+    await writeFile(
+      GISTS_CACHE_PATH,
+      `${JSON.stringify(cache, null, 2)}\n`,
+      "utf-8",
+    );
+  } catch (err) {
+    console.warn("  [sync-medium] Failed saving gists-cache.json:", err);
+  }
+};
+
+const fetchAndCacheGitHubGist = async (gistUrl: string): Promise<void> => {
+  const cleanUrl = gistUrl.trim().replace(/\/+$/, "");
+  const gistId = cleanUrl.split("/").pop();
+  if (!gistId) return;
+
+  const currentCache = await loadGistsCache();
+  if (currentCache[gistId] && !isForce) return;
+
+  try {
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (fiirman-crawler/1.0)",
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+    if (!res.ok) {
+      console.warn(
+        `  [sync-medium] GitHub API HTTP ${res.status} for gist ${gistId}`,
+      );
+      return;
+    }
+    const data = (await res.json()) as {
+      id: string;
+      description?: string;
+      html_url?: string;
+      owner?: { login: string };
+      files?: Record<
+        string,
+        { filename: string; language?: string; content?: string }
+      >;
+    };
+    const files: GistCacheFile[] = Object.values(data.files || {}).map((f) => ({
+      filename: f.filename,
+      language: (f.language || "text").toLowerCase(),
+      content: f.content || "",
+    }));
+
+    currentCache[gistId] = {
+      id: data.id,
+      description: data.description || "",
+      owner: data.owner?.login || "zeetec20",
+      htmlUrl: data.html_url || cleanUrl,
+      files,
+    };
+
+    await saveGistsCache(currentCache);
+    console.log(
+      `  [sync-medium] Cached GitHub Gist ${gistId} (${files.length} file(s))`,
+    );
+  } catch (err) {
+    console.warn(`  [sync-medium] Error caching gist ${gistId}:`, err);
+  }
+};
+
+const resolveMediumEmbedUrl = async (
+  mediaUrl: string,
+  embedsMap: Record<string, string>,
+): Promise<string> => {
+  const cleanUrl = mediaUrl.trim();
+  if (embedsMap[cleanUrl]) {
+    return embedsMap[cleanUrl];
+  }
+
+  // 1. Try redirect resolution with manual redirect
+  try {
+    const res = await fetch(cleanUrl, {
+      redirect: "manual",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        Referer: "https://medium.com/",
+      },
+    });
+    const location = res.headers.get("location");
+    if (location?.startsWith("http")) {
+      embedsMap[cleanUrl] = location;
+      await saveMediumEmbedsMap(embedsMap);
+      console.log(
+        `  [sync-medium] Resolved embed via redirect: ${cleanUrl} -> ${location}`,
+      );
+      return location;
+    }
+  } catch {
+    // continue to fallback
+  }
+
+  // 2. Fallback: check zeetec20 public gists
+  try {
+    const gistsRes = await fetch(
+      "https://api.github.com/users/zeetec20/gists",
+      {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (fiirman-crawler/1.0)",
+          Accept: "application/vnd.github.v3+json",
+        },
+      },
+    );
+    if (gistsRes.ok) {
+      const gists = (await gistsRes.json()) as Array<{
+        id: string;
+        html_url: string;
+        description: string;
+      }>;
+      if (Array.isArray(gists) && gists.length > 0) {
+        const mappedUrls = new Set(Object.values(embedsMap));
+        const unmappedGist = gists.find((g) => !mappedUrls.has(g.html_url));
+        if (unmappedGist) {
+          embedsMap[cleanUrl] = unmappedGist.html_url;
+          await saveMediumEmbedsMap(embedsMap);
+          console.log(
+            `  [sync-medium] Auto-matched Gist: ${cleanUrl} -> ${unmappedGist.html_url}`,
+          );
+          return unmappedGist.html_url;
+        }
+      }
+    }
+  } catch {
+    // continue
+  }
+
+  console.warn(
+    `  [sync-medium] Could not auto-resolve embed: ${cleanUrl}. Add mapping to content/articles/medium-embeds.json.`,
+  );
+  return cleanUrl;
+};
 
 function decodeEntities(html: string): string {
   return html
@@ -128,6 +318,23 @@ export function htmlToMarkdown(html: string, articleTitle: string): string {
     const trailing = text.endsWith(" ") ? " " : "";
     return `${leading}\`${trimmed}\`${trailing}`;
   });
+
+  // 6.5. Convert iframe embeds (such as Medium embeds or Gists) into standalone markdown links
+  md = md.replace(
+    /<iframe[^>]*>[\s\S]*?<a\s+[^>]*href="([^"]+)"[^>]*>[\s\S]*?<\/a>[\s\S]*?<\/iframe>/gi,
+    (_, href) => {
+      const cleanHref = href.trim();
+      return `\n\n[${cleanHref}](${cleanHref})\n\n`;
+    },
+  );
+  md = md.replace(
+    /<iframe[^>]*src="([^"]+)"[^>]*>[\s\S]*?<\/iframe>/gi,
+    (_, src) => {
+      const cleanSrc = src.trim();
+      if (!cleanSrc) return "";
+      return `\n\n[${cleanSrc}](${cleanSrc})\n\n`;
+    },
+  );
 
   // 7. Convert links with trailing dot cleanup
   md = md.replace(
@@ -412,6 +619,44 @@ async function repairExistingArticles(): Promise<void> {
         `  [sync-medium] Backfilled code block languages in '${file}'`,
       );
     }
+
+    // 4. Check for medium.com/media links in existing markdown and resolve them
+    const mediumMediaRegex =
+      /\[(?:https?:\/\/[^\]]+)?\]\((https:\/\/medium\.com\/media\/[a-f0-9]+\/href)\)/g;
+    const mediaMatches = [...mdContent.matchAll(mediumMediaRegex)];
+    if (mediaMatches.length > 0) {
+      let mediaUpdated = false;
+      const embedsMap = await loadMediumEmbedsMap();
+      for (const match of mediaMatches) {
+        const fullMatch = match[0];
+        const mediaUrl = match[1];
+        const resolvedUrl = await resolveMediumEmbedUrl(mediaUrl, embedsMap);
+        if (resolvedUrl && resolvedUrl !== mediaUrl) {
+          mdContent = mdContent.replace(
+            fullMatch,
+            `[${resolvedUrl}](${resolvedUrl})`,
+          );
+          mediaUpdated = true;
+          if (resolvedUrl.includes("gist.github.com/")) {
+            await fetchAndCacheGitHubGist(resolvedUrl);
+          }
+          console.log(
+            `  [sync-medium] Repaired media embed in '${file}' -> ${resolvedUrl}`,
+          );
+        }
+      }
+      if (mediaUpdated) {
+        await writeFile(mdPath, mdContent, "utf-8");
+      }
+    }
+
+    // 5. Pre-cache any GitHub Gists present in existing markdown
+    const gistRegex =
+      /https:\/\/gist\.github\.com\/[a-zA-Z0-9_-]+\/([a-f0-9]+)/g;
+    const gistMatches = [...mdContent.matchAll(gistRegex)];
+    for (const match of gistMatches) {
+      await fetchAndCacheGitHubGist(match[0]);
+    }
   }
 }
 
@@ -518,6 +763,22 @@ async function main() {
       if (res) {
         const localPath = `/article/${slug}/${res.fileName}`;
         bodyHtml = bodyHtml.replaceAll(imgUrl, localPath);
+      }
+    }
+
+    // 3. Process Medium media embeds
+    const embedsMap = await loadMediumEmbedsMap();
+    const mediaMatches = [
+      ...bodyHtml.matchAll(/https:\/\/medium\.com\/media\/[a-f0-9]+\/href/gi),
+    ];
+    for (const match of mediaMatches) {
+      const mediaUrl = match[0];
+      const resolvedUrl = await resolveMediumEmbedUrl(mediaUrl, embedsMap);
+      if (resolvedUrl && resolvedUrl !== mediaUrl) {
+        bodyHtml = bodyHtml.replaceAll(mediaUrl, resolvedUrl);
+        if (resolvedUrl.includes("gist.github.com/")) {
+          await fetchAndCacheGitHubGist(resolvedUrl);
+        }
       }
     }
 
@@ -709,6 +970,14 @@ async function generateArticlesManifest() {
 
   const manifestPath = path.join(ROOT, "src", "data", "articles-manifest.json");
   await writeFile(manifestPath, JSON.stringify(manifest, null, 2), "utf-8");
+  try {
+    const { execSync } = await import("node:child_process");
+    execSync(`bunx biome format --write "${manifestPath}"`, {
+      stdio: "ignore",
+    });
+  } catch {
+    // Ignore format errors if biome is not in environment
+  }
   console.log(
     `[sync-medium] Generated lightweight articles manifest at ${manifestPath} (${manifest.length} articles).`,
   );

@@ -2,8 +2,10 @@ import { ExternalLink } from "lucide-react";
 import { marked, type Token, type Tokens } from "marked";
 import React, { useMemo } from "react";
 import { CodeBlock } from "@/components/CodeBlock";
+import { GistEmbed } from "@/components/GistEmbed";
 import { ImageFrame } from "@/components/ImageFrame";
 import { InkLine } from "@/components/ui/ink";
+import mediumEmbedsMap from "../../content/articles/medium-embeds.json";
 
 interface MarkdownRendererProps {
   content: string;
@@ -278,13 +280,27 @@ function HeadingBlock({
   );
 }
 
-function ParagraphBlock({
+const resolveGistEmbedUrl = (href: string): string | null => {
+  const normalizedHref = href.trim();
+  const directOrMapped =
+    (mediumEmbedsMap as Record<string, string>)[normalizedHref] ||
+    normalizedHref;
+  if (
+    directOrMapped.startsWith("https://gist.github.com/") ||
+    directOrMapped.startsWith("http://gist.github.com/")
+  ) {
+    return directOrMapped;
+  }
+  return null;
+};
+
+const ParagraphBlock = ({
   token,
   nodeKey,
 }: {
   token: Tokens.Paragraph;
   nodeKey: string;
-}) {
+}) => {
   const soleToken = token.tokens?.[0];
 
   // A paragraph holding nothing but an image renders as a bare frame.
@@ -301,12 +317,21 @@ function ParagraphBlock({
     );
   }
 
+  // A paragraph holding a standalone GitHub Gist (or mapped Medium embed) renders as an interactive GistEmbed.
+  if (token.tokens && token.tokens.length === 1 && soleToken?.type === "link") {
+    const linkToken = soleToken as Tokens.Link;
+    const gistUrl = resolveGistEmbedUrl(linkToken.href);
+    if (gistUrl) {
+      return <GistEmbed url={gistUrl} />;
+    }
+  }
+
   return (
     <p className="my-5 text-base sm:text-lg font-serif text-[var(--ink-primary)] leading-[1.8]">
       <InlineTokens parentKey={nodeKey} tokens={token.tokens} />
     </p>
   );
-}
+};
 
 function ListBlock({
   token,

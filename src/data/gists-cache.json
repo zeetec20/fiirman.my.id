@@ -1,0 +1,41 @@
+{
+  "7879e41ea1a06c14df023f18f89a0116": {
+    "id": "7879e41ea1a06c14df023f18f89a0116",
+    "description": "UUIDv7 vs UUIDv4 for database indexing - Programming Language",
+    "owner": "zeetec20",
+    "htmlUrl": "https://gist.github.com/zeetec20/7879e41ea1a06c14df023f18f89a0116",
+    "files": [
+      {
+        "filename": "gistfile1.txt",
+        "language": "text",
+        "content": "+-------------------------+---------+------------------------------+-------------------+\n| Language                | Support | Implementation               | Minimum Version   |\n+-------------------------+---------+------------------------------+-------------------+\n| JavaScript / TypeScript | Library | uuid (v7())                  | Package-dependent |\n| JavaScript Web Crypto   | Partial | crypto.randomUUID() (v4)     | No native v7      |\n| Bun                     | Native  | Bun.randomUUIDv7()           | Version-dependent |\n| Python                  | Native  | uuid.uuid7()                 | 3.14              |\n| Go                      | Library | google/uuid (NewV7())        | Package-dependent |\n| Rust                    | Library | uuid (Uuid::now_v7())        | Package-dependent |\n| Java                    | Native  | UUID.ofEpochMillis()         | JDK 26            |\n| C# / .NET               | Native  | Guid.CreateVersion7()        | .NET 9            |\n| PHP                     | Library | ramsey/uuid (Uuid::uuid7())  | Package-dependent |\n| Ruby                    | Library | UUID generation gem          | Package-dependent |\n| Swift                   | Library | External UUID library        | Package-dependent |\n| Kotlin                  | Library | UUID library                 | Package-dependent |\n+-------------------------+---------+------------------------------+-------------------+"
+      }
+    ]
+  },
+  "fad68186fe6c4c2d32a5305bd211e590": {
+    "id": "fad68186fe6c4c2d32a5305bd211e590",
+    "description": "",
+    "owner": "zeetec20",
+    "htmlUrl": "https://gist.github.com/zeetec20/fad68186fe6c4c2d32a5305bd211e590",
+    "files": [
+      {
+        "filename": "gistfile1.txt",
+        "language": "text",
+        "content": "+------------------------+----------------------+----------------------+\n| Database               | UUIDv7 Storage       | Native Generation    |\n+------------------------+----------------------+----------------------+\n| PostgreSQL 18+         | UUID                 | uuidv7()             |\n| MySQL                  | BINARY(16) / CHAR(36)| No                   |\n| MariaDB 11.7+          | UUID                 | UUID_v7()            |\n| SQL Server             | UNIQUEIDENTIFIER     | No                   |\n| SQLite                 | BLOB / TEXT          | No                   |\n| MongoDB                | Binary UUID          | No                   |\n| CockroachDB            | UUID                 | Version-dependent    |\n| Oracle Database 26ai   | RAW(16)              | No                   |\n| Redis                  | String               | No                   |\n+------------------------+----------------------+----------------------+"
+      }
+    ]
+  },
+  "6fa48f923b510fd265d96c03d7079950": {
+    "id": "6fa48f923b510fd265d96c03d7079950",
+    "description": "",
+    "owner": "zeetec20",
+    "htmlUrl": "https://gist.github.com/zeetec20/6fa48f923b510fd265d96c03d7079950",
+    "files": [
+      {
+        "filename": "gistfile1.txt",
+        "language": "text",
+        "content": "+----------------------+---------+----------------------------------------------+\n| ORM / Framework      | Support | Implementation                               |\n+----------------------+---------+----------------------------------------------+\n| Prisma               | Library | @default(uuid(7))                            |\n| Drizzle ORM          | Library | SQL uuidv7() or application generator        |\n| TypeORM              | Library | External UUID generator                      |\n| Sequelize            | Library | Application-side generation                  |\n| MikroORM             | Library | Custom UUID generator                        |\n| SQLAlchemy           | Library | Python uuid.uuid7()                          |\n| Entity Framework Core| Native  | .NET 9 Guid.CreateVersion7()                 |\n| GORM                 | Library | UUID package                                 |\n+----------------------+---------+----------------------------------------------+"
+      }
+    ]
+  }
+}
