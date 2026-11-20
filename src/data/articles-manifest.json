@@ -1,11 +1,11 @@
 [
   {
     "slug": "uuidv7-vs-uuidv4-for-database-indexing",
-    "docId": "FOLIO-2026-M631",
+    "docId": "FOLIO-2026-M378",
     "title": "UUIDv7 vs UUIDv4 for database indexing",
     "coverImage": "/article/uuidv7-vs-uuidv4-for-database-indexing/thumbnail.webp",
     "date": "November 19, 2026",
-    "readingTime": "2 min",
+    "readingTime": "4 min",
     "tags": [
       "programming",
       "software-engineering",
